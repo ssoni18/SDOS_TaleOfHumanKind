@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "Campaign",
     "EduResource",
     "Donation",
+    "Payment",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = "django_backend.urls"
@@ -119,6 +123,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -129,3 +134,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# settings.py
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51O6Zg2SCNdvTVqnLYDrXR4dSuioi20e1N4ubsaykUpn1swCmsaDuOQTSI4n5VR6BZX6x1vIMKRb2KzauR89OLci900o8764qMw'
+STRIPE_SECRET_KEY = 'sk_test_51O6Zg2SCNdvTVqnLKTc55ca5W0zlDcpxUuSwpZEuM9LSmePRMAttTzy1reSxu1FEwK8mXwdAHrMDYkiW90RyJp1f00NdOITyBB'
