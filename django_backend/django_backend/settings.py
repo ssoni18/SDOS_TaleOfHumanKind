@@ -134,7 +134,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
+REDIRECT_DOMAIN_FRONTEND = "http://localhost:3000"
+REDIRECT_DOMAIN_BACKEND = "http://localhost:8000"
 # settings.py
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51O6Zg2SCNdvTVqnLYDrXR4dSuioi20e1N4ubsaykUpn1swCmsaDuOQTSI4n5VR6BZX6x1vIMKRb2KzauR89OLci900o8764qMw'
+PRODUCT_PRICE = 200
+STRIPE_PUBLISHABLE_KEY_TEST = 'pk_test_51O6Zg2SCNdvTVqnLYDrXR4dSuioi20e1N4ubsaykUpn1swCmsaDuOQTSI4n5VR6BZX6x1vIMKRb2KzauR89OLci900o8764qMw'
 STRIPE_SECRET_KEY = 'sk_test_51O6Zg2SCNdvTVqnLKTc55ca5W0zlDcpxUuSwpZEuM9LSmePRMAttTzy1reSxu1FEwK8mXwdAHrMDYkiW90RyJp1f00NdOITyBB'
