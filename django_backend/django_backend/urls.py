@@ -16,9 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
-from Payment import views
+from django.urls import include
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('process_payment/', views.process_payment, name='process_payment'),
+    path('accounts/', include('allauth.urls')),
 ]

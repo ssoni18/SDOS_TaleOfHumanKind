@@ -25,8 +25,13 @@ SECRET_KEY = "django-insecure-&4-x2p&g2fm=))6(1pzc-!4o)yrf)(tc1b)j6lg_0x^msp8&2u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SITE_ID = 1
 ALLOWED_HOSTS = []
 
+AUTHENTICATION_BACKENDS = (
+  'django.contrib.auth.backends.ModelBackend',
+  'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 # Application definition
 
@@ -37,12 +42,18 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "User",
     "Campaign",
     "EduResource",
     "Donation",
-    "Payment",
-    "corsheaders",
+    
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    # 'allauth.socialacc ount.providers.github', 
+    
 ]
 
 MIDDLEWARE = [
@@ -53,8 +64,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "django_backend.urls"
@@ -70,6 +80,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.request",
             ],
         },
     },
@@ -77,14 +88,38 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "django_backend.wsgi.application"
 
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         # For each OAuth based provider, either add a ``SocialApp``
+#         # (``socialaccount`` app) containing the required client
+#         # credentials, or list them here:
+#         'APP': {
+#             'client_id': '335351655350-vnafv8fmml40qfrv2m3tt41ro4m47gko.apps.googleusercontent.com',
+#             'secret': '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',
+#             'key': ''
+#         }
+#     }
+# }
 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'NAME': 'TaleOfHumankind',
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'django.db.backends.mysql',
         'HOST': '127.0.0.1',
         'PORT': 3306,
         'USER': 'root',
@@ -111,7 +146,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -122,9 +156,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
-CORS_ALLOW_ALL_ORIGINS = True
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
@@ -134,9 +165,3 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-REDIRECT_DOMAIN_FRONTEND = "http://localhost:3000"
-REDIRECT_DOMAIN_BACKEND = "http://localhost:8000"
-# settings.py
-PRODUCT_PRICE = 200
-STRIPE_PUBLISHABLE_KEY_TEST = 'pk_test_51O6Zg2SCNdvTVqnLYDrXR4dSuioi20e1N4ubsaykUpn1swCmsaDuOQTSI4n5VR6BZX6x1vIMKRb2KzauR89OLci900o8764qMw'
-STRIPE_SECRET_KEY = 'sk_test_51O6Zg2SCNdvTVqnLKTc55ca5W0zlDcpxUuSwpZEuM9LSmePRMAttTzy1reSxu1FEwK8mXwdAHrMDYkiW90RyJp1f00NdOITyBB'
