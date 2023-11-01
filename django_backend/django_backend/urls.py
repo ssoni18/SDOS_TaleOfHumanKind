@@ -16,7 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from django.urls import include
+from User import views
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('login_auth/', views.login_auth, name='login_auth'),
+    path('user_signup/', views.user_signup, name='user_signup'),
+    # path('google-login/', views.google_login, name='google_login'),
 ]

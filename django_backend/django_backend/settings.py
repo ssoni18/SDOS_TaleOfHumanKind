@@ -25,8 +25,13 @@ SECRET_KEY = "django-insecure-&4-x2p&g2fm=))6(1pzc-!4o)yrf)(tc1b)j6lg_0x^msp8&2u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SITE_ID = 1
 ALLOWED_HOSTS = []
 
+AUTHENTICATION_BACKENDS = (
+  'django.contrib.auth.backends.ModelBackend',
+  'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 # Application definition
 
@@ -37,13 +42,35 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "User",
     "Campaign",
     "EduResource",
     "Donation",
+    
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'rest_framework',
+    'corsheaders',
+    
+    # 'allauth.socialacc ount.providers.github', 
+    
 ]
 
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+]
+
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -51,6 +78,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "django_backend.urls"
@@ -66,6 +94,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.request",
             ],
         },
     },
@@ -73,14 +102,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "django_backend.wsgi.application"
 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '335351655350-vnafv8fmml40qfrv2m3tt41ro4m47gko.apps.googleusercontent.com',
+            'secret': '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',
+        }
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'NAME': 'TaleOfHumankind',
-        'ENGINE': 'mysql.connector.django',
+        'NAME': 'SDOS',
+        'ENGINE': 'django.db.backends.mysql',
         'HOST': '127.0.0.1',
         'PORT': 3306,
         'USER': 'root',
@@ -107,7 +144,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -118,8 +154,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 

@@ -2,22 +2,20 @@ from django.db import models
 from User.models import User
 
 class Campaign(models.Model):
-    campaign_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    approved = models.BooleanField()
-    leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='led_campaigns')
-    mentor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mentored_campaigns')
-    current_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    goal_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.CharField(max_length=100)
-    file_url = models.CharField(max_length=200)
-    changemaker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_campaigns')
-    created_date = models.DateTimeField()
-    updated_date = models.DateTimeField()
+    title = models.CharField(max_length=200,null=True)
+    description = models.TextField(null=True)
+    approved = models.BooleanField(null=True)
+    leader = models.ForeignKey(User, on_delete=models.CASCADE, related_name='led_campaigns',null=True)
+    mentor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mentored_campaigns',null=True)
+    current_amount = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    goal_amount = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    category = models.CharField(max_length=100,null=True)
+    file_url = models.CharField(max_length=200,null=True)
+    changemaker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_campaigns',null=True)
+    created_date = models.DateTimeField(null=True)
+    updated_date = models.DateTimeField(null=True)
 
 
 class CampaignChangemakers(models.Model):
-    id = models.AutoField(primary_key=True)
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
-    changemaker = models.ForeignKey(User, on_delete=models.CASCADE)
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE,null=True)
+    changemaker = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
