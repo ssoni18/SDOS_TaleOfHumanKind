@@ -52,11 +52,16 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'rest_framework',
+    'corsheaders',
+    
     # 'allauth.socialacc ount.providers.github', 
     
 ]
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -88,37 +93,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "django_backend.wsgi.application"
 
-# SOCIALACCOUNT_PROVIDERS = {
-#     'google': {
-#         # For each OAuth based provider, either add a ``SocialApp``
-#         # (``socialaccount`` app) containing the required client
-#         # credentials, or list them here:
-#         'APP': {
-#             'client_id': '335351655350-vnafv8fmml40qfrv2m3tt41ro4m47gko.apps.googleusercontent.com',
-#             'secret': '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',
-#             'key': ''
-#         }
-#     }
-# }
-
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'OAUTH_PKCE_ENABLED': True,
+        'APP': {
+            'client_id': '335351655350-vnafv8fmml40qfrv2m3tt41ro4m47gko.apps.googleusercontent.com',
+            'secret': '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',
+        }
     }
 }
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'NAME': 'TaleOfHumankind',
+        'NAME': 'SDOS',
         'ENGINE': 'django.db.backends.mysql',
         'HOST': '127.0.0.1',
         'PORT': 3306,

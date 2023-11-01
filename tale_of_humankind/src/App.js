@@ -1,7 +1,7 @@
 import Navbar from "./components/js/Navbar";
 // import ControlledCarousel from "./components/js/Corousel";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+// import { Elements } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
 
 import { Route, Routes } from "react-router-dom";
 import HomePage from "./components/js/HomePage";
@@ -12,11 +12,14 @@ import LoginPage from "./components/js/LoginPage";
 import SupportUs from "./components/js/SupportUs";
 import TeamSection from "./components/js/TeamSection";
 import UserProfile from "./components/js/UserProfile";
-import Payment from "./components/js/Payment";
-
-const stripePromise = loadStripe(
-  "pk_test_51O6Zg2SCNdvTVqnLYDrXR4dSuioi20e1N4ubsaykUpn1swCmsaDuOQTSI4n5VR6BZX6x1vIMKRb2KzauR89OLci900o8764qMw"
-);
+// import Payment from "./components/js/Payment";
+// import {
+//   PaymentCancelled,
+//   PaymentSuccessful,
+// } from "./components/js/PaymentStatus";
+// const stripePromise = loadStripe(
+//   "pk_test_51O6Zg2SCNdvTVqnLYDrXR4dSuioi20e1N4ubsaykUpn1swCmsaDuOQTSI4n5VR6BZX6x1vIMKRb2KzauR89OLci900o8764qMw"
+// );
 
 function App() {
   return (
@@ -32,14 +35,9 @@ function App() {
         <Route path="/teamSection" element={<TeamSection />}></Route>
         <Route path="/userProfile" element={<UserProfile />}></Route>
         <Route path="/userProfile" element={<UserProfile />}></Route>
-        <Route
-          path="/Payment"
-          element={
-            <Elements stripe={stripePromise}>
-              <Payment />
-            </Elements>
-          }
-        ></Route>
+        {/* <Route path="/Payment" element={<Payment />}></Route> */}
+        {/* <Route path="/payment_successful" element={<PaymentSuccessful />}></Route> */}
+        {/* <Route path="/payment_cancelled" element={<PaymentCancelled />}></Route> */}
       </Routes>
     </>
   );
