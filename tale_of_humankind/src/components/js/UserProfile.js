@@ -2,14 +2,14 @@ import React from 'react';
 import "../css/userProfile.css";
 import RegistrationCounter from './Counter';
 
-export default function UserProfile() {
+export default function UserProfile({ userData }) {
   return (
     <section className="section about-section gray-bg" id="about">
       <div className="container">
         <div className="row align-items-center flex-row-reverse">
           <div className="col-lg-6">
             <div className="about-text go-to">
-              <h3 className="dark-color">Name</h3>
+              <h3 className="dark-color">{userData.first_name}</h3>
               <h6 className="theme-color lead">Role</h6>
               <p>
                 Some description that is optional that the user will write about himself in his profile 

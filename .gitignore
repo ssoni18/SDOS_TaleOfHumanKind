@@ -1,0 +1,5 @@
+
+venv/
+**/__pycache__/
+tale_of_humankind/node_modules/
+.env

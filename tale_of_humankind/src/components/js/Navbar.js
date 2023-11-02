@@ -2,9 +2,29 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 import { Link } from "react-router-dom";
 function BasicExample() {
+  const history = useNavigate();
+  const handleSubmit = () => {
+    
+    axios
+      .post("http://localhost:8000/logout/", {
+        
+      })
+      .then((response) => {
+        if (response.data.status === 'ok'){
+          history('/Login')
+          }
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <>
       <Navbar expand="lg" className="bg-dark text-white body-tertiary" >
@@ -38,6 +58,12 @@ function BasicExample() {
               <Link to="/registerPage">
                 <Button variant="danger">Sign Up</Button>
               </Link>
+
+              
+                <Button variant="success" className="mr-2" onClick={handleSubmit}>
+                  Logout
+                </Button>
+              
             </Nav>
           </Navbar.Collapse>
         </Container>

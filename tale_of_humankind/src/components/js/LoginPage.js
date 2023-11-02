@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import "../css/LoginPage.css";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import axios from "axios";
+import ReactDOM from 'react-dom';
 import { GoogleLogin } from 'react-google-login';
+import { useNavigate } from 'react-router-dom';
+import UserProfile from './UserProfile';
 
 export default function LoginPage() {
+  const history = useNavigate();
+
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
@@ -16,6 +21,12 @@ export default function LoginPage() {
         password: password,
       })
       .then((response) => {
+        if (response.data.status === 'ok'){
+        const userData = response.data.user_data;
+        console.log(userData.firts_name);
+        ReactDOM.render(<UserProfile userData={userData} />, document.getElementById('root'));
+        history('/UserProfile')
+        }
         console.log(response);
       })
       .catch((error) => {
