@@ -46,11 +46,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
-    "User",
-    "Campaign",
-    "EduResource",
-    "Donation",
-    
+    "dashboard",
+   
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

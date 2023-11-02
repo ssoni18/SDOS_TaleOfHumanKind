@@ -26,8 +26,8 @@ from django.contrib.auth import get_user_model
 
 @csrf_exempt
 def user_signup(request):
-    if request.method == 'POST':
-        
+    from .functions import validate_email, validate_phonenumber, validate_selectedRole, validate_selectedQualification
+    if request.method == 'POST':        
         data  = json.loads(request.body)
         email = data.get('email')
         firstname = data.get('firstName')
@@ -36,41 +36,43 @@ def user_signup(request):
         selectedRole = data.get('selectedRole')
         selectedQualification = data.get('selectedQualification')
         password = data.get('password')
+        
+        if not validate_email(email) or not validate_phonenumber(phoneNumber) or not validate_selectedRole(selectedRole) or not validate_selectedQualification(selectedQualification):
+            return JsonResponse({"status": "failure", "message":"Invalid input data"}, status=400)
+        
         user = CustomUser.objects.filter(Q(email = email))
         if user:
             return JsonResponse({"status": "failure", "message":"User already exists with this email"}, status=409)
-        else:
-            password = make_password(password)
-            address = Address()
-            Customuser = CustomUser()
-            Customuser.username = email
-            Customuser.first_name = firstname
-            Customuser.last_name = lastName
-            Customuser.email = email
-            Customuser.password = password
-            Customuser.address = address
-            Customuser.date_of_birth = None
-            Customuser.qualification = selectedQualification
-            Customuser.primary_phone_number = phoneNumber
-            Customuser.secondary_phone_number = None
-            Customuser.user_type = selectedRole
-            Customuser.created_time = timezone.now()
-            Customuser.updated_time = timezone.now()
-            Customuser.social_handle  = None
-            # Customuser.last_login  = timezone.now()
-            address.save()
-            Customuser.save()
-            
-            login = LoginDetails()
-            login.email = email
-            login.password_hash = password
-            login.user = Customuser
-            login.save()
-            
-            return JsonResponse({"status": "success", "message":"Sign Up Successfull!! Please Login"}, status=200)
+        
+        password = make_password(password)
+        address = Address.objects.create()
+        Customuser = CustomUser.objects.create(
+            username=email,
+            first_name=firstname,
+            last_name=lastName,
+            email=email,
+            password=password,
+            address=address,
+            date_of_birth=None,
+            qualification=selectedQualification,
+            primary_phone_number=phoneNumber,
+            secondary_phone_number=None,
+            user_type=selectedRole,
+            created_time=timezone.now(),
+            updated_time=timezone.now(),
+            social_handle=None
+        )
+        
+        LoginDetails.objects.create(
+            email=email,
+            password_hash=password,
+            user=Customuser
+        )
+        
+        return JsonResponse({"status": "success", "message":"Sign Up Successful! Please Login."}, status=200)
     return JsonResponse({'status': 'error', 'message': 'Invalid request'})
-@csrf_exempt
 
+@csrf_exempt
 def login_auth(request):
     # import ipdb; ipdb.set_trace()
     if request.method == 'POST':
@@ -104,8 +106,3 @@ def login_auth(request):
 def logout(request):
     auth_logout(request)
     return JsonResponse({'status': 'ok', 'message': 'Logged out successfully'})
-
-
-
-
-

@@ -23,7 +23,7 @@ export default function LoginPage() {
       .then((response) => {
         if (response.data.status === 'ok'){
         const userData = response.data.user_data;
-        console.log(userData.firts_name);
+        console.log(userData.first_name);
         ReactDOM.render(<UserProfile userData={userData} />, document.getElementById('root'));
         history('/UserProfile')
         }
