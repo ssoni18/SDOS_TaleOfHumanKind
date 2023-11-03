@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 import json
 from .models import LoginDetails
-from .models import CustomUser ,  Address
+from .models import CustomUser ,  Address , EducationalResource
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate , login 
 from django.contrib.auth import logout as auth_logout
@@ -102,7 +102,36 @@ def login_auth(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request'})
     
-
+@csrf_exempt
 def logout(request):
     auth_logout(request)
     return JsonResponse({'status': 'ok', 'message': 'Logged out successfully'})
+
+@csrf_exempt
+def Education_resources(request):
+    if request.method == 'POST':
+        print(request.user.is_authenticated)
+        if request.user.is_authenticated:
+            print("OJ")
+            title = request.POST.get('title')
+            contenttype = request.POST.get('contenttype')
+            resource_url = request.POST.get('resource_url')
+            creator = request.user
+            image = request.FILES.get('image')
+
+            edu = EducationalResource.objects.create(
+                title=title,
+                content_type=contenttype,
+                resource_url=resource_url,
+                creator=creator,
+                created_date=timezone.now(),
+                updated_date=timezone.now(),
+                image=image,
+            )
+            print(edu)
+            return JsonResponse({"status": "success", "message":"Resource Added Successfully!!!"}, status=200)
+        else:
+            return JsonResponse({'status': 'error', 'message': 'User not authenticated'})
+
+        
+    
