@@ -104,7 +104,7 @@ export default function LoginPage() {
                         name="registerSubmit"
                         onClick={handleSubmit}
                       >
-                        Register
+                        Login
                       </button>
                     </div>
                   </form>
