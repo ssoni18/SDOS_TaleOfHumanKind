@@ -14,7 +14,8 @@ from django.shortcuts import render,  HttpResponseRedirect
 import bcrypt
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-
+from django.core import serializers
+ 
 @csrf_exempt
 # def hash_password(password):
 #     salt = bcrypt.gensalt()
@@ -133,5 +134,8 @@ def Education_resources(request):
         else:
             return JsonResponse({'status': 'error', 'message': 'User not authenticated'})
 
-        
-    
+def Fetchresources(request):
+    if request.method == 'GET':
+        resources = EducationalResource.objects.all()
+        resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__username', 'created_date', 'updated_date', 'image'))
+        return JsonResponse(resources_list, safe=False)

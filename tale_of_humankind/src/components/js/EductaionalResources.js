@@ -10,7 +10,7 @@ export default function EducationalResources() {
   const [resource_url, setresource_url] = useState("NULL");
   const [image, setimage] = useState("NULL");
 
-  const handleSubmit = () => {
+const handleSubmit = () => {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('contenttype', contenttype);
