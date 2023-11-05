@@ -14,7 +14,7 @@ import TeamSection from "./components/js/TeamSection";
 import UserProfile from "./components/js/UserProfile";
 import EducationalResources from "./components/js/EductaionalResources";
 import ViewEducationalResource from "./components/js/ViewEducationalResource";
-
+import { Payment } from "./components/js/payments";
 function App() {
   return (
     <>
@@ -31,6 +31,7 @@ function App() {
         <Route path="/userProfile" element={<UserProfile />}></Route>
         <Route path="/EducationalResources" element={<EducationalResources />}></Route>
         <Route path="/ViewEducationalResource" element={<ViewEducationalResource />}></Route>
+        <Route path="/payment" element={<Payment />}></Route>
       </Routes>
     </>
   );

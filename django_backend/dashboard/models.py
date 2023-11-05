@@ -69,3 +69,10 @@ class EducationalResource(models.Model):
     created_date = models.DateTimeField(null=True)
     updated_date = models.DateTimeField(null=True)
     image = models.ImageField(upload_to='images/',null=True)
+
+class Transaction(models.Model):
+    payment_id = models.CharField(max_length=200, verbose_name="Payment ID")
+    order_id = models.CharField(max_length=200, verbose_name="Order ID")
+    signature = models.CharField(max_length=500, verbose_name="Signature", blank=True, null=True)
+    amount = models.IntegerField(verbose_name="Amount")
+    created_at = models.DateTimeField(auto_now_add=True)
