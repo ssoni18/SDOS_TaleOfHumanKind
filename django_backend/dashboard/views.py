@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 import json
 from .models import LoginDetails
-from .models import CustomUser ,  Address , EducationalResource
+from .models import CustomUser ,  Address , EducationalResource , FeedItem
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate , login 
 from django.contrib.auth import logout as auth_logout
@@ -138,4 +138,11 @@ def Fetchresources(request):
     if request.method == 'GET':
         resources = EducationalResource.objects.all()
         resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__username', 'created_date', 'updated_date', 'image'))
+        return JsonResponse(resources_list, safe=False)
+    
+def getfeed(request):
+    if request.method == 'GET':
+        print(request)
+        resources = FeedItem.objects.all()
+        resources_list = list(resources.values('creater', 'content', 'image', 'likes', 'created_at' , 'resource_url'))
         return JsonResponse(resources_list, safe=False)

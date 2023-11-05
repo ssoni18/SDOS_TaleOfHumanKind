@@ -15,6 +15,7 @@ import UserProfile from "./components/js/UserProfile";
 import EducationalResources from "./components/js/EductaionalResources";
 import ViewEducationalResource from "./components/js/ViewEducationalResource";
 import { Payment } from "./components/js/payments";
+import Home from "./components/js/Home";
 function App() {
   return (
     <>
@@ -32,6 +33,7 @@ function App() {
         <Route path="/EducationalResources" element={<EducationalResources />}></Route>
         <Route path="/ViewEducationalResource" element={<ViewEducationalResource />}></Route>
         <Route path="/payment" element={<Payment />}></Route>
+        <Route path="/home" element={<Home />}></Route>
       </Routes>
     </>
   );

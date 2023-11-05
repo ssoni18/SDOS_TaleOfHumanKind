@@ -7,5 +7,6 @@ urlpatterns = [
     path('logout/', views.login_auth, name='logout'),
     # path('google-login/', views.google_login, name='google_login'),
     path('EducationResource/' , views.Education_resources ,  name = 'EducationResource'),
-    path('Fetchresources/' , views.Fetchresources , name = 'Fetchresources')
+    path('Fetchresources/' , views.Fetchresources , name = 'Fetchresources'),
+    path('getfeed/',views.getfeed,name='feed'),
 ]

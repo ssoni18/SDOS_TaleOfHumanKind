@@ -76,3 +76,12 @@ class Transaction(models.Model):
     signature = models.CharField(max_length=500, verbose_name="Signature", blank=True, null=True)
     amount = models.IntegerField(verbose_name="Amount")
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    
+class FeedItem(models.Model):
+    creater = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True)
+    content = models.TextField()
+    image = models.ImageField(upload_to='images/')  # new field for the image
+    likes = models.IntegerField(default=0)  # new field for the likes counter
+    created_at = models.DateTimeField(auto_now_add=True)
+    resource_url = models.URLField(max_length=200,null=True)
