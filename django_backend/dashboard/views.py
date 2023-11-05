@@ -13,6 +13,7 @@ import bcrypt
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from backend import CustomUserModelBackend
+from django.core.serializers import serialize
 
 @csrf_exempt
 # def hash_password(password):
@@ -76,15 +77,25 @@ def login_auth(request):
         backend = CustomUserModelBackend()
         user = backend.authenticate(request, email=email, password=password)
         
+        print('user', user)
+        print('rcv pass:', password)
+        print('rcv enc pass:', password.encode('utf-8'))
+        print('usr rcv pass:', user.password)
+        print('usr rcv enc pass:', user.password.encode('utf-8'))
+        print('check pass1:', bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')))
+
         if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
             user.last_login = timezone.now()
             user.save(update_fields=['last_login'])
+            
+            address_data = serialize('json', [user.address])
+            address = json.loads(address_data)[0]['fields']
             
             user_data = {
                 'first_name' : user.first_name,
                 'email': user.email,
                 'Date_of_Birth' : user.date_of_birth,
-                'address': user.address,
+                'address': address,
                 'phone' : user.primary_phone_number
             }
             

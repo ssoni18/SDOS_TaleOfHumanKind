@@ -1,5 +1,6 @@
 from django.contrib.auth.backends import ModelBackend                                                                                                                        
-from django.contrib.auth import get_user_model                                                                                          
+from django.contrib.auth import get_user_model 
+import bcrypt                                                                                         
 
 class CustomUserModelBackend(ModelBackend):
     def user_can_authenticate(self, user):
@@ -16,8 +17,9 @@ class CustomUserModelBackend(ModelBackend):
         User = get_user_model()
         try:
             user = User.objects.get(email=email)
-            if user.check_password(password):
+            if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
                 return user
         except User.DoesNotExist:
+            print('user does not exist')
             return None
             
