@@ -3,7 +3,7 @@ import "../css/LoginPage.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ReactDOM from 'react-dom';
-import { GoogleLogin } from 'react-google-login';
+// import { GoogleLogin } from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
 import UserProfile from './UserProfile';
 
@@ -109,13 +109,13 @@ export default function LoginPage() {
                     </div>
                   </form>
 
-                  <GoogleLogin
+                  {/* <GoogleLogin
                     clientId="335351655350-vnafv8fmml40qfrv2m3tt41ro4m47gko.apps.googleusercontent.com"
                     buttonText="Login with Google"
                     onSuccess={responseGoogle}
                     onFailure={responseGoogle}
                     cookiePolicy={"single_host_origin"}
-                  />
+                  /> */}
                 </div>
                 <div className="card-footer px-lg-5 py-lg-4">
                   <Link to="/registerPage">
