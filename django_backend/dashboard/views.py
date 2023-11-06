@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 import json
 from .models import LoginDetails
-from .models import CustomUser ,  Address
+from .models import CustomUser ,  Address , EducationalResource , FeedItem
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate , login 
 from django.contrib.auth import logout as auth_logout
@@ -14,7 +14,8 @@ from django.shortcuts import render,  HttpResponseRedirect
 import bcrypt
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-
+from django.core import serializers
+ 
 @csrf_exempt
 # def hash_password(password):
 #     salt = bcrypt.gensalt()
@@ -102,7 +103,46 @@ def login_auth(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request'})
     
-
+@csrf_exempt
 def logout(request):
     auth_logout(request)
     return JsonResponse({'status': 'ok', 'message': 'Logged out successfully'})
+
+@csrf_exempt
+def Education_resources(request):
+    if request.method == 'POST':
+        print(request.user.is_authenticated)
+        if request.user.is_authenticated:
+            print("OJ")
+            title = request.POST.get('title')
+            contenttype = request.POST.get('contenttype')
+            resource_url = request.POST.get('resource_url')
+            creator = request.user
+            image = request.FILES.get('image')
+
+            edu = EducationalResource.objects.create(
+                title=title,
+                content_type=contenttype,
+                resource_url=resource_url,
+                creator=creator,
+                created_date=timezone.now(),
+                updated_date=timezone.now(),
+                image=image,
+            )
+            print(edu)
+            return JsonResponse({"status": "success", "message":"Resource Added Successfully!!!"}, status=200)
+        else:
+            return JsonResponse({'status': 'error', 'message': 'User not authenticated'})
+
+def Fetchresources(request):
+    if request.method == 'GET':
+        resources = EducationalResource.objects.all()
+        resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__username', 'created_date', 'updated_date', 'image'))
+        return JsonResponse(resources_list, safe=False)
+    
+def getfeed(request):
+    if request.method == 'GET':
+        print(request)
+        resources = FeedItem.objects.all()
+        resources_list = list(resources.values('creater', 'content', 'image', 'likes', 'created_at' , 'resource_url'))
+        return JsonResponse(resources_list, safe=False)

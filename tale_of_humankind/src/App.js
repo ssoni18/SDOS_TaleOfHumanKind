@@ -12,15 +12,10 @@ import LoginPage from "./components/js/LoginPage";
 import SupportUs from "./components/js/SupportUs";
 import TeamSection from "./components/js/TeamSection";
 import UserProfile from "./components/js/UserProfile";
-// import Payment from "./components/js/Payment";
-// import {
-//   PaymentCancelled,
-//   PaymentSuccessful,
-// } from "./components/js/PaymentStatus";
-// const stripePromise = loadStripe(
-//   "pk_test_51O6Zg2SCNdvTVqnLYDrXR4dSuioi20e1N4ubsaykUpn1swCmsaDuOQTSI4n5VR6BZX6x1vIMKRb2KzauR89OLci900o8764qMw"
-// );
-
+import EducationalResources from "./components/js/EductaionalResources";
+import ViewEducationalResource from "./components/js/ViewEducationalResource";
+import { Payment } from "./components/js/payments";
+import Home from "./components/js/Home";
 function App() {
   return (
     <>
@@ -35,9 +30,10 @@ function App() {
         <Route path="/teamSection" element={<TeamSection />}></Route>
         <Route path="/userProfile" element={<UserProfile />}></Route>
         <Route path="/userProfile" element={<UserProfile />}></Route>
-        {/* <Route path="/Payment" element={<Payment />}></Route> */}
-        {/* <Route path="/payment_successful" element={<PaymentSuccessful />}></Route> */}
-        {/* <Route path="/payment_cancelled" element={<PaymentCancelled />}></Route> */}
+        <Route path="/EducationalResources" element={<EducationalResources />}></Route>
+        <Route path="/ViewEducationalResource" element={<ViewEducationalResource />}></Route>
+        <Route path="/payment" element={<Payment />}></Route>
+        <Route path="/home" element={<Home />}></Route>
       </Routes>
     </>
   );
