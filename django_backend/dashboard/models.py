@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
+    email = models.EmailField(null=True)
     address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='users' , null=True)
     date_of_birth = models.DateField(null=True)
     qualification = models.CharField(max_length=100, null=True)  # Dropdown value for string
@@ -11,8 +12,7 @@ class CustomUser(AbstractUser):
     created_time = models.DateTimeField(null=True)
     updated_time = models.DateTimeField(null=True)
     social_handle = models.ForeignKey('SocialMediaHandle', on_delete=models.CASCADE, related_name='users', null=True)
-    email = models.EmailField(null=True)
-    password_hash = models.CharField(max_length=200, null=True)
+    # password_hash = models.CharField(max_length=200, null=True)
 
 class Address(models.Model):
     country = models.CharField(max_length=100, null=True)
@@ -55,6 +55,6 @@ class EducationalResource(models.Model):
     title = models.CharField(max_length=200, null=True)
     content_type = models.CharField(max_length=100, null=True)
     resource_url = models.CharField(max_length=200, null=True)
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)  # Use the model name directly
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
     created_date = models.DateTimeField(null=True)
     updated_date = models.DateTimeField(null=True)

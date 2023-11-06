@@ -26,6 +26,7 @@ from django.core.serializers import serialize
 
 @csrf_exempt
 def user_signup(request):
+    # Important: Add checks for duplicate email/username
     from .functions import validate_email, validate_phonenumber, validate_selectedRole, validate_selectedQualification
     if request.method == 'POST':        
         data  = json.loads(request.body)
@@ -94,10 +95,12 @@ def login_auth(request):
             user_data = {
                 'first_name' : user.first_name,
                 'email': user.email,
-                'Date_of_Birth' : user.date_of_birth,
+                'user_type': user.user_type,
+                'dob' : user.date_of_birth,
                 'address': address,
                 'phone' : user.primary_phone_number
             }
+            print("first_name", user.first_name)
             
             return JsonResponse({'status': 'ok' , 'user_data': user_data})
         else:
