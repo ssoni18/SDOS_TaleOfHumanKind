@@ -5,7 +5,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 import json
-from .models import LoginDetails
 from .models import CustomUser ,  Address , EducationalResource , FeedItem
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import logout as auth_logout
@@ -17,16 +16,7 @@ from backend import CustomUserModelBackend
 from django.core.serializers import serialize
  
 @csrf_exempt
-# def hash_password(password):
-#     salt = bcrypt.gensalt()
-#     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-#     return hashed_password
-
-# def verify_password(input_password, hashed_password):
-#     return bcrypt.checkpw(input_password.encode('utf-8'), hashed_password.encode('utf-8'))
-
-@csrf_exempt
-def user_signup(request):
+def     user_signup(request):
     # Important: Add checks for duplicate email/username
     from .functions import validate_email, validate_phonenumber, validate_selectedRole, validate_selectedQualification
     if request.method == 'POST':        
