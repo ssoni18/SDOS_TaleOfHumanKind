@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+import { useLocation } from 'react-router-dom'; // Import useLocation hook
 import "../css/userProfile.css";
 import RegistrationCounter from "./Counter";
 import Button from "react-bootstrap/Button";
@@ -6,13 +7,18 @@ import axios from "axios"
 import { Link } from "react-router-dom";
 
 export default function UserProfile() {
+  const location = useLocation(); // Use useLocation hook to access location state
+  const userData = location.state.userData; // Access userData from location state
+
+  console.log("user data at profile", userData);
   return (
     <section className="section about-section gray-bg" id="about">
       <div className="container">
         <div className="row align-items-center flex-row-reverse">
           <div className="col-lg-6">
             <div className="about-text go-to">
-              <h3 className="dark-color"> NAME </h3>
+              <h3 className="dark-color">{userData.first_name}</h3>
+              <h6 className="theme-color lead">{userData.user_type}</h6>
               <Link to="/EducationalResources">
                 <Button variant="success">Manage Resorces</Button>
               </Link>
@@ -26,7 +32,7 @@ export default function UserProfile() {
                 <div className="col-md-6">
                   <div className="media">
                     <label>Birthday</label>
-                    <p>4th April 1998</p>
+                    <p>{userData.dob}</p>
                   </div>
                   <div className="media">
                     <label>Age</label>
@@ -38,17 +44,21 @@ export default function UserProfile() {
                   </div>
                   <div className="media">
                     <label>Address</label>
-                    <p>California, USA</p>
-                  </div>
+                    <p>
+                      Country: {userData.country}<br />
+                      Street Name: {userData.street_name}<br />
+                      State: {userData.state}<br />
+                      Pincode: {userData.pincode}
+                    </p>                  </div>
                 </div>
                 <div className="col-md-6">
                   <div className="media">
                     <label>E-mail</label>
-                    <p>info@domain.com</p>
+                    <p>{userData.email}</p>
                   </div>
                   <div className="media">
                     <label>Phone</label>
-                    <p>820-885-3321</p>
+                    <p>{userData.phone}</p>
                   </div>
                 </div>
               </div>

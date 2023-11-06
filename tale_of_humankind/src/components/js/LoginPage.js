@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../css/LoginPage.css";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import ReactDOM from 'react-dom';
 // import { GoogleLogin } from 'react-google-login';
@@ -21,11 +21,11 @@ export default function LoginPage() {
         password: password,
       })
       .then((response) => {
-        if (response.data.status === 'ok'){
-        const userData = response.data.user_data;
-        console.log(userData.first_name);
-        ReactDOM.render(<UserProfile userData={userData} />, document.getElementById('root'));
-        history('/UserProfile')
+        if (response.data.status === 'ok') {
+          const userData = response.data.user_data;
+          console.log(userData.first_name);
+          // ReactDOM.render(<UserProfile userData={userData} />, document.getElementById('root'));
+          history('/UserProfile', { state: { userData: response.data.user_data } }); // Pass userData as state
         }
         console.log(response);
       })
@@ -51,7 +51,7 @@ export default function LoginPage() {
         });
     }
   };
-  
+
   return (
     <div className="App">
       <div className="page-holder align-items-center py-4 bg-gray-100 vh-80">

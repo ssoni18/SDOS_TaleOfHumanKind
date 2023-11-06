@@ -69,6 +69,10 @@ PASSWORD_HASHERS = [
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
 
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+]
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
@@ -163,5 +167,8 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = 'dashboard.CustomUser'
+
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
 RAZORPAY_SECRET_KEY =os.environ.get("RAZORPAY_SECRET_KEY")

@@ -2,8 +2,10 @@
 
 from django.conf import settings
 import django.contrib.auth.models
+import django.contrib.auth.validators
 from django.db import migrations, models
 import django.db.models.deletion
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
@@ -15,6 +17,37 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.CreateModel(
+            name='CustomUser',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('password', models.CharField(max_length=128, verbose_name='password')),
+                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
+                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
+                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
+                ('first_name', models.CharField(blank=True, max_length=150, verbose_name='first name')),
+                ('last_name', models.CharField(blank=True, max_length=150, verbose_name='last name')),
+                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
+                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
+                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
+                ('email', models.EmailField(max_length=254, null=True)),
+                ('date_of_birth', models.DateField(null=True)),
+                ('qualification', models.CharField(max_length=100, null=True)),
+                ('primary_phone_number', models.CharField(max_length=20, null=True)),
+                ('secondary_phone_number', models.CharField(max_length=20, null=True)),
+                ('user_type', models.CharField(max_length=50)),
+                ('created_time', models.DateTimeField(null=True)),
+                ('updated_time', models.DateTimeField(null=True)),
+            ],
+            options={
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'abstract': False,
+            },
+            managers=[
+                ('objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
         migrations.CreateModel(
             name='Address',
             fields=[
@@ -38,29 +71,20 @@ class Migration(migrations.Migration):
                 ('file_url', models.CharField(max_length=200, null=True)),
                 ('created_date', models.DateTimeField(null=True)),
                 ('updated_date', models.DateTimeField(null=True)),
+                ('changemaker', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='created_campaigns', to=settings.AUTH_USER_MODEL)),
+                ('leader', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='led_campaigns', to=settings.AUTH_USER_MODEL)),
+                ('mentor', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='mentored_campaigns', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
-            name='CustomUser',
+            name='Transaction',
             fields=[
-                ('user_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
-                ('date_of_birth', models.DateField(null=True)),
-                ('qualification', models.CharField(max_length=100, null=True)),
-                ('primary_phone_number', models.CharField(max_length=20, null=True)),
-                ('secondary_phone_number', models.CharField(max_length=20, null=True)),
-                ('user_type', models.CharField(max_length=50)),
-                ('created_time', models.DateTimeField(null=True)),
-                ('updated_time', models.DateTimeField(null=True)),
-                ('address', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='users', to='dashboard.address')),
-            ],
-            options={
-                'verbose_name': 'user',
-                'verbose_name_plural': 'users',
-                'abstract': False,
-            },
-            bases=('auth.user',),
-            managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('payment_id', models.CharField(max_length=200, verbose_name='Payment ID')),
+                ('order_id', models.CharField(max_length=200, verbose_name='Order ID')),
+                ('signature', models.CharField(blank=True, max_length=500, null=True, verbose_name='Signature')),
+                ('amount', models.IntegerField(verbose_name='Amount')),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
@@ -81,16 +105,19 @@ class Migration(migrations.Migration):
                 ('facebook_link', models.CharField(blank=True, max_length=200, null=True)),
                 ('twitter_link', models.CharField(blank=True, max_length=200, null=True)),
                 ('linkedin_link', models.CharField(blank=True, max_length=200, null=True)),
-                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='dashboard.customuser')),
+                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
-            name='LoginDetails',
+            name='FeedItem',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email', models.EmailField(max_length=254, null=True)),
-                ('password_hash', models.CharField(max_length=200, null=True)),
-                ('user', models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, to='dashboard.customuser')),
+                ('content', models.TextField()),
+                ('image', models.ImageField(upload_to='images/')),
+                ('likes', models.IntegerField(default=0)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('resource_url', models.URLField(null=True)),
+                ('creater', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dashboard.customuser')),
             ],
         ),
         migrations.CreateModel(
@@ -116,6 +143,7 @@ class Migration(migrations.Migration):
                 ('updated_date', models.DateTimeField(null=True)),
                 ('image', models.ImageField(null=True, upload_to='images/')),
                 ('creator', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='dashboard.customuser')),
+                ('creator', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -129,32 +157,32 @@ class Migration(migrations.Migration):
                 ('campaign', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='dashboard.campaign')),
             ],
         ),
-        migrations.AddField(
-            model_name='customuser',
-            name='social_handle',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='users', to='dashboard.socialmediahandle'),
-        ),
         migrations.CreateModel(
             name='CampaignChangemakers',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('campaign', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='dashboard.campaign')),
-                ('changemaker', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='dashboard.customuser')),
+                ('changemaker', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.AddField(
-            model_name='campaign',
-            name='changemaker',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='created_campaigns', to='dashboard.customuser'),
+            model_name='customuser',
+            name='address',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='users', to='dashboard.address'),
         ),
         migrations.AddField(
-            model_name='campaign',
-            name='leader',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='led_campaigns', to='dashboard.customuser'),
+            model_name='customuser',
+            name='groups',
+            field=models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups'),
         ),
         migrations.AddField(
-            model_name='campaign',
-            name='mentor',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='mentored_campaigns', to='dashboard.customuser'),
+            model_name='customuser',
+            name='social_handle',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='users', to='dashboard.socialmediahandle'),
+        ),
+        migrations.AddField(
+            model_name='customuser',
+            name='user_permissions',
+            field=models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions'),
         ),
     ]
