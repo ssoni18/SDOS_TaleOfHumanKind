@@ -5,36 +5,46 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function RegisterPage(){
-  const history = useNavigate();
+export default function RegisterPage() {
+  const navigate = useNavigate();
 
   const [selectedRole, setSelectedRole] = useState("Changemaker"); // Initialize with a default role
   const [selectedQualification, setSelectedQualification] = useState("High School"); // Initialize with a default qualification
-  const [firstName , setfirstname] = useState("NULL")
-  const [lastName , setlastname] = useState("NULL")
-  const [phoneNumber , setphone] = useState("NULL")
-  const [email , setemail] = useState("NULL")
-  const [password , setpassword] = useState("NULL")
+  const [firstName, setfirstname] = useState("NULL")
+  const [lastName, setlastname] = useState("NULL")
+  const [phoneNumber, setphone] = useState("NULL")
+  const [email, setemail] = useState("NULL")
+  const [password, setpassword] = useState("NULL")
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const handleSubmit = () =>{
+  const handleSubmit = () => {
 
-    // console.log(email)
     axios
       .post("http://localhost:8000/user_signup/", {
         email: email,
         password: password,
-        firstName:firstName,
-        lastName:lastName,
-        phoneNumber:phoneNumber,
-        selectedRole:selectedRole,
-        selectedQualification:selectedQualification,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        selectedRole: selectedRole,
+        selectedQualification: selectedQualification,
       })
       .then((response) => {
-        history('/Login');
-        console.log(response);
+        if (response.data.status === 'success') {
+          navigate('/Login');
+          console.log(response);
+        } else {
+          setErrorMessage(response.data.message);
+          console.log(response.data.message);
+        }
       })
       .catch((error) => {
         console.error(error);
+        // Check if the error has a response and response data
+        if (error.response && error.response.data) {
+          console.error('Response data:', error.response.data);
+          setErrorMessage(error.response.data.message);
+        }
       });
   };
   const handleRoleChange = (e) => {
@@ -58,42 +68,43 @@ export default function RegisterPage(){
                 <div className="card-body p-lg-5">
                   <h3 className="mb-4">Register Yourself</h3>
                   {/* <p className="text-muted text-sm mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p> */}
+                  {errorMessage && <div className="alert alert-danger" style={{ color: 'red' }}>{errorMessage}</div>}
                   <form action="index.html">
-                  {/* <div className="form-floating mb-3">
+                    {/* <div className="form-floating mb-3">
                       <input className="form-control" id="lastName" type="text" placeholder="Last Name" required  onChange={(event) => {
                           setusername(event.target.value);
                         }}/>
                       <label htmlFor="lastName">UserName</label>
                     </div> */}
-                  <div className="form-floating mb-3">
+                    <div className="form-floating mb-3">
                       <input className="form-control" id="firstName" type="text" placeholder="First Name" required onChange={(event) => {
-                          setfirstname(event.target.value);
-                        }}/>
+                        setfirstname(event.target.value);
+                      }} />
                       <label htmlFor="firstName">First Name</label>
                     </div>
                     <div className="form-floating mb-3">
                       <input className="form-control" id="lastName" type="text" placeholder="Last Name" required onChange={(event) => {
-                          setlastname(event.target.value);
-                        }}/>
+                        setlastname(event.target.value);
+                      }} />
                       <label htmlFor="lastName">Last Name</label>
                     </div>
                     <div className="form-floating mb-3">
-                      <input className="form-control" id="phoneNumber" type="tel" placeholder="Phone Number" required 
-                      onChange={(event) => {
-                        setphone(event.target.value);
-                      }}/>
+                      <input className="form-control" id="phoneNumber" type="tel" placeholder="Phone Number" required
+                        onChange={(event) => {
+                          setphone(event.target.value);
+                        }} />
                       <label htmlFor="phoneNumber">Phone Number</label>
                     </div>
                     <div className="form-floating mb-3">
                       <input className="form-control" id="email" type="email" placeholder="Email address" required onChange={(event) => {
-                          setemail(event.target.value);
-                        }}/>
+                        setemail(event.target.value);
+                      }} />
                       <label htmlFor="email">Email address</label>
                     </div>
                     <div className="form-floating mb-3">
                       <input className="form-control" id="password" type="password" placeholder="Password" required onChange={(event) => {
-                          setpassword(event.target.value);
-                        }}/>
+                        setpassword(event.target.value);
+                      }} />
                       <label htmlFor="password">Password</label>
                     </div>
                     <div className="form-floating mb-3">
@@ -126,8 +137,8 @@ export default function RegisterPage(){
                   </form>
                 </div>
                 <div className="card-footer px-lg-5 py-lg-4">
-                <Link to ="/Login">
-                  <div className="text-sm text-muted">Already have an account?</div></Link>
+                  <Link to="/Login">
+                    <div className="text-sm text-muted">Already have an account?</div></Link>
                 </div>
               </div>
             </div>

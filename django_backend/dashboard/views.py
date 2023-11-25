@@ -1,63 +1,88 @@
 from django.utils import timezone
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 import json
-from .models import CustomUser ,  Address , EducationalResource , FeedItem
-from django.contrib.auth.hashers import make_password, check_password
+from .models import CustomUser, Address, EducationalResource, FeedItem
 from django.contrib.auth import logout as auth_logout
 from django.shortcuts import render,  HttpResponseRedirect
 import bcrypt
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from backend import CustomUserModelBackend
 from django.core.serializers import serialize
- 
+from django.core.exceptions import ValidationError
+
+
 @csrf_exempt
-def     user_signup(request):
+def is_authenticated(request):
+    if request.user.is_authenticated:
+        print("Authenticated!")
+        return JsonResponse({'is_authenticated': True})
+    else:
+        print("Not Authenticated!")
+        return JsonResponse({'is_authenticated': False})
+ 
+
+@csrf_exempt
+def user_signup(request):
     # Important: Add checks for duplicate email/username
-    from .functions import validate_email, validate_phonenumber, validate_selectedRole, validate_selectedQualification
-    if request.method == 'POST':        
-        data  = json.loads(request.body)
-        email = data.get('email')
-        firstname = data.get('firstName')
-        lastName = data.get('lastName')
-        phoneNumber = data.get('phoneNumber')
-        selectedRole = data.get('selectedRole')
-        selectedQualification = data.get('selectedQualification')
-        password = data.get('password')
+    from .functions import validate_email, validate_phonenumber, validate_selectedRole, validate_selectedQualification, validate_firstname, validate_lastname, validate_password
+    if request.method == 'POST':      
+        try:  
+            data  = json.loads(request.body)
+            email = data.get('email')
+            password = data.get('password')
+            firstName = data.get('firstName')
+            lastName = data.get('lastName')
+            phoneNumber = data.get('phoneNumber')
+            selectedRole = data.get('selectedRole')
+            selectedQualification = data.get('selectedQualification')
+            
+            if not validate_email(email):
+                return JsonResponse({"status": "failure", "message": "Server: Invalid email"}, status=400)
+
+            if not validate_phonenumber(phoneNumber):
+                return JsonResponse({"status": "failure", "message": "Server: Invalid phone number"}, status=400)
+
+            if not validate_selectedRole(selectedRole):
+                return JsonResponse({"status": "failure", "message": "Server: Invalid role selected"}, status=400)
+
+            if not validate_selectedQualification(selectedQualification):
+                return JsonResponse({"status": "failure", "message": "Server: Invalid qualification selected"}, status=400)
+
+            if not validate_password(password):
+                return JsonResponse({"status": "failure", "message": "Server: Invalid password"}, status=400)
+
+            if not validate_firstname(firstName):
+                return JsonResponse({"status": "failure", "message": "Server: Invalid first name"}, status=400)
+
+            if not validate_lastname(lastName):
+                return JsonResponse({"status": "failure", "message": "Server: Invalid last name"}, status=400)
+
+            # Check for duplicate email
+            if CustomUser.objects.filter(email=email).exists():
+                return JsonResponse({"status": "failure", "message": "Email already exists"}, status=400)
+            
+            user = CustomUser.objects.create_user(email=email, password=password)
+            user.first_name = firstName
+            user.last_name = lastName
+            user.primary_phone_number = phoneNumber
+            user.user_type = selectedRole
+            user.qualification = selectedQualification
+            address = Address.objects.create()
+            user.address = address
         
-        if not validate_email(email) or not validate_phonenumber(phoneNumber) or not validate_selectedRole(selectedRole) or not validate_selectedQualification(selectedQualification):
-            return JsonResponse({"status": "failure", "message":"Invalid input data"}, status=400)
+            
+            user.save()
+            return JsonResponse({"status": "success", "message": "Server: Sign Up Successful! Please Login."}, status=200)
+
+        except ValidationError as e:
+            return JsonResponse({"status": "failure", "Server: message": str(e)}, status=400)
         
-        user = CustomUser.objects.filter(Q(email=email))
-        if user:
-            return JsonResponse({"status": "failure", "message":"User already exists with this email"}, status=409)
-        
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        
-        address = Address.objects.create()
-        custom_user = CustomUser.objects.create(
-            username=email,
-            first_name=firstname,
-            last_name=lastName,
-            email=email,
-            password=hashed_password.decode('utf-8'),
-            address=address,
-            date_of_birth=None,
-            qualification=selectedQualification,
-            primary_phone_number=phoneNumber,
-            secondary_phone_number=None,
-            user_type=selectedRole,
-            created_time=timezone.now(),
-            updated_time=timezone.now(),
-            social_handle=None
-        )
-        
-        return JsonResponse({"status": "success", "message":"Sign Up Successful! Please Login."}, status=200)
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+    return JsonResponse({'status': 'error', 'message': 'Server: Invalid request'})
 
 @csrf_exempt
 def login_auth(request):
@@ -65,18 +90,15 @@ def login_auth(request):
         data = json.loads(request.body)
         email = data.get('email')
         password = data.get('password')
-        
-        backend = CustomUserModelBackend()
-        user = backend.authenticate(request, email=email, password=password)
-        
-        print('user', user)
-        print('rcv pass:', password)
-        print('rcv enc pass:', password.encode('utf-8'))
-        print('usr rcv pass:', user.password)
-        print('usr rcv enc pass:', user.password.encode('utf-8'))
-        print('check pass1:', bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')))
 
-        if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+        # Check for the existence of the user
+        if not CustomUser.objects.filter(email=email).exists():
+            return JsonResponse({'status': 'error', 'message': 'Server: User does not exist'}, status=400)
+        
+        user = authenticate(request, email=email, password=password)
+        
+        if user is not None:
+            login(request, user)
             user.last_login = timezone.now()
             user.save(update_fields=['last_login'])
             
@@ -91,25 +113,30 @@ def login_auth(request):
                 'address': address,
                 'phone' : user.primary_phone_number
             }
-            print("first_name", user.first_name)
+            print("auth?", request.user.is_authenticated)
+            print("sesh items in login", request.session.items())
             
-            return JsonResponse({'status': 'ok' , 'user_data': user_data})
+            return JsonResponse({'status': 'success' , 'message': "Server: Login Successful", 'user_data': user_data}, status=200)
         else:
-            return JsonResponse({'status': 'error', 'message': 'Invalid credentials'})
+            return JsonResponse({'status': 'error', 'message': 'Invalid credentials'}, status=400)
     else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request'})
-    
+        return JsonResponse({'status': 'error', 'message': 'Server: Invalid request'}, status=400)
+
+
 @csrf_exempt
 def logout(request):
+    # Manually clear the session
+    # request.session.flush()
     auth_logout(request)
-    return JsonResponse({'status': 'ok', 'message': 'Logged out successfully'})
+    # request.session.save()  # Save the session after clearing it
+    return JsonResponse({'status': 'success', 'message': 'Server: Logged out successfully'}, status=200)
+    
 
 @csrf_exempt
 def Education_resources(request):
-    if request.method == 'POST':
-        print(request.user.is_authenticated)
-        if request.user.is_authenticated:
-            print("OJ")
+    auth_status = is_authenticated(request)
+    if auth_status.content.decode('utf-8') == '{"is_authenticated": true}':
+        if request.method == 'POST':
             title = request.POST.get('title')
             contenttype = request.POST.get('contenttype')
             resource_url = request.POST.get('resource_url')
@@ -125,17 +152,19 @@ def Education_resources(request):
                 updated_date=timezone.now(),
                 image=image,
             )
-            print(edu)
-            return JsonResponse({"status": "success", "message":"Resource Added Successfully!!!"}, status=200)
-        else:
-            return JsonResponse({'status': 'error', 'message': 'User not authenticated'})
+            
+            return JsonResponse({"status": "success", "message":"Resource Added Successfully!"}, status=200)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'User not authenticated!'})
+
 
 def Fetchresources(request):
     if request.method == 'GET':
         resources = EducationalResource.objects.all()
         resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__username', 'created_date', 'updated_date', 'image'))
         return JsonResponse(resources_list, safe=False)
-    
+
+
 def getfeed(request):
     if request.method == 'GET':
         print(request)

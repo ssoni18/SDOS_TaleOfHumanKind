@@ -6,18 +6,19 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
 import { Link } from "react-router-dom";
-function BasicExample() {
-  const history = useNavigate();
-  const handleSubmit = () => {
-    
+function NavFunction() {
+  const navigate = useNavigate();
+  const handleLogout = () => {
     axios
-      .post("http://localhost:8000/logout/", {
-        
-      })
+      .post("http://localhost:8000/logout/", {}, { withCredentials: true })
       .then((response) => {
-        if (response.data.status === 'ok'){
-          history('/Login')
-          }
+        console.log("Response Headers:", response.headers);
+        if (response.data.status === 'success') {
+          // Clear userData from local storage on successful logout
+          localStorage.removeItem('userData');
+
+          navigate('/Login');
+        }
         console.log(response);
       })
       .catch((error) => {
@@ -59,11 +60,11 @@ function BasicExample() {
                 <Button variant="danger">Sign Up</Button>
               </Link>
 
-              
-                <Button variant="success" className="mr-2" onClick={handleSubmit}>
-                  Logout
-                </Button>
-              
+
+              <Button variant="success" className="mr-2" onClick={handleLogout}>
+                Logout
+              </Button>
+
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -72,4 +73,4 @@ function BasicExample() {
   );
 }
 
-export default BasicExample;
+export default NavFunction;

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom'; // Import useLocation hook
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocation hook
 import "../css/userProfile.css";
 import RegistrationCounter from "./Counter";
 import Button from "react-bootstrap/Button";
@@ -8,9 +8,40 @@ import { Link } from "react-router-dom";
 
 export default function UserProfile() {
   const location = useLocation(); // Use useLocation hook to access location state
-  const userData = location.state.userData; // Access userData from location state
-
+  const navigate = useNavigate();
+  let userData = location.state?.userData; // Access userData from location state
+  // If userData is not available in location state, get it from local storage
+  if (!userData) {
+    userData = JSON.parse(localStorage.getItem('userData'));
+  }
   console.log("user data at profile", userData);
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/is_authenticated/', { withCredentials: true })
+      .then((response) => {
+        if (!response.data.is_authenticated) {
+          // Redirect to login page if user is not authenticated
+          navigate('/Login');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [navigate]); // Added navigate to the dependency array
+
+  // Check if userData is not available or user is not authenticated
+  useEffect(() => {
+    if (!userData) {
+      // Redirect to login page if userData is not available
+      navigate('/Login');
+    }
+  }, [userData, navigate]);
+
+  if (!userData) {
+    // Don't render anything if userData is not available
+    return null;
+  }
+
   return (
     <section className="section about-section gray-bg" id="about">
       <div className="container">
@@ -22,7 +53,7 @@ export default function UserProfile() {
               <Link to="/EducationalResources">
                 <Button variant="success">Manage Resorces</Button>
               </Link>
-             
+
               <h6 className="theme-color lead">Role</h6>
               <p>
                 Some description that is optional that the user will write about
