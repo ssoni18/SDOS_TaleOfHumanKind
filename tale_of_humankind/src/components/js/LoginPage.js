@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/LoginPage.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -8,31 +8,65 @@ import { useNavigate } from 'react-router-dom';
 import UserProfile from './UserProfile';
 
 export default function LoginPage() {
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const handleSubmit = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/is_authenticated/', { withCredentials: true })
+      .then((response) => {
+        setLoading(false); // Set loading to false once the authentication check is complete
+
+        if (response.data.is_authenticated) {
+          console.log('user authenticated')
+          navigate('/'); // Redirect to the home page if the user is authenticated
+        }
+      })
+      .catch((error) => {
+        setLoading(false); // Set loading to false if there is an error
+        console.error(error);
+      });
+  }, [navigate]); // Added navigate to the dependency array
+
+  if (loading) {
+    // Render a loading state while the authentication check is in progress
+    return <p>Loading...</p>;
+  }
+
+  const handleLogin = () => {
     console.log(email);
     axios
       .post("http://localhost:8000/login_auth/", {
         email: email,
         password: password,
-      })
+      }, { withCredentials: true }) // Include session cookie with request
       .then((response) => {
-        if (response.data.status === 'ok') {
+        if (response.data.status === 'success') {
           const userData = response.data.user_data;
+          // Store user data in local storage
+          localStorage.setItem('userData', JSON.stringify(userData));
           console.log(userData.first_name);
-          // ReactDOM.render(<UserProfile userData={userData} />, document.getElementById('root'));
-          history('/UserProfile', { state: { userData: response.data.user_data } }); // Pass userData as state
+          navigate('/UserProfile', { state: { userData: response.data.user_data } }); // Pass userData as state
         }
-        console.log(response);
+        else {
+          setErrorMessage(response.data.message);
+          console.log(response.data.message);
+        }
       })
       .catch((error) => {
         console.error(error);
+        // Check if the error has a response and response data
+        if (error.response && error.response.data) {
+          console.error('Response data:', error.response.data);
+          setErrorMessage(error.response.data.message);
+        }
       });
   };
+
 
   const responseGoogle = (response) => {
     // Send the Google access token to your server for verification.
@@ -40,7 +74,7 @@ export default function LoginPage() {
       axios
         .post("http://localhost:8000/google-login/", {
           token: response.accessToken,
-        })
+        }, { withCredentials: true }) // Include session cookie with request
         .then((response) => {
           // Handle the server response or redirect as needed.
           console.log(response);
@@ -60,14 +94,15 @@ export default function LoginPage() {
             <div className="show col-lg-6 px-lg-4">
               <div className="card">
                 <div className="card-header px-lg-5">
-                  <div className="card-heading text-primary">Registration</div>
+                  <div className="card-heading text-primary">Login</div>
                 </div>
                 <div className="card-body p-lg-5">
                   <h3 className="mb-4">Login</h3>
-                  <p className="text-muted text-sm mb-5">
+                  {/* <p className="text-muted text-sm mb-5">
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit,
                     sed do eiusmod tempor incididunt ut labore.
-                  </p>
+                  </p> */}
+                  {errorMessage && <div className="alert alert-danger" style={{ color: 'red' }}>{errorMessage}</div>}
                   <form action="index.html">
                     <div className="form-floating mb-3">
                       <input
@@ -99,12 +134,12 @@ export default function LoginPage() {
                     <div className="form-group">
                       <button
                         className="btn btn-primary"
-                        id="register"
+                        id="login"
                         type="button"
-                        name="registerSubmit"
-                        onClick={handleSubmit}
+                        name="loginSubmit"
+                        onClick={handleLogin}
                       >
-                        Register
+                        Login
                       </button>
                     </div>
                   </form>

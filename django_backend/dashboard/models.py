@@ -1,8 +1,16 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
-class CustomUser(AbstractUser):
-    email = models.EmailField(null=True)
+from .managers import CustomUserManager
+
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(_("email address"), unique=True)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
     address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='users' , null=True)
     date_of_birth = models.DateField(null=True)
     qualification = models.CharField(max_length=100, null=True)  # Dropdown value for string
@@ -12,7 +20,17 @@ class CustomUser(AbstractUser):
     created_time = models.DateTimeField(null=True)
     updated_time = models.DateTimeField(null=True)
     social_handle = models.ForeignKey('SocialMediaHandle', on_delete=models.CASCADE, related_name='users', null=True)
-    # password_hash = models.CharField(max_length=200, null=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []    
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email
 
 class Address(models.Model):
     country = models.CharField(max_length=100, null=True)
@@ -59,7 +77,7 @@ class EducationalResource(models.Model):
     title = models.CharField(max_length=200,null=True)
     content_type = models.CharField(max_length=100,null=True)
     resource_url = models.URLField(max_length=200,null=True)
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True)  # Use the model name directly
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True)
     created_date = models.DateTimeField(null=True)
     updated_date = models.DateTimeField(null=True)
     image = models.ImageField(upload_to='images/',null=True)

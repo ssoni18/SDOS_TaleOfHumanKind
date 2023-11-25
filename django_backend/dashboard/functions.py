@@ -13,17 +13,17 @@ def validate_email(email):
     return True
 
 def validate_password(password):
-    if not password or len(password) < 8:
+    if not password or len(password) < 8 or len(password) > 32:
         return False
     return True
 
 def validate_firstname(firstname):
-    if not firstname or len(firstname) < 2:
+    if not firstname or len(firstname) > 32:
         return False
     return True
 
 def validate_lastname(lastname):
-    if not lastname or len(lastname) < 2:
+    if not lastname or len(lastname) > 32:
         return False
     return True
 

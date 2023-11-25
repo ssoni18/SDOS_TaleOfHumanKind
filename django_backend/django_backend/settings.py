@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 
 AUTHENTICATION_BACKENDS = (
   'django.contrib.auth.backends.ModelBackend',
-  'allauth.account.auth_backends.AuthenticationBackend',
+#   'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 # Application definition
@@ -69,9 +69,18 @@ PASSWORD_HASHERS = [
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
 
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
 ]
+
+SESSION_ENGINE = "django.contrib.sessions.backends.db" 
+SESSION_COOKIE_NAME = "e6a8f8223be7c31be4e07eee2ea2f634d6cca5a937c43c81"
+# SESSION_COOKIE_AGE = 3600  # Session timeout in seconds
+SESSION_COOKIE_SECURE = False  # Set to True in production if using HTTPS
+SESSION_SAVE_EVERY_REQUEST = True  # Save the session on every request
+
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

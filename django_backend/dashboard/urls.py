@@ -5,6 +5,8 @@ urlpatterns = [
     path('login_auth/', views.login_auth, name='login_auth'),
     path('user_signup/', views.user_signup, name='user_signup'),
     path('logout/', views.logout, name='logout'),
+    path('is_authenticated/', views.is_authenticated, name='is_authenticated'),
+
     # path('google-login/', views.google_login, name='google_login'),
     path('EducationResource/' , views.Education_resources ,  name = 'EducationResource'),
     path('Fetchresources/' , views.Fetchresources , name = 'Fetchresources'),
