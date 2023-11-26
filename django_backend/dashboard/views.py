@@ -134,8 +134,7 @@ def logout(request):
 
 @csrf_exempt
 def Education_resources(request):
-    auth_status = is_authenticated(request)
-    if auth_status.content.decode('utf-8') == '{"is_authenticated": true}':
+    if request.user.is_authenticated:
         if request.method == 'POST':
             title = request.POST.get('title')
             contenttype = request.POST.get('contenttype')
@@ -155,19 +154,41 @@ def Education_resources(request):
             
             return JsonResponse({"status": "success", "message":"Resource Added Successfully!"}, status=200)
     else:
-        return JsonResponse({'status': 'error', 'message': 'User not authenticated!'})
+        return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=400)
 
-
-def Fetchresources(request):
+@csrf_exempt
+def fetch_resources(request):
     if request.method == 'GET':
         resources = EducationalResource.objects.all()
-        resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__username', 'created_date', 'updated_date', 'image'))
+        resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__email', 'created_date', 'updated_date', 'image'))
         return JsonResponse(resources_list, safe=False)
 
-
-def getfeed(request):
+@csrf_exempt
+def get_feed(request):
     if request.method == 'GET':
         print(request)
-        resources = FeedItem.objects.all()
-        resources_list = list(resources.values('creater', 'content', 'image', 'likes', 'created_at' , 'resource_url'))
-        return JsonResponse(resources_list, safe=False)
+        feed_items = FeedItem.objects.all()
+        feed_list = list(feed_items.values('creator__email', 'content', 'image', 'likes', 'created_at', 'resource_url'))
+        return JsonResponse(feed_list, safe=False)
+    
+
+def incrementLikeCount(request):
+    if request.method == 'POST':
+        feed_items = FeedItem.objects.all()
+        for feed_item in feed_items:
+            feed_item.likes += 1
+            feed_item.save()    
+        return JsonResponse({'status': 'success', 'message': 'Like count incremented for all feed items'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+def decrementLikeCount(request):
+    if request.method == 'POST':
+        feed_items = FeedItem.objects.all()
+        for feed_item in feed_items:
+            feed_item.likes -= 1
+            feed_item.save()
+        return JsonResponse({'status': 'success', 'message': 'Like count incremented for all feed items'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})

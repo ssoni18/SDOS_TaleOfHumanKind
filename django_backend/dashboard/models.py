@@ -72,15 +72,11 @@ class Donation(models.Model):
 class EducationalResource(models.Model):
     title = models.CharField(max_length=200, null=True)
     content_type = models.CharField(max_length=100, null=True)
-    resource_url = models.CharField(max_length=200, null=True)
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
-    title = models.CharField(max_length=200,null=True)
-    content_type = models.CharField(max_length=100,null=True)
-    resource_url = models.URLField(max_length=200,null=True)
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True)
+    resource_url = models.URLField(max_length=200, null=True)
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, related_name='resources', to_field='email')
     created_date = models.DateTimeField(null=True)
     updated_date = models.DateTimeField(null=True)
-    image = models.ImageField(upload_to='images/',null=True)
+    image = models.ImageField(upload_to='images/', null=True)
 
 class Transaction(models.Model):
     payment_id = models.CharField(max_length=200, verbose_name="Payment ID")
@@ -91,7 +87,7 @@ class Transaction(models.Model):
     
     
 class FeedItem(models.Model):
-    creater = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True)
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True)
     content = models.TextField()
     image = models.ImageField(upload_to='images/')  # new field for the image
     likes = models.IntegerField(default=0)  # new field for the likes counter
