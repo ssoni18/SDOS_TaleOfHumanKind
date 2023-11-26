@@ -9,7 +9,7 @@ export default function Home() {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get('http://localhost:8000/getfeed/');
+          const response = await axios.get(`${process.env.REACT_APP_API_URL}/getfeed/`);
           console.log("response", response.data);
           setResources(response.data);
         } catch (error) {

@@ -12,7 +12,7 @@ import LoginPage from "./components/js/LoginPage";
 import SupportUs from "./components/js/SupportUs";
 import TeamSection from "./components/js/TeamSection";
 import UserProfile from "./components/js/UserProfile";
-import EducationalResources from "./components/js/EductaionalResources";
+import EducationalResources from "./components/js/EducationalResources";
 import ViewEducationalResource from "./components/js/ViewEducationalResource";
 import { Payment } from "./components/js/payments";
 import Home from "./components/js/Home";

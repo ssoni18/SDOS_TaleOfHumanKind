@@ -17,7 +17,7 @@ export default function UserProfile() {
   console.log("user data at profile", userData);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/is_authenticated/', { withCredentials: true })
+    axios.get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, { withCredentials: true })
       .then((response) => {
         if (!response.data.is_authenticated) {
           // Redirect to login page if user is not authenticated

@@ -20,7 +20,7 @@ export default function RegisterPage() {
   const handleSubmit = () => {
 
     axios
-      .post("http://localhost:8000/user_signup/", {
+      .post(`${process.env.REACT_APP_API_URL}/user_signup/`, {
         email: email,
         password: password,
         firstName: firstName,

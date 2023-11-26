@@ -10,7 +10,7 @@
 
 //     const makePayment = async (event) => {
     
-//             axios.post('http://localhost:8000/process_payment/', {
+//             axios.post(`${process.env.REACT_APP_API_URL}/process_payment/`, {
 //             })
 //             .then(response => {
 //                 console.log(response);

@@ -26,10 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-&4-x2p&g2fm=))6(1pzc-!4o)yrf)(tc1b)j6lg_0x^msp8&2u"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = False  # Production only
+DEBUG = True  # Development only
 
 SITE_ID = 1
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []  # Development only
+# ALLOWED_HOSTS = ["http://test-website.taleofhumankind.com"]  # Production only
+
 
 AUTHENTICATION_BACKENDS = (
   'django.contrib.auth.backends.ModelBackend',
@@ -67,11 +70,15 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://test-website.taleofhumankind.com'
+]
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+    'http://test-website.taleofhumankind.com'
 ]
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db" 

@@ -10,7 +10,7 @@ function NavFunction() {
   const navigate = useNavigate();
   const handleLogout = () => {
     axios
-      .post("http://localhost:8000/logout/", {}, { withCredentials: true })
+      .post(`${process.env.REACT_APP_API_URL}/logout/`, {}, { withCredentials: true })
       .then((response) => {
         console.log("Response Headers:", response.headers);
         if (response.data.status === 'success') {

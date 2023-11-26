@@ -18,7 +18,7 @@ const handleSubmit = () => {
     formData.append('image', image);  // make sure 'image' is the state where your File object is stored
 
     axios
-        .post("http://localhost:8000/EducationResource/", formData, {
+        .post(`${process.env.REACT_APP_API_URL}/EducationResource/`, formData, {
             headers: {
                 'content-type': 'multipart/form-data'
             }

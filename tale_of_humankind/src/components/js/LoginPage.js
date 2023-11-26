@@ -17,7 +17,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/is_authenticated/', { withCredentials: true })
+    axios.get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, { withCredentials: true })
       .then((response) => {
         setLoading(false); // Set loading to false once the authentication check is complete
 
@@ -40,7 +40,7 @@ export default function LoginPage() {
   const handleLogin = () => {
     console.log(email);
     axios
-      .post("http://localhost:8000/login_auth/", {
+      .post(`${process.env.REACT_APP_API_URL}/login_auth/`, {
         email: email,
         password: password,
       }, { withCredentials: true }) // Include session cookie with request
@@ -72,7 +72,7 @@ export default function LoginPage() {
     // Send the Google access token to your server for verification.
     if (response.accessToken) {
       axios
-        .post("http://localhost:8000/google-login/", {
+        .post(`${process.env.REACT_APP_API_URL}/google-login/`, {
           token: response.accessToken,
         }, { withCredentials: true }) // Include session cookie with request
         .then((response) => {
