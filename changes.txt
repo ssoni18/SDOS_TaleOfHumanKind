@@ -1,1 +1,1 @@
-1 form validation on login page and signup page
+Here, I will work on Payment and some frontend elements
