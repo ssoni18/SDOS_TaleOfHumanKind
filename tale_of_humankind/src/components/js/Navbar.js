@@ -1,25 +1,46 @@
+import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
 
-import { Link } from "react-router-dom";
 function NavFunction() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [isLoggedInLocal, setIsLoggedInLocal] = useState(false);
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
+
+  useEffect(() => {
+    setIsLoggedInLocal(isLoggedIn); // Update local state when Redux state changes
+  }, [isLoggedIn]);
+
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, { withCredentials: true })
+      .then((response) => {
+        if (response.data.is_authenticated) {
+          dispatch({ type: 'LOGIN' });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        dispatch({ type: 'LOGOUT' });
+      });
+  }, [dispatch]);
+
   const handleLogout = () => {
     axios
       .post(`${process.env.REACT_APP_API_URL}/logout/`, {}, { withCredentials: true })
       .then((response) => {
-        console.log("Response Headers:", response.headers);
         if (response.data.status === 'success') {
-          // Clear userData from local storage on successful logout
-          localStorage.removeItem('userData');
-
+          dispatch({ type: 'LOGOUT' });
           navigate('/Login');
         }
-        console.log(response);
       })
       .catch((error) => {
         console.error(error);
@@ -28,7 +49,7 @@ function NavFunction() {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-dark text-white body-tertiary" >
+      <Navbar expand="lg" className="bg-dark text-white body-tertiary">
         <Container>
           <Navbar.Brand as={Link} to="/" style={{ color: "white" }}>
             Tale of HumanKind
@@ -48,24 +69,32 @@ function NavFunction() {
               <Nav.Link as={Link} to="/supportUs" style={{ color: "white" }}>
                 Support Us
               </Nav.Link>
+              <Nav.Link as={Link} to="/ViewEducationalResource" style={{ color: "white" }}>
+                Resources
+              </Nav.Link>
+              {isLoggedIn && (
+                <Nav.Link as={Link} to="/UserProfile" style={{ color: "white" }}>
+                  My Profile
+                </Nav.Link>
+              )}
             </Nav>
-            <Nav>
-              <Link to="/Login">
-                <Button variant="success" className="mr-2">
-                  Login
-                </Button>
-              </Link>
-
-              <Link to="/registerPage">
-                <Button variant="danger">Sign Up</Button>
-              </Link>
-
-
+            {isLoggedIn ? (
               <Button variant="success" className="mr-2" onClick={handleLogout}>
                 Logout
               </Button>
+            ) : (
+              <>
+                <Link to="/Login">
+                  <Button variant="success" className="mr-2">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/registerPage">
+                  <Button variant="danger">Sign Up</Button>
+                </Link>
+              </>
+            )}
 
-            </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>

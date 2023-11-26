@@ -18,7 +18,7 @@ venv/
 *.hs_err_pid*
 *.iml
 *.idea/
-.vscode/
+**/.vscode/
 .pytest_cache/
 .coverage
 .cache/
