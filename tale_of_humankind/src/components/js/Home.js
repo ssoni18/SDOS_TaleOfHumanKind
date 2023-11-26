@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaRegHeart, FaHeart } from "react-icons/fa"; // Import heart icons from react-icons
+import "../css/EducationResources.css"
 
 export default function Home() {
 
@@ -20,7 +21,7 @@ export default function Home() {
     };
 
     fetchData();
-    const intervalId = setInterval(fetchData, 5000); // fetch data every 5 seconds
+    const intervalId = setInterval(fetchData, 50); // fetch data every 5 seconds
     return () => clearInterval(intervalId); // cleanup on unmount
   }, []);
 
@@ -39,7 +40,7 @@ return (
     <div>
     {resources.map((resource, index) => (
         <div className="post" key={index}>
-            <div className="post-image post-image-1">
+            <div className={`post-image post-image-${index + 1}`}>
                 <img src={resource.image} alt={resource.title}/>
             </div>
             <div className="post-content">

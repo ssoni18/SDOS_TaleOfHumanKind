@@ -1,6 +1,6 @@
 import React, { useState ,  useEffect} from "react";
 import axios from "axios"
-
+import "../css/EducationResources.css"
 const ViewEducationalResource = () => {
 
     const [resources, setResources] = useState([]);
@@ -21,27 +21,23 @@ const ViewEducationalResource = () => {
 
   return (
     <div>
-      {resources.map((resource, index) => (
-        <div
-          key={index}
-          style={{
-            border: "1px solid black",
-            margin: "10px",
-            padding: "10px",
-          }}
-        >
-          <img
-            src={resource.image}
-            alt={resource.title}
-            style={{ width: "100px", height: "100px" }}
-          />
-          <h2>{resource.title}</h2>
-          <p>{resource.content_type}</p>
-          <a href={resource.resource_url}>Go to resource</a>
-        </div>
-      ))}
+        {resources.map((resource, index) => (
+            <div className="post" key={index}>
+                <div className={`post-image post-image-${index + 1}`}>
+                    <img src={resource.image} alt={resource.title} />
+                </div>
+                <div className="post-content">
+                    <p className="post-date">Posted on <time datetime={resource.date}>{resource.date}</time> by <a className="post-author" href="#">{resource.author}</a></p>
+                    <h2 className="post-title">{resource.title}</h2>
+                    <div className="post-excerpt">
+                        <p>{resource.content_type}</p>
+                    </div>
+                    <a className="post-link" href={resource.resource_url}>Go to resource</a>
+                </div>
+            </div>
+        ))}
     </div>
-  );
+);
 };
 
 export default ViewEducationalResource;
