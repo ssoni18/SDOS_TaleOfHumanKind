@@ -168,17 +168,17 @@ def get_feed(request):
     if request.method == 'GET':
         print(request)
         feed_items = FeedItem.objects.all()
-        feed_list = list(feed_items.values('creator__email', 'content', 'image', 'likes', 'created_at', 'resource_url'))
+        feed_list = list(feed_items.values('id','creator__email', 'content', 'image', 'likes', 'created_at', 'resource_url'))
         return JsonResponse(feed_list, safe=False)
     
 @csrf_exempt
 def incrementLikeCount(request):
     print(request)
     if request.method == 'POST':
-        feed_items = FeedItem.objects.all()
-        for feed_item in feed_items:
-            feed_item.likes += 1
-            feed_item.save()    
+        data = json.loads(request.body)
+        feed_item = FeedItem.objects.get(id=data['id'])
+        feed_item.likes += 1
+        feed_item.save()    
         return JsonResponse({'status': 'success', 'message': 'Like count incremented for all feed items'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
@@ -186,10 +186,10 @@ def incrementLikeCount(request):
 @csrf_exempt
 def decrementLikeCount(request):
     if request.method == 'POST':
-        feed_items = FeedItem.objects.all()
-        for feed_item in feed_items:
-            feed_item.likes -= 1
-            feed_item.save()
+        data = json.loads(request.body)
+        feed_item = FeedItem.objects.get(id=data['id'])
+        feed_item.likes -= 1
+        feed_item.save()
         return JsonResponse({'status': 'success', 'message': 'Like count incremented for all feed items'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})

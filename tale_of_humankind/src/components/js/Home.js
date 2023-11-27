@@ -25,13 +25,13 @@ export default function Home() {
     return () => clearInterval(intervalId); // cleanup on unmount
   }, []);
 
-  const handleLikeClick = async () => {
+  const handleLikeClick = async (id) => {
     setIsLiked(!isLiked);
     let response;
     if (!isLiked) {
-      response = await axios.post(`${process.env.REACT_APP_API_URL}/incrementLikeCount/`, {}, { withCredentials: true });
+      response = await axios.post(`${process.env.REACT_APP_API_URL}/incrementLikeCount/`, {id}, { withCredentials: true });
     } else {
-      response = await axios.post(`${process.env.REACT_APP_API_URL}/decrementLikeCount/`, {}, { withCredentials: true });
+      response = await axios.post(`${process.env.REACT_APP_API_URL}/decrementLikeCount/`, {id}, { withCredentials: true });
     }
     console.log(response);
   };
@@ -47,12 +47,14 @@ return (
                 <p className="post-date">Posted on <time datetime={resource.created_date}>{resource.created_at}</time> by <a className="post-author" href="#">{resource.creator}</a></p>
                 <div className="post-excerpt">
                     <p>{resource.content}</p>
+                    <p>{resource.id}</p>
                 </div>
                 <a className="post-link" href={resource.resource_url}>Read More</a>
             
-                <button onClick={handleLikeClick} style={{ color: isLiked ? 'red' : 'grey' }}>
+                <button onClick={() => handleLikeClick(resource.id)} style={{ color: isLiked ? 'red' : 'grey' }}>
                   {isLiked ? <FaHeart /> : <FaRegHeart />}
                 </button>
+                
                 <p> {resource.likes} likes </p>
             </div>
         </div>
