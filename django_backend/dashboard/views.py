@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 import json
-from .models import CustomUser, Address, EducationalResource, FeedItem
+from .models import CustomUser, Address, EducationalResource, FeedItem ,Like
 from django.contrib.auth import logout as auth_logout
 from django.shortcuts import render,  HttpResponseRedirect
 import bcrypt
@@ -172,24 +172,26 @@ def get_feed(request):
         return JsonResponse(feed_list, safe=False)
     
 @csrf_exempt
-def incrementLikeCount(request):
+def likeFeedItem(request, id, email):
     print(request)
     if request.method == 'POST':
-        data = json.loads(request.body)
-        feed_item = FeedItem.objects.get(id=data['id'])
-        feed_item.likes += 1
-        feed_item.save()    
-        return JsonResponse({'status': 'success', 'message': 'Like count incremented for all feed items'})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+        user = CustomUser.objects.get(email=email)
+        feed_item = FeedItem.objects.get(id=id)
+        print(user)
+        print(feed_item)
+        Like.objects.create(user=user, feed_item=feed_item)
+        feed_item.likes = feed_item.get_likes()  # Update the likes field
+        feed_item.save()  # Save the changes
+        return JsonResponse({'status': 'success', 'message': 'Feed item liked'})
 
 @csrf_exempt
-def decrementLikeCount(request):
+def unlikeFeedItem(request, id, email):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        feed_item = FeedItem.objects.get(id=data['id'])
-        feed_item.likes -= 1
-        feed_item.save()
-        return JsonResponse({'status': 'success', 'message': 'Like count incremented for all feed items'})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+        user = CustomUser.objects.get(email=email)
+        feed_item = FeedItem.objects.get(id=id)
+        Like.objects.filter(user=user, feed_item=feed_item).delete()
+        feed_item.likes = feed_item.get_likes()  # Update the likes field
+        feed_item.save()  # Save the changes
+        return JsonResponse({'status': 'success', 'message': 'Feed item unliked'})
+
+

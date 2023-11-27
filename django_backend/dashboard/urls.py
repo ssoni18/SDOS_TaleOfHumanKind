@@ -12,6 +12,6 @@ urlpatterns = [
     path('EducationResource/' , views.Education_resources ,  name = 'EducationResource'),
     path('Fetchresources/' , views.fetch_resources , name = 'Fetchresources'),
     path('getfeed/',views.get_feed,name='feed'),
-    path('incrementLikeCount/' , views.incrementLikeCount , name='incrementLikeCount'),
-    path('decrementLikeCount/' , views.decrementLikeCount , name = 'decrementLikeCount'),
+    path('likeFeedItem/<int:id>/<str:email>/' , views.likeFeedItem , name='likeFeedItem'),
+    path('unlikeFeedItem/<int:id>/<str:email>/' , views.unlikeFeedItem , name = 'unlikeFeedItem'),
 ]
