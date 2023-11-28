@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocation hook
+import { useLocation, useNavigate } from "react-router-dom"; // Import useLocation hook
 import "../css/userProfile.css";
 import RegistrationCounter from "./Counter";
 import Button from "react-bootstrap/Button";
-import axios from "axios"
+import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function UserProfile() {
@@ -12,16 +12,37 @@ export default function UserProfile() {
   let userData = location.state?.userData; // Access userData from location state
   // If userData is not available in location state, get it from local storage
   if (!userData) {
-    userData = JSON.parse(localStorage.getItem('userData'));
+    userData = JSON.parse(localStorage.getItem("userData"));
   }
   console.log("user data at profile", userData);
 
+  const [userType, setUserType] = useState(null);
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, { withCredentials: true })
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/get_user_role/`,
+          { withCredentials: true }
+        );
+        console.log("User role:", response.data.user_type);
+        setUserType(response.data.user_type);
+      } catch (error) {
+        console.error("Error fetching user role: ", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, {
+        withCredentials: true,
+      })
       .then((response) => {
         if (!response.data.is_authenticated) {
           // Redirect to login page if user is not authenticated
-          navigate('/Login');
+          navigate("/Login");
         }
       })
       .catch((error) => {
@@ -33,7 +54,7 @@ export default function UserProfile() {
   useEffect(() => {
     if (!userData) {
       // Redirect to login page if userData is not available
-      navigate('/Login');
+      navigate("/Login");
     }
   }, [userData, navigate]);
 
@@ -50,9 +71,11 @@ export default function UserProfile() {
             <div className="about-text go-to">
               <h3 className="dark-color">{userData.first_name}</h3>
               <h6 className="theme-color lead">{userData.user_type}</h6>
-              <Link to="/EducationalResources">
-                <Button variant="success">Manage Resorces</Button>
-              </Link>
+              {userType === "mentor" && (
+                <Link to="/EducationalResources">
+                  <Button variant="success">Manage Resources</Button> 
+                </Link>
+              )}
 
               <h6 className="theme-color lead">Role</h6>
               <p>
@@ -76,11 +99,15 @@ export default function UserProfile() {
                   <div className="media">
                     <label>Address</label>
                     <p>
-                      Country: {userData.country}<br />
-                      Street Name: {userData.street_name}<br />
-                      State: {userData.state}<br />
+                      Country: {userData.country}
+                      <br />
+                      Street Name: {userData.street_name}
+                      <br />
+                      State: {userData.state}
+                      <br />
                       Pincode: {userData.pincode}
-                    </p>                  </div>
+                    </p>{" "}
+                  </div>
                 </div>
                 <div className="col-md-6">
                   <div className="media">
