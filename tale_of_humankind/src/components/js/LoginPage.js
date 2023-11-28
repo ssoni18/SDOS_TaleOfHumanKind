@@ -5,10 +5,12 @@ import axios from "axios";
 import ReactDOM from 'react-dom';
 // import { GoogleLogin } from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import UserProfile from './UserProfile';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
@@ -34,7 +36,18 @@ export default function LoginPage() {
 
   if (loading) {
     // Render a loading state while the authentication check is in progress
-    return <p>Loading...</p>;
+
+    return (
+      <div id="load">
+        <div>G</div>
+        <div>N</div>
+        <div>I</div>
+        <div>D</div>
+        <div>A</div>
+        <div>O</div>
+        <div>L</div>
+      </div>
+    );
   }
 
   const handleLogin = () => {
@@ -50,6 +63,7 @@ export default function LoginPage() {
           // Store user data in local storage
           localStorage.setItem('userData', JSON.stringify(userData));
           console.log(userData.first_name);
+          dispatch({ type: 'LOGIN' });
           navigate('/UserProfile', { state: { userData: response.data.user_data } }); // Pass userData as state
         }
         else {

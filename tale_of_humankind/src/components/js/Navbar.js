@@ -3,8 +3,9 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
+import Dropdown from "react-bootstrap/Dropdown";
 import axios from "axios";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 
 function NavFunction() {
@@ -14,11 +15,9 @@ function NavFunction() {
   const [isLoggedInLocal, setIsLoggedInLocal] = useState(false);
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
-
   useEffect(() => {
-    setIsLoggedInLocal(isLoggedIn); // Update local state when Redux state changes
+    setIsLoggedInLocal(isLoggedIn);
   }, [isLoggedIn]);
-
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, { withCredentials: true })
@@ -72,29 +71,31 @@ function NavFunction() {
               <Nav.Link as={Link} to="/ViewEducationalResource" style={{ color: "white" }}>
                 Resources
               </Nav.Link>
-              {isLoggedIn && (
-                <Nav.Link as={Link} to="/UserProfile" style={{ color: "white" }}>
-                  My Profile
-                </Nav.Link>
+            </Nav>
+            <Nav>
+              {isLoggedIn ? (
+                <Dropdown>
+                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    My Profile
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to="/UserProfile">Profile</Dropdown.Item>
+                    <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              ) : (
+                <>
+                  <Link to="/Login">
+                    <Button variant="success" className="mr-2">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link to="/registerPage">
+                    <Button variant="danger">Sign Up</Button>
+                  </Link>
+                </>
               )}
             </Nav>
-            {isLoggedIn ? (
-              <Button variant="success" className="mr-2" onClick={handleLogout}>
-                Logout
-              </Button>
-            ) : (
-              <>
-                <Link to="/Login">
-                  <Button variant="success" className="mr-2">
-                    Login
-                  </Button>
-                </Link>
-                <Link to="/registerPage">
-                  <Button variant="danger">Sign Up</Button>
-                </Link>
-              </>
-            )}
-
           </Navbar.Collapse>
         </Container>
       </Navbar>
