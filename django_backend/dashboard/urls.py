@@ -9,10 +9,10 @@ urlpatterns = [
     path('is_authenticated/', views.is_authenticated, name='is_authenticated'),
 
     # path('google-login/', views.google_login, name='google_login'),
-    path('EducationResource/' , views.Education_resources ,  name = 'EducationResource'),
-    path('Fetchresources/' , views.fetch_resources , name = 'Fetchresources'),
+    path('addEducationalResource/' , views.addEducationalResource ,  name='addEducationalResource'),
+    path('fetchEducationalResources/' , views.fetchEducationalResources , name = 'fetchEducationalResources'),
     path('getfeed/',views.get_feed,name='feed'),
     path('likeFeedItem/<int:id>/<str:email>/' , views.likeFeedItem , name='likeFeedItem'),
-    path('unlikeFeedItem/<int:id>/<str:email>/' , views.unlikeFeedItem , name = 'unlikeFeedItem'),
-    path('get_user_role/' , views.get_user_role , name = 'get_user_role'),
+    path('unlikeFeedItem/<int:id>/<str:email>/' , views.unlikeFeedItem , name='unlikeFeedItem'),
+    path('get_user_role/' , views.get_user_role , name='get_user_role'),
 ]

@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import UserProfile from './UserProfile';
+import Loading from './Loading';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -36,18 +37,7 @@ export default function LoginPage() {
 
   if (loading) {
     // Render a loading state while the authentication check is in progress
-
-    return (
-      <div id="load">
-        <div>G</div>
-        <div>N</div>
-        <div>I</div>
-        <div>D</div>
-        <div>A</div>
-        <div>O</div>
-        <div>L</div>
-      </div>
-    );
+    return <Loading />;
   }
 
   const handleLogin = () => {
@@ -64,6 +54,7 @@ export default function LoginPage() {
           localStorage.setItem('userData', JSON.stringify(userData));
           console.log(userData.first_name);
           dispatch({ type: 'LOGIN' });
+          dispatch({ type: 'SET_USER_TYPE', userType: userData.user_type }); // Dispatch the SET_USER_TYPE action
           navigate('/UserProfile', { state: { userData: response.data.user_data } }); // Pass userData as state
         }
         else {

@@ -8,7 +8,7 @@ const ViewEducationalResource = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/Fetchresources/`, { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/fetchEducationalResources/`, { withCredentials: true });
         console.log("response", response.data);
         setResources(response.data);
       } catch (error) {
