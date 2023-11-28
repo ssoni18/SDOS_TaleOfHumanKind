@@ -98,6 +98,7 @@ def login_auth(request):
         user = authenticate(request, email=email, password=password)
         
         if user is not None:
+            request.session['user_type'] = user.user_type
             login(request, user)
             user.last_login = timezone.now()
             user.save(update_fields=['last_login'])
@@ -121,6 +122,12 @@ def login_auth(request):
             return JsonResponse({'status': 'error', 'message': 'Invalid credentials'}, status=400)
     else:
         return JsonResponse({'status': 'error', 'message': 'Server: Invalid request'}, status=400)
+
+
+@csrf_exempt
+def get_user_role(request):
+    user_type = request.session.get('user_type', None)
+    return JsonResponse({'user_type': user_type})
 
 
 @csrf_exempt
@@ -193,5 +200,3 @@ def unlikeFeedItem(request, id, email):
         feed_item.likes = feed_item.get_likes()  # Update the likes field
         feed_item.save()  # Save the changes
         return JsonResponse({'status': 'success', 'message': 'Feed item unliked'})
-
-

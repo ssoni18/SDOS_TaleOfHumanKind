@@ -14,4 +14,5 @@ urlpatterns = [
     path('getfeed/',views.get_feed,name='feed'),
     path('likeFeedItem/<int:id>/<str:email>/' , views.likeFeedItem , name='likeFeedItem'),
     path('unlikeFeedItem/<int:id>/<str:email>/' , views.unlikeFeedItem , name = 'unlikeFeedItem'),
+    path('get_user_role/' , views.get_user_role , name = 'get_user_role'),
 ]
