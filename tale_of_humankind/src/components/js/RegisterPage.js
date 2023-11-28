@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const [phoneNumber, setphone] = useState("NULL")
   const [email, setemail] = useState("NULL")
   const [password, setpassword] = useState("NULL")
+  const [confirmPassword, setConfirmPassword] = useState("NULL")
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleSubmit = () => {
@@ -23,6 +24,7 @@ export default function RegisterPage() {
       .post(`${process.env.REACT_APP_API_URL}/user_signup/`, {
         email: email,
         password: password,
+        confirmPassword: confirmPassword,
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
@@ -48,6 +50,7 @@ export default function RegisterPage() {
       });
   };
   const handleRoleChange = (e) => {
+    console.log("current target value: ", e.target.value);
     setSelectedRole(e.target.value);
   };
 
@@ -108,14 +111,16 @@ export default function RegisterPage() {
                       <label htmlFor="password">Password</label>
                     </div>
                     <div className="form-floating mb-3">
-                      <input className="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" required />
+                      <input className="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" required onChange={(event) => {
+                        setConfirmPassword(event.target.value);
+                      }} />
                       <label htmlFor="confirmPassword">Confirm Password</label>
                     </div>
                     <div className="form-group mb-3">
                       <label htmlFor="role">Choose Role</label>
                       <select className="form-control" id="role" onChange={handleRoleChange} value={selectedRole}>
+                        <option value="Changemaker">Changemaker</option>
                         <option value="Mentor">Mentor</option>
-                        <option value="Student">Changemaker</option>
                         <option value="Leader">Leader</option>
                       </select>
                     </div>

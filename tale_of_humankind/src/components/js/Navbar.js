@@ -68,7 +68,7 @@ function NavFunction() {
               <Nav.Link as={Link} to="/supportUs" style={{ color: "white" }}>
                 Support Us
               </Nav.Link>
-              <Nav.Link as={Link} to="/ViewEducationalResource" style={{ color: "white" }}>
+              <Nav.Link as={Link} to="/viewEducationalResources" style={{ color: "white" }}>
                 Resources
               </Nav.Link>
             </Nav>

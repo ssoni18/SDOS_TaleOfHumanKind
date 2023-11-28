@@ -71,8 +71,8 @@ export default function UserProfile() {
             <div className="about-text go-to">
               <h3 className="dark-color">{userData.first_name}</h3>
               <h6 className="theme-color lead">{userData.user_type}</h6>
-              {userType === "mentor" && (
-                <Link to="/EducationalResources">
+              {userType === "Mentor" && (
+                <Link to="/manageEducationalResources">
                   <Button variant="success">Manage Resources</Button> 
                 </Link>
               )}

@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from dashboard.views import is_authenticated, user_signup, Education_resources, Fetchresources, getfeed, login_auth, logout
+from dashboard.views import is_authenticated, user_signup, Education_resources, fetchEducationalResources, getfeed, login_auth, logout
 
 
 class TestUrls(SimpleTestCase):
@@ -29,10 +29,10 @@ class TestUrls(SimpleTestCase):
         url = reverse('EducationResource')
         self.assertEquals(resolve(url).func, Education_resources)
 
-    def test_Fetchresources_url_resolved(self):
-        # Test that the Fetchresources URL resolves to the Fetchresources view function
-        url = reverse('Fetchresources')
-        self.assertEquals(resolve(url).func, Fetchresources)
+    def test_fetchEducationalResources_url_resolved(self):
+        # Test that the fetchEducationalResources URL resolves to the fetchEducationalResources view function
+        url = reverse('fetchEducationalResources')
+        self.assertEquals(resolve(url).func, fetchEducationalResources)
 
     def test_getfeed_url_resolved(self):
         # Test that the getfeed URL resolves to the getfeed view function

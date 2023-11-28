@@ -12,8 +12,13 @@ def validate_email(email):
         return False
     return True
 
-def validate_password(password):
+def validate_password_length(password):
     if not password or len(password) < 8 or len(password) > 32:
+        return False
+    return True
+
+def validate_password_match(password, confirmPassword):
+    if not password or not confirmPassword or password != confirmPassword:
         return False
     return True
 

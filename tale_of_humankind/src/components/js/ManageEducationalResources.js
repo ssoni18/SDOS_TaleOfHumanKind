@@ -5,21 +5,21 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function EducationalResources() {
-  const [title, settitle] = useState("");
-  const [contenttype, setcontent_type] = useState("");
-  const [resource_url, setresource_url] = useState("");
-  const [image, setimage] = useState("");
+  const [title, setTitle] = useState("");
+  const [contenttype, setContentType] = useState("");
+  const [resourceUrl, setResourceUrl] = useState("");
+  const [image, setImage] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState(null);
 
   const handleSubmit = () => {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('contenttype', contenttype);
-    formData.append('resource_url', resource_url);
+    formData.append('resourceUrl', resourceUrl);
     formData.append('image', image);  // make sure 'image' is the state where your File object is stored
 
     axios
-      .post(`${process.env.REACT_APP_API_URL}/EducationResource/`, formData, {
+      .post(`${process.env.REACT_APP_API_URL}/addEducationalResource/`, formData, {
         headers: {
           'content-type': 'multipart/form-data'
         }, withCredentials: true
@@ -28,10 +28,10 @@ export default function EducationalResources() {
         console.log(response);
         setFeedbackMessage("Resource added successfully!");
         // Clear the form fields
-        settitle("");
-        setcontent_type("");
-        setresource_url("");
-        setimage("");
+        setTitle("");
+        setContentType("");
+        setResourceUrl("");
+        setImage("");
       })
       .catch((error) => {
         console.error(error);
@@ -64,41 +64,41 @@ export default function EducationalResources() {
                       <div className="form-floating mb-3">
                         <input
                           className="form-control"
-                          id="firstName"
+                          id="title"
                           type="text"
-                          placeholder="title"
+                          placeholder="Title"
                           required
                           onChange={(event) => {
-                            settitle(event.target.value);
+                            setTitle(event.target.value);
                           }}
                         />
-                        <label htmlFor="firstName">title</label>
+                        <label htmlFor="title">Title</label>
                       </div>
                       <div className="form-floating mb-3">
                         <input
                           className="form-control"
-                          id="lastName"
+                          id="contentType"
                           type="text"
-                          placeholder="content_type"
+                          placeholder="Content Type"
                           required
                           onChange={(event) => {
-                            setcontent_type(event.target.value);
+                            setContentType(event.target.value);
                           }}
                         />
-                        <label htmlFor="lastName">content_type</label>
+                        <label htmlFor="contentType">Content Type</label>
                       </div>
                       <div className="form-floating mb-3">
                         <input
                           className="form-control"
-                          id="phoneNumber"
+                          id="resourceURL"
                           type="tel"
-                          placeholder="Phone Number"
+                          placeholder="Resource URL"
                           required
                           onChange={(event) => {
-                            setresource_url(event.target.value);
+                            setResourceUrl(event.target.value);
                           }}
                         />
-                        <label htmlFor="phoneNumber">resource_url</label>
+                        <label htmlFor="resourceURL">Resource URL</label>
                       </div>
 
 
@@ -111,7 +111,7 @@ export default function EducationalResources() {
                           accept="image/*"
                           required
                           onChange={(event) => {
-                            setimage(event.target.files[0]);
+                            setImage(event.target.files[0]);
                           }}
                         />
                         <label htmlFor="image">Image</label>
@@ -125,7 +125,7 @@ export default function EducationalResources() {
                           name="registerSubmit"
                           onClick={handleSubmit}
                         >
-                          Add Resources
+                          Add Resource
                         </button>
                       </div>
                     </form>

@@ -29,12 +29,13 @@ def is_authenticated(request):
 @csrf_exempt
 def user_signup(request):
     # Important: Add checks for duplicate email/username
-    from .functions import validate_email, validate_phonenumber, validate_selectedRole, validate_selectedQualification, validate_firstname, validate_lastname, validate_password
+    from .functions import validate_email, validate_phonenumber, validate_selectedRole, validate_selectedQualification, validate_firstname, validate_lastname, validate_password_length, validate_password_match
     if request.method == 'POST':      
         try:  
             data  = json.loads(request.body)
             email = data.get('email')
             password = data.get('password')
+            confirmPassword = data.get('confirmPassword')
             firstName = data.get('firstName')
             lastName = data.get('lastName')
             phoneNumber = data.get('phoneNumber')
@@ -53,8 +54,11 @@ def user_signup(request):
             if not validate_selectedQualification(selectedQualification):
                 return JsonResponse({"status": "failure", "message": "Server: Invalid qualification selected"}, status=400)
 
-            if not validate_password(password):
+            if not validate_password_length(password):
                 return JsonResponse({"status": "failure", "message": "Server: Invalid password"}, status=400)
+            
+            if not validate_password_match(password, confirmPassword):
+                return JsonResponse({"status": "failure", "message": "Server: Passwords don't match"}, status=400)
 
             if not validate_firstname(firstName):
                 return JsonResponse({"status": "failure", "message": "Server: Invalid first name"}, status=400)
@@ -140,14 +144,22 @@ def logout(request):
     
 
 @csrf_exempt
-def Education_resources(request):
+def addEducationalResource(request):
     if request.user.is_authenticated:
+        # Check if the user is a Mentor
+        if request.user.user_type != 'Mentor':
+            return JsonResponse({'status': 'error', 'message': 'Only Mentors can add resources!'}, status=403)
+
         if request.method == 'POST':
             title = request.POST.get('title')
             contenttype = request.POST.get('contenttype')
             resource_url = request.POST.get('resource_url')
             creator = request.user
             image = request.FILES.get('image')
+
+            # Check if all required fields are provided
+            if not title or not contenttype or not resource_url:
+                return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)
 
             edu = EducationalResource.objects.create(
                 title=title,
@@ -161,10 +173,11 @@ def Education_resources(request):
             
             return JsonResponse({"status": "success", "message":"Resource Added Successfully!"}, status=200)
     else:
-        return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=400)
+        return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=401)
+    
 
 @csrf_exempt
-def fetch_resources(request):
+def fetchEducationalResources(request):
     if request.method == 'GET':
         resources = EducationalResource.objects.all()
         resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__email', 'created_date', 'updated_date', 'image'))
