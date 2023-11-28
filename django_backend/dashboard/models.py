@@ -93,3 +93,10 @@ class FeedItem(models.Model):
     likes = models.IntegerField(default=0)  # new field for the likes counter
     created_at = models.DateTimeField(auto_now_add=True)
     resource_url = models.URLField(max_length=200,null=True)
+    
+    def get_likes(self):
+        return Like.objects.filter(feed_item=self).count()
+
+class Like(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    feed_item = models.ForeignKey(FeedItem, on_delete=models.CASCADE)

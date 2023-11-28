@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 import json
-from .models import CustomUser, Address, EducationalResource, FeedItem
+from .models import CustomUser, Address, EducationalResource, FeedItem ,Like
 from django.contrib.auth import logout as auth_logout
 from django.shortcuts import render,  HttpResponseRedirect
 import bcrypt
@@ -98,6 +98,7 @@ def login_auth(request):
         user = authenticate(request, email=email, password=password)
         
         if user is not None:
+            request.session['user_type'] = user.user_type
             login(request, user)
             user.last_login = timezone.now()
             user.save(update_fields=['last_login'])
@@ -121,6 +122,12 @@ def login_auth(request):
             return JsonResponse({'status': 'error', 'message': 'Invalid credentials'}, status=400)
     else:
         return JsonResponse({'status': 'error', 'message': 'Server: Invalid request'}, status=400)
+
+
+@csrf_exempt
+def get_user_role(request):
+    user_type = request.session.get('user_type', None)
+    return JsonResponse({'user_type': user_type})
 
 
 @csrf_exempt
@@ -168,28 +175,28 @@ def get_feed(request):
     if request.method == 'GET':
         print(request)
         feed_items = FeedItem.objects.all()
-        feed_list = list(feed_items.values('creator__email', 'content', 'image', 'likes', 'created_at', 'resource_url'))
+        feed_list = list(feed_items.values('id','creator__email', 'content', 'image', 'likes', 'created_at', 'resource_url'))
         return JsonResponse(feed_list, safe=False)
     
+@csrf_exempt
+def likeFeedItem(request, id, email):
+    print(request)
+    if request.method == 'POST':
+        user = CustomUser.objects.get(email=email)
+        feed_item = FeedItem.objects.get(id=id)
+        print(user)
+        print(feed_item)
+        Like.objects.create(user=user, feed_item=feed_item)
+        feed_item.likes = feed_item.get_likes()  # Update the likes field
+        feed_item.save()  # Save the changes
+        return JsonResponse({'status': 'success', 'message': 'Feed item liked'})
 
 @csrf_exempt
-def incrementLikeCount(request):
+def unlikeFeedItem(request, id, email):
     if request.method == 'POST':
-        feed_items = FeedItem.objects.all()
-        for feed_item in feed_items:
-            feed_item.likes += 1
-            feed_item.save()    
-        return JsonResponse({'status': 'success', 'message': 'Like count incremented for all feed items'})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-
-@csrf_exempt
-def decrementLikeCount(request):
-    if request.method == 'POST':
-        feed_items = FeedItem.objects.all()
-        for feed_item in feed_items:
-            feed_item.likes -= 1
-            feed_item.save()
-        return JsonResponse({'status': 'success', 'message': 'Like count incremented for all feed items'})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+        user = CustomUser.objects.get(email=email)
+        feed_item = FeedItem.objects.get(id=id)
+        Like.objects.filter(user=user, feed_item=feed_item).delete()
+        feed_item.likes = feed_item.get_likes()  # Update the likes field
+        feed_item.save()  # Save the changes
+        return JsonResponse({'status': 'success', 'message': 'Feed item unliked'})
