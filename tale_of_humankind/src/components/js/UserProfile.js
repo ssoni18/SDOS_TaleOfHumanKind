@@ -77,7 +77,7 @@ export default function UserProfile() {
                 </Link>
               )}
 
-              <h6 className="theme-color lead">Role</h6>
+              {/* <h6 className="theme-color lead">Role</h6> */}
               <p>
                 Some description that is optional that the user will write about
                 himself in his profile
@@ -134,7 +134,7 @@ export default function UserProfile() {
         </div>
         <br></br>
         <h6>
-          This could include information realted to maybe students he/she taught
+          This could include information related to maybe students he/she has mentored
         </h6>
 
         <div className="counter">

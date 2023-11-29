@@ -7,6 +7,9 @@ import Dropdown from "react-bootstrap/Dropdown";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
+import "../css/Navbar.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserAlt, faMapMarker, faCog, faSignOutAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 function NavFunction() {
   const navigate = useNavigate();
@@ -76,11 +79,37 @@ function NavFunction() {
               {isLoggedIn ? (
                 <Dropdown>
                   <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    My Profile
+                    <div className="icon_wrap">
+                      <img src="https://i.imgur.com/x3omKbe.png" alt="profile_pic" />
+                      <span className="name">John Alex</span>
+                      <FontAwesomeIcon icon={faChevronDown} />
+                    </div>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to="/UserProfile">Profile</Dropdown.Item>
-                    <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/UserProfile">
+                      <span className="picon">
+                        <FontAwesomeIcon icon={faUserAlt} />
+                      </span>
+                      Profile
+                    </Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/Address">
+                      <span className="picon">
+                        <FontAwesomeIcon icon={faMapMarker} />
+                      </span>
+                      Address
+                    </Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/Settings">
+                      <span className="picon">
+                        <FontAwesomeIcon icon={faCog} />
+                      </span>
+                      Settings
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={handleLogout}>
+                      <span className="picon">
+                        <FontAwesomeIcon icon={faSignOutAlt} />
+                      </span>
+                      Logout
+                    </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               ) : (

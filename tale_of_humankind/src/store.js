@@ -1,4 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 
 const initialState = {
   isLoggedIn: false,
@@ -18,10 +20,19 @@ function reducer(state = initialState, action) {
   }
 }
 
+const persistConfig = {
+  key: 'root',
+  storage,
+};
+
+const persistedReducer = persistReducer(persistConfig, reducer);
+
 const store = configureStore({
   reducer: {
-    auth: reducer,
+    auth: persistedReducer,
   },
 });
 
-export default store;
+let persistor = persistStore(store);
+
+export { store, persistor };

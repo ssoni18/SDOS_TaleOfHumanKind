@@ -153,10 +153,9 @@ def addEducationalResource(request):
         if request.method == 'POST':
             title = request.POST.get('title')
             contenttype = request.POST.get('contenttype')
-            resource_url = request.POST.get('resource_url')
+            resource_url = request.POST.get('resourceUrl')
             creator = request.user
             image = request.FILES.get('image')
-
             # Check if all required fields are provided
             if not title or not contenttype or not resource_url:
                 return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)

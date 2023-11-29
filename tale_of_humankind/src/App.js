@@ -21,8 +21,9 @@ import ForbiddenPage from "./components/js/403Page";
 
 function App() {
   const userType = useSelector(state => state.auth.userType);
+  console.log("userType now at App.js", userType);
 
-  return (
+  return (  
     <>
       <Navbar />
       <Routes>
