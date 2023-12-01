@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import "../css/LoginPage.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import ReactDOM from 'react-dom';
 // import { GoogleLogin } from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import UserProfile from './UserProfile';
 import Loading from './Loading';
 
 export default function LoginPage() {
@@ -50,11 +48,9 @@ export default function LoginPage() {
       .then((response) => {
         if (response.data.status === 'success') {
           const userData = response.data.user_data;
-          // Store user data in local storage
-          localStorage.setItem('userData', JSON.stringify(userData));
-          console.log(userData.first_name);
-          dispatch({ type: 'LOGIN' });
-          dispatch({ type: 'SET_USER_TYPE', userType: userData.user_type }); // Dispatch the SET_USER_TYPE action
+
+          // Dispatch the login action
+          dispatch({ type: 'LOGIN', userData: userData });
           navigate('/UserProfile', { state: { userData: response.data.user_data } }); // Pass userData as state
         }
         else {

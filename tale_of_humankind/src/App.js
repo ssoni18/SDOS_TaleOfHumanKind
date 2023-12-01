@@ -20,9 +20,11 @@ import ForbiddenPage from "./components/js/403Page";
 
 
 function App() {
-  const userType = useSelector(state => state.auth.userType);
+  const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
+  const userType = userData ? userData.user_type : null; // Access userType from userData
+  console.log("userType now at App.js", userType);
 
-  return (
+  return (  
     <>
       <Navbar />
       <Routes>

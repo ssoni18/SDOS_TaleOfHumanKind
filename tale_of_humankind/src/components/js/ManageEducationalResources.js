@@ -17,6 +17,8 @@ export default function EducationalResources() {
     formData.append('contenttype', contenttype);
     formData.append('resourceUrl', resourceUrl);
     formData.append('image', image);  // make sure 'image' is the state where your File object is stored
+    console.log("Image", image);
+    console.log("Educational ", formData);
 
     axios
       .post(`${process.env.REACT_APP_API_URL}/addEducationalResource/`, formData, {
@@ -111,7 +113,9 @@ export default function EducationalResources() {
                           accept="image/*"
                           required
                           onChange={(event) => {
-                            setImage(event.target.files[0]);
+                            const file = event.target.files[0];
+                            setImage(file);
+                            console.log("Image after set", image);
                           }}
                         />
                         <label htmlFor="image">Image</label>
