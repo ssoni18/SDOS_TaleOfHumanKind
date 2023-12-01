@@ -1,0 +1,18 @@
+/* EmptyData.css */
+.empty-page-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa; /* Example background color */
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Example box shadow */
+  }
+  
+  .empty-page-container h2 {
+    color: #333; /* Example text color */
+  }
+  
+  .empty-page-container p {
+    color: #555; /* Example text color */
+  }
+  

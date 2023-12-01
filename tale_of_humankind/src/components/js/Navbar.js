@@ -59,26 +59,39 @@ function NavFunction() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link as={Link} to="/contactUs" style={{ color: "white" }}>
-                Contact Us
+              <Nav.Link as={Link} to="/home" style={{ color: "white" }}>
+                Feed
               </Nav.Link>
-              <Nav.Link as={Link} to="/aboutUs" style={{ color: "white" }}>
-                About Us
-              </Nav.Link>
-              <Nav.Link as={Link} to="/teamSection" style={{ color: "white" }}>
-                Our Team
-              </Nav.Link>
-              <Nav.Link as={Link} to="/supportUs" style={{ color: "white" }}>
-                Support Us
-              </Nav.Link>
+              <Nav.Link as={Link} to="/viewCampaigns" style={{ color: "white" }}>
+                Campaigns
+              </Nav.Link> 
               <Nav.Link as={Link} to="/viewEducationalResources" style={{ color: "white" }}>
                 Resources
-              </Nav.Link>
+              </Nav.Link> 
+              <Nav.Item as={Dropdown}>
+                <Dropdown.Toggle variant="links" id="dropdown-basic" as={Nav.Link} style={{ color: "white" }}>
+                  About
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} to="/aboutUs">
+                    About Us
+                  </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/supportUs">
+                    Support Us
+                  </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/teamSection">
+                    Our Team
+                  </Dropdown.Item>
+                  <Dropdown.Item as={Link} to="/contactUs">
+                    Contact Us
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Nav.Item>
             </Nav>
             <Nav>
               {isLoggedIn ? (
                 <Dropdown>
-                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  <Dropdown.Toggle variant="success" id="dropdown-basic" className="profile-dropdown-toggle">
                     <div className="icon_wrap">
                       <img src="https://i.imgur.com/x3omKbe.png" alt="profile_pic" />
                       <span className="name">John Alex</span>

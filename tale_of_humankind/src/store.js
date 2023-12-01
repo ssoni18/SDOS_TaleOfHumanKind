@@ -5,14 +5,15 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 const initialState = {
   isLoggedIn: false,
   userType: null,
+  userData: null,
 };
 
 function reducer(state = initialState, action) {
   switch (action.type) {
     case 'LOGIN':
-      return { ...state, isLoggedIn: true };
+      return { ...state, isLoggedIn: true, userData: action.userData };
     case 'LOGOUT':
-      return { ...state, isLoggedIn: false };
+      return { ...state, isLoggedIn: false, userData: null };
     case 'SET_USER_TYPE':
       return { ...state, userType: action.userType };
     default:

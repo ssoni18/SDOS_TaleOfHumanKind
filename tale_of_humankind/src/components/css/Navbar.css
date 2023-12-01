@@ -15,27 +15,25 @@ body {
   color: #fff;
 }
 
-.dropdown-toggle::after {
-  display: none;
-}
+/* Remove the down arrow background image */
+/* .dropdown-toggle::after {
+  display: none !important;
+} */
 
 .dropdown-toggle {
   color: #fff;
-  display: flex;
-  align-items: center;
-  height: 50px;
 }
 
 .dropdown-toggle img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: 10px; /* Added margin */
+  margin-right: 12px;
 }
 
 .dropdown-toggle .name {
   display: inline-block;
-  color: #fff;
+  color: #fff !important; /* Use !important to ensure the style takes precedence */
   font-size: 1.2em;
 }
 
@@ -44,12 +42,18 @@ body {
   margin-right: 5px;
 }
 
+.dropdown-item .picon {
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
 .dropdown-menu {
   white-space: nowrap;
+  width: 100%;
 }
 
 .dropdown-item {
-  color: #333;
+  color: #fff;
 }
 
 .button {
@@ -71,10 +75,58 @@ body {
 }
 
 .dropdown-menu a {
-  padding: 10px;
+  padding: 10px 10px; /* Adjusted padding */
 }
 
 .dropdown-menu a:hover {
+  background-color: #f0f5ff;
+  color: #3b80f9;
+}
+
+/* Styles for profile-dropdown-toggle class */
+.profile-dropdown-toggle::after {
+  display: none !important;
+}
+
+.profile-dropdown-toggle {
+  color: #333;
+  height: 50px; 
+}
+
+.profile-dropdown-toggle img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.profile-dropdown-toggle .name {
+  display: inline-block;
+  color: #ffffff; /* Change color for profile-dropdown-toggle */
+  font-size: 1.2em;
+  margin-right: 12px;
+}
+
+.profile-dropdown-toggle .fas.fa-chevron-down {
+  margin-left: auto;
+  margin-right: 5px;
+}
+
+/* Additional styles for better visibility */
+.profile-dropdown-menu {
+  white-space: nowrap;
+  width: 100%;
+}
+
+.profile-dropdown-item {
+  color: #333; /* Change color for profile-dropdown-toggle */
+}
+
+.profile-dropdown-menu a {
+  padding: 10px 10px; /* Adjusted padding */
+}
+
+.profile-dropdown-menu a:hover {
   background-color: #f0f5ff;
   color: #3b80f9;
 }
@@ -93,9 +145,26 @@ body {
 
   .dropdown-toggle .name {
     font-size: 1em;
+    margin-right: 8px; /* Adjusted margin for small screens */
   }
 
   .button {
     padding: 8px;
+  }
+
+  /* Adjustments for profile-dropdown-toggle on small screens */
+  .profile-dropdown-toggle {
+    height: auto;
+  }
+
+  .profile-dropdown-toggle img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px; /* Adjusted margin for small screens */
+  }
+
+  .profile-dropdown-toggle .name {
+    font-size: 1em;
+    margin-right: 8px; /* Adjusted margin for small screens */
   }
 }

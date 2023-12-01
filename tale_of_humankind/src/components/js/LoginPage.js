@@ -53,7 +53,7 @@ export default function LoginPage() {
           // Store user data in local storage
           localStorage.setItem('userData', JSON.stringify(userData));
           console.log(userData.first_name);
-          dispatch({ type: 'LOGIN' });
+          dispatch({ type: 'LOGIN', userData: userData });
           dispatch({ type: 'SET_USER_TYPE', userType: userData.user_type }); // Dispatch the SET_USER_TYPE action
           navigate('/UserProfile', { state: { userData: response.data.user_data } }); // Pass userData as state
         }
