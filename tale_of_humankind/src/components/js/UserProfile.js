@@ -5,34 +5,12 @@ import RegistrationCounter from "./Counter";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function UserProfile() {
-  const location = useLocation(); // Use useLocation hook to access location state
   const navigate = useNavigate();
-  let userData = location.state?.userData; // Access userData from location state
-  // If userData is not available in location state, get it from local storage
-  if (!userData) {
-    userData = JSON.parse(localStorage.getItem("userData"));
-  }
+  const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
   console.log("user data at profile", userData);
-
-  const [userType, setUserType] = useState(null);
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/get_user_role/`,
-          { withCredentials: true }
-        );
-        console.log("User role:", response.data.user_type);
-        setUserType(response.data.user_type);
-      } catch (error) {
-        console.error("Error fetching user role: ", error);
-      }
-    };
-
-    fetchUserRole();
-  }, []);
 
   useEffect(() => {
     axios
@@ -71,7 +49,7 @@ export default function UserProfile() {
             <div className="about-text go-to">
               <h3 className="dark-color">{userData.first_name}</h3>
               <h6 className="theme-color lead">{userData.user_type}</h6>
-              {userType === "Mentor" && (
+              {userData.user_type === "Mentor" && (
                 <Link to="/manageEducationalResources">
                   <Button variant="success">Manage Resources</Button> 
                 </Link>

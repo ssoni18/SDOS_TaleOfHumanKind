@@ -14,6 +14,7 @@ import { faUserAlt, faMapMarker, faCog, faSignOutAlt, faChevronDown } from '@for
 function NavFunction() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
 
   const [isLoggedInLocal, setIsLoggedInLocal] = useState(false);
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
@@ -26,14 +27,14 @@ function NavFunction() {
     axios.get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, { withCredentials: true })
       .then((response) => {
         if (response.data.is_authenticated) {
-          dispatch({ type: 'LOGIN' });
+          dispatch({ type: 'LOGIN', userData: userData });
         }
       })
       .catch((error) => {
         console.error(error);
         dispatch({ type: 'LOGOUT' });
       });
-  }, [dispatch]);
+  }, [dispatch, userData]);
 
   const handleLogout = () => {
     axios
@@ -94,7 +95,7 @@ function NavFunction() {
                   <Dropdown.Toggle variant="success" id="dropdown-basic" className="profile-dropdown-toggle">
                     <div className="icon_wrap">
                       <img src="https://i.imgur.com/x3omKbe.png" alt="profile_pic" />
-                      <span className="name">John Alex</span>
+                      <span className="name">{userData.first_name + " " + userData.last_name}</span>
                       <FontAwesomeIcon icon={faChevronDown} />
                     </div>
                   </Dropdown.Toggle>

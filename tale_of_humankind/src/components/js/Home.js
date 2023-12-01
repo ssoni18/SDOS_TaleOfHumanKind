@@ -4,6 +4,7 @@ import axios from "axios";
 import { FaRegHeart, FaHeart } from "react-icons/fa"; // Import heart icons from react-icons
 import "../css/EducationResources.css"
 import { useLocation, useNavigate } from 'react-router-dom'; 
+import { useSelector, useDispatch } from 'react-redux';
 import EmptyData from './EmptyData'; 
 
 export default function Home() {
@@ -12,11 +13,7 @@ export default function Home() {
   const [isLiked, setIsLiked] = useState(false);
   const location = useLocation(); // Use useLocation hook to access location state
   const navigate = useNavigate();
-  let userData = location.state?.userData; // Access userData from location state
-  // If userData is not available in location state, get it from local storage
-  if (!userData) {
-    userData = JSON.parse(localStorage.getItem('userData'));
-  }
+  const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
 
   useEffect(() => {
     const fetchData = async () => {
