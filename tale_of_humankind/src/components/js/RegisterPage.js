@@ -131,7 +131,6 @@ export default function RegisterPage() {
                       <select className="form-control" id="role" onChange={handleRoleChange} value={selectedRole}>
                         <option value="Changemaker">Changemaker</option>
                         <option value="Mentor">Mentor</option>
-                        <option value="Leader">Leader</option>
                       </select>
                     </div>
                     <div className="form-group mb-3">

@@ -38,7 +38,8 @@ def validate_phonenumber(phoneNumber):
     return True
 
 def validate_selectedRole(selectedRole):
-    if not selectedRole or selectedRole not in ['Mentor', 'Changemaker', 'Leader']:
+    if not selectedRole or selectedRole not in ['Mentor', 'Changemaker']:
+
         return False
     return True
 

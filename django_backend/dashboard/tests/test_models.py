@@ -108,14 +108,12 @@ class CampaignModelTestCase(TestCase):
 
     def test_campaign_associations(self):
         # Create users for campaign associations
-        leader = CustomUser.objects.create(username='leader', email='leader@example.com')
         mentor = CustomUser.objects.create(username='mentor', email='mentor@example.com')
         changemaker = CustomUser.objects.create(username='changemaker', email='changemaker@example.com')
 
         # Create a campaign with associations and verify them
         campaign = Campaign.objects.create(title='Campaign', description='Campaign description', approved=True,
-                                          leader=leader, mentor=mentor, changemaker=changemaker)
-        self.assertEqual(campaign.leader, leader)
+                                          mentor=mentor, changemaker=changemaker)
         self.assertEqual(campaign.mentor, mentor)
         self.assertEqual(campaign.changemaker, changemaker)
 

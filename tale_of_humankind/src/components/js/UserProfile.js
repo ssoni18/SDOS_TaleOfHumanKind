@@ -54,7 +54,11 @@ export default function UserProfile() {
                   <Button variant="success">Manage Resources</Button> 
                 </Link>
               )}
-
+              {userType === "Changemaker" && (
+                <Link to="/manageCampaigns">
+                  <Button variant="success">Manage Campaigns</Button> 
+                </Link>
+              )}
               {/* <h6 className="theme-color lead">Role</h6> */}
               <p>
                 Some description that is optional that the user will write about

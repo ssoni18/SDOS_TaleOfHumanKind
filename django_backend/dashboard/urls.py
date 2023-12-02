@@ -8,10 +8,13 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('is_authenticated/', views.is_authenticated, name='is_authenticated'),
     path('activateUser/<uidb64>/<token>/', views.activateUser, name='activateUser'),
-
     # path('google-login/', views.google_login, name='google_login'),
     path('addEducationalResource/' , views.addEducationalResource ,  name='addEducationalResource'),
     path('fetchEducationalResources/' , views.fetchEducationalResources , name = 'fetchEducationalResources'),
+    path('fetchCampaigns/' , views.fetchCampaigns , name = 'fetchCampaigns'),
+    path('addCampaign/' , views.addCampaign ,  name='addCampaign'),
+    path('fetchMentors/', views.fetchMentors, name='fetchMentors'),
+
     path('getfeed/',views.get_feed,name='feed'),
     path('likeFeedItem/<int:id>/<str:email>/' , views.likeFeedItem , name='likeFeedItem'),
     path('unlikeFeedItem/<int:id>/<str:email>/' , views.unlikeFeedItem , name='unlikeFeedItem'),

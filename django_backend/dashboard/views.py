@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from .models import CustomUser, Address, EducationalResource, FeedItem ,Like, Campaign
 import os
-from .models import CustomUser, Address, EducationalResource, FeedItem ,Like
 from django.contrib.auth import logout as auth_logout
 from django.core.serializers import serialize
 from django.core.exceptions import ValidationError
@@ -185,7 +185,68 @@ def activateUser(request, uidb64, token):
 
 
     
+@csrf_exempt
+def fetchMentors(request):
+    if request.user.is_authenticated:
+        mentors = CustomUser.objects.filter(user_type="Mentor")
+        mentors_data = {mentor.email: mentor.first_name for mentor in mentors}
+        response_data = {'mentors': mentors_data}
+        return JsonResponse(response_data)
+    else:
+        return JsonResponse({'is_authenticated': False})
 
+
+@csrf_exempt
+def getMentor(email):
+    try:
+        user = CustomUser.objects.get(email=email)
+        return user
+    except CustomUser.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=400)
+    
+@csrf_exempt
+def addCampaign(request):
+    # return (request)
+    if request.user.is_authenticated:
+        # Check if the user is a Mentor
+        if request.user.user_type != 'Changemaker':
+            return JsonResponse({'status': 'error', 'message': 'Only Changemakers can create campaigns!'}, status=403)
+        if request.method == 'POST':
+            try:
+                title = request.POST.get('title')
+                description = request.POST.get('description')
+                goal_amount = int(request.POST.get('goalAmount'))
+                creator = request.user
+                email = request.POST.get('Mentor')
+                Mentor = getMentor(email)
+                current_amount=0
+       
+                if not CustomUser.objects.filter(email=email).exists():
+                    return JsonResponse({'status': 'error', 'message': 'Server: User does not exist'}, status=400)
+        
+                # # Check if all required fields are provided
+                if not title or not description or not goal_amount:
+                    return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)
+                
+
+                edu = Campaign.objects.create(
+                    title=title,
+                    description=description,
+                    mentor=Mentor,
+                    current_amount=0,
+                    goal_amount=goal_amount,
+                    changemaker=creator,
+                    created_date=timezone.now(),
+                    updated_date=timezone.now(),
+                    # image=image,
+                )
+                return JsonResponse({"status": "success", "message":"Campaign  Added Successfully!"}, status=200)
+            
+            except ValidationError as e:
+                return JsonResponse({"status": "failure", "Server: message": str(e)}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=401)
+    
 @csrf_exempt
 def addEducationalResource(request):
     if request.user.is_authenticated:
@@ -194,11 +255,19 @@ def addEducationalResource(request):
             return JsonResponse({'status': 'error', 'message': 'Only Mentors can add resources!'}, status=403)
 
         if request.method == 'POST':
+            print("request data",request.POST.get('title'))
+            
+            print("request data",request.POST.get('contenttype'))
+            
+            print("request data",request.POST.get('resourceUrl'))
+            
             title = request.POST.get('title')
+            print(title)
             contenttype = request.POST.get('contenttype')
             resource_url = request.POST.get('resourceUrl')
             creator = request.user
             image = request.FILES.get('image')
+            print(title, contenttype,resource_url)
             # Check if all required fields are provided
             if not title or not contenttype or not resource_url:
                 return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)
@@ -225,6 +294,12 @@ def fetchEducationalResources(request):
         resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__email', 'created_date', 'updated_date', 'image'))
         return JsonResponse(resources_list, safe=False)
 
+@csrf_exempt
+def fetchCampaigns(request):
+    if request.method == 'GET':
+        resources = Campaign.objects.all()
+        resources_list = list(resources.values('title', 'description', 'mentor__first_name', 'changemaker__first_name'))
+        return JsonResponse(resources_list, safe=False)
 @csrf_exempt
 def get_feed(request):
     if request.method == 'GET':
