@@ -14,6 +14,7 @@ import UserProfile from "./components/js/UserProfile";
 import EducationalResources from "./components/js/ManageEducationalResources";
 import ManageCampaigns from "./components/js/ManageCampaigns";
 import ViewEducationalResources from "./components/js/ViewEducationalResources";
+import Profile from './components/js/EditProfile';
 import { Payment } from "./components/js/payments";
 import Home from "./components/js/Home";
 import ForbiddenPage from "./components/js/403Page";
@@ -46,6 +47,7 @@ function App() {
         <Route path="/viewCampaigns" element={<ViewCampaigns />}></Route>
         <Route path="/payment" element={<Payment />}></Route>
         <Route path="/home" element={<Home />}></Route>
+        <Route path="/editprofile" element={<Profile />}></Route>
       </Routes>
     </>
   );

@@ -48,3 +48,9 @@ def validate_selectedQualification(selectedQualification):
         return False
     return True
 
+def validate_pincode(pincode):
+    if len(pincode) == 6 :
+        return True
+    else:
+        return False
+
