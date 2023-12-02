@@ -1,0 +1,14 @@
+{% autoescape off %}
+Hi {{ user.first_name }},
+
+Greetings from Tale of Humankind!
+
+Please click the link below to activate your account:
+
+{{ domain }}{% url 'activateUser' uidb64=uid token=token %}
+
+If you didn't register on our site, please ignore this email.
+
+Thanks,
+Tale of Humankind Team
+{% endautoescape %}

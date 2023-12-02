@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Loading from './Loading';
+import Notification from './Notification';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, { withCredentials: true })
+    axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/is_authenticated/`, { withCredentials: true })
       .then((response) => {
         setLoading(false); // Set loading to false once the authentication check is complete
 
@@ -41,7 +42,7 @@ export default function LoginPage() {
   const handleLogin = () => {
     console.log(email);
     axios
-      .post(`${process.env.REACT_APP_API_URL}/login_auth/`, {
+      .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/login_auth/`, {
         email: email,
         password: password,
       }, { withCredentials: true }) // Include session cookie with request
@@ -73,7 +74,7 @@ export default function LoginPage() {
     // Send the Google access token to your server for verification.
     if (response.accessToken) {
       axios
-        .post(`${process.env.REACT_APP_API_URL}/google-login/`, {
+        .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/google-login/`, {
           token: response.accessToken,
         }, { withCredentials: true }) // Include session cookie with request
         .then((response) => {
@@ -89,6 +90,7 @@ export default function LoginPage() {
 
   return (
     <div className="App">
+      <Notification />
       <div className="page-holder align-items-center py-4 bg-gray-100 vh-80">
         <div className="container">
           <div className="row align-items-center">

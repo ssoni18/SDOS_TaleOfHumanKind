@@ -24,7 +24,7 @@ function NavFunction() {
   }, [isLoggedIn]);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, { withCredentials: true })
+    axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/is_authenticated/`, { withCredentials: true })
       .then((response) => {
         if (response.data.is_authenticated) {
           dispatch({ type: 'LOGIN', userData: userData });
@@ -38,7 +38,7 @@ function NavFunction() {
 
   const handleLogout = () => {
     axios
-      .post(`${process.env.REACT_APP_API_URL}/logout/`, {}, { withCredentials: true })
+      .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/logout/`, {}, { withCredentials: true })
       .then((response) => {
         if (response.data.status === 'success') {
           dispatch({ type: 'LOGOUT' });
@@ -71,7 +71,7 @@ function NavFunction() {
               </Nav.Link> 
               <Nav.Item as={Dropdown}>
                 <Dropdown.Toggle variant="links" id="dropdown-basic" as={Nav.Link} style={{ color: "white" }}>
-                  About
+                  More
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item as={Link} to="/aboutUs">
