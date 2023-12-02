@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/LoginPage.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -6,34 +6,49 @@ import { useNavigate } from "react-router-dom";
 
 export default function EducationalResources() {
   const [title, setTitle] = useState("");
-  const [contenttype, setContentType] = useState("");
-  const [resourceUrl, setResourceUrl] = useState("");
-  const [image, setImage] = useState("");
+  const [description, setdescription] = useState("");
+  const [goalAmount, setgoalAmount] = useState(0);
+  const [Mentor, setMentor] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState(null);
+  const [mentorsData, setMentorsData] = useState({});
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/fetchMentors/`, { withCredentials: true });
+        setMentorsData(response.data.mentors || {});
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+
+    fetchData();
+  }, []);
   const handleSubmit = () => {
-    const formData = new FormData();
+    var formData = new FormData();
     formData.append('title', title);
-    formData.append('contenttype', contenttype);
-    formData.append('resourceUrl', resourceUrl);
-    formData.append('image', image);  // make sure 'image' is the state where your File object is stored
-    console.log("Image", image);
-    console.log("Educational ", formData);
-
-    axios
-      .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/addEducationalResource/`, formData, {
-        headers: {
-          'content-type': 'multipart/form-data'
-        }, withCredentials: true
+    formData.append('description', description);
+    formData.append('goalAmount', goalAmount);
+    formData.append('Mentor', Mentor);
+    console.log(formData)
+      axios({
+        method: "post",
+        url: `${process.env.REACT_APP_API_URL}/addCampaign/`,
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true
       })
       .then((response) => {
         console.log(response);
-        setFeedbackMessage("Resource added successfully!");
+        setFeedbackMessage("Campaign added successfully!");
         // Clear the form fields
         setTitle("");
-        setContentType("");
-        setResourceUrl("");
-        setImage("");
+        setdescription("");
+        setgoalAmount(0);
+        setMentorsData({});
+        setMentor("");
+
+        // setImage("");
       })
       .catch((error) => {
         console.error(error);
@@ -48,14 +63,14 @@ export default function EducationalResources() {
         <div className="container">
           <div className="row align-items-center">
             <div className="show col-lg-6 px-lg-4">
-              <div className="card ">
-                <div className="card-image post-image post-image-1"></div>
+              <div className="card post">
+                {/* <div className="card-image post-image post-image-1"></div> */}
                 <div className="card-content post-content">
                   <div className="card-header px-lg-5">
-                    <div className="card-heading text-primary">Resources</div>
+                    <div className="card-heading text-primary">Campaigns</div>
                   </div>
                   <div className="card-body p-lg-5">
-                    <h3 className="mb-4">Add Resources</h3>
+                    <h3 className="mb-4">Add Campaign</h3>
                     {feedbackMessage && (
                       <div className={feedbackMessage.includes("successfully") ? "alert alert-success" : "alert alert-danger"}>
                         {feedbackMessage}
@@ -79,48 +94,51 @@ export default function EducationalResources() {
                       <div className="form-floating mb-3">
                         <input
                           className="form-control"
-                          id="contentType"
+                          id="description"
                           type="text"
                           placeholder="Content Type"
                           required
                           onChange={(event) => {
-                            setContentType(event.target.value);
+                            setdescription(event.target.value);
                           }}
                         />
-                        <label htmlFor="contentType">Content Type</label>
+                        <label htmlFor="description">Description</label>
                       </div>
                       <div className="form-floating mb-3">
                         <input
                           className="form-control"
-                          id="resourceURL"
-                          type="tel"
+                          id="goalAmount"
+                          type="number"
                           placeholder="Resource URL"
                           required
                           onChange={(event) => {
-                            setResourceUrl(event.target.value);
+                            setgoalAmount(event.target.value);
                           }}
                         />
-                        <label htmlFor="resourceURL">Resource URL</label>
+                        <label htmlFor="goalAmount">Goal Amount</label>
                       </div>
 
-
-
-                      <div className="form-floating mb-3">
-                        <input
+                        <div className="form-floating mb-3">
+                          <select
                           className="form-control"
-                          id="image"
-                          type="file"
-                          accept="image/*"
+                          id="mentor"
+                          type="text"
+                          placeholder="Mentor"
                           required
                           onChange={(event) => {
-                            const file = event.target.files[0];
-                            setImage(file);
-                            console.log("Image after set", image);
+                            setMentor(event.target.value);
                           }}
-                        />
-                        <label htmlFor="image">Image</label>
-                      </div>
+                          >
+                          <option value="" disabled selected className="form-floating mb-3"></option>
+                          {Object.entries(mentorsData).map(([email, name], index) => (
+                            <optgroup label={name} key={index}>
+                              <option value={email}>{email}</option>
+                            </optgroup>
+                          ))}
+                          </select>
 
+                          <label htmlFor="Mentor">Mentor</label>
+                        </div>
                       <div className="form-group">
                         <button
                           className="btn btn-primary"

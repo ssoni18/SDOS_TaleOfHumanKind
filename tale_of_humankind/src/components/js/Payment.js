@@ -10,7 +10,7 @@
 
 //     const makePayment = async (event) => {
     
-//             axios.post(`${process.env.REACT_APP_API_URL}/process_payment/`, {
+//             axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/process_payment/`, {
 //             })
 //             .then(response => {
 //                 console.log(response);

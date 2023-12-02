@@ -14,7 +14,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, {
+      .get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/is_authenticated/`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -47,7 +47,7 @@ export default function UserProfile() {
         <div className="row align-items-center flex-row-reverse">
           <div className="col-lg-6">
             <div className="about-text go-to">
-              <h3 className="dark-color">{userData.first_name}</h3>
+              <h3 className="dark-color">{userData.first_name + " " + userData.last_name}</h3>
               <h6 className="theme-color lead">{userData.user_type}</h6>
               {userData.user_type === "Mentor" && (
                 <Link to="/manageEducationalResources">
@@ -57,7 +57,11 @@ export default function UserProfile() {
               <Link to="/editprofile">
                 <Button variant="success">Edit Profile</Button> 
               </Link>
-
+              {userType === "Changemaker" && (
+                <Link to="/manageCampaigns">
+                  <Button variant="success">Manage Campaigns</Button> 
+                </Link>
+              )}
               {/* <h6 className="theme-color lead">Role</h6> */}
               <p>
                 Some description that is optional that the user will write about
@@ -67,11 +71,11 @@ export default function UserProfile() {
                 <div className="col-md-6">
                   <div className="media">
                     <label>Birthday</label>
-                    <p>{userData.dob}</p>
+                    <p>{userData.dob || "None"}</p>
                   </div>
                   <div className="media">
                     <label>Age</label>
-                    <p>22 Yr</p>
+                    <p>{userData.dob ? `${new Date().getFullYear() - new Date(userData.dob).getFullYear()} Yr` : "None"}</p>
                   </div>
                   <div className="media">
                     <label>Country</label>
@@ -80,19 +84,20 @@ export default function UserProfile() {
                   <div className="media">
                     <label>Address</label>
                     <p>
-                      Country: {userData.country}
+                      Country: {userData.country || "None"}
                       <br />
-                      Street Name: {userData.street_name}
+                      Street Name: {userData.street_name || "None"}
                       <br />
-                      State: {userData.state}
+                      State: {userData.state || "None"}
                       <br />
-                      Pincode: {userData.pincode}
+                      Pincode: {userData.pincode || "None"}
                     </p>{" "}
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="media">
                     <label>E-mail</label>
+                    {/* Don't display email here for privacy reasons (add a user setting to allow or not allow users to display their email) */}
                     <p>{userData.email}</p>
                   </div>
                   <div className="media">

@@ -4,7 +4,7 @@ import axios from "axios";
 import { FaRegHeart, FaHeart } from "react-icons/fa"; // Import heart icons from react-icons
 import "../css/EducationResources.css"
 import { useLocation, useNavigate } from 'react-router-dom'; 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';               
 import EmptyData from './EmptyData'; 
 
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getfeed/`, { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/getfeed/`, { withCredentials: true });
         console.log("response", response.data);
         setResources(response.data);
       } catch (error) {
@@ -35,13 +35,13 @@ export default function Home() {
     setIsLiked(prevState => ({ ...prevState, [id]: !prevState[id] }));
     let response;
     if (!isLiked[id]) {
-      response = await axios.post(`${process.env.REACT_APP_API_URL}/likeFeedItem/${id}/${email}/`, {}, { withCredentials: true });
+      response = await axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/likeFeedItem/${id}/${email}/`, {}, { withCredentials: true });
     } else {
-      response = await axios.post(`${process.env.REACT_APP_API_URL}/unlikeFeedItem/${id}/${email}/`, {}, { withCredentials: true });
+      response = await axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/unlikeFeedItem/${id}/${email}/`, {}, { withCredentials: true });
     }
     console.log(response);
 
-    const updatedResources = await axios.get(`${process.env.REACT_APP_API_URL}/getfeed/`, { withCredentials: true });
+    const updatedResources = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/getfeed/`, { withCredentials: true });
     setResources(updatedResources.data);
   };
 

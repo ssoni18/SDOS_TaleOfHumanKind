@@ -1,19 +1,20 @@
 from django.utils import timezone
-from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
 import json
-from .models import CustomUser, Address, EducationalResource, FeedItem ,Like
+from .models import CustomUser, Address, EducationalResource, FeedItem ,Like, Campaign
+import os
 from django.contrib.auth import logout as auth_logout
-from django.shortcuts import render,  HttpResponseRedirect
-import bcrypt
-from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
 from django.core.serializers import serialize
 from django.core.exceptions import ValidationError
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import EmailMessage
+from django.shortcuts import redirect
 
 
 @csrf_exempt
@@ -67,8 +68,13 @@ def user_signup(request):
                 return JsonResponse({"status": "failure", "message": "Server: Invalid last name"}, status=400)
 
             # Check for duplicate email
-            if CustomUser.objects.filter(email=email).exists():
-                return JsonResponse({"status": "failure", "message": "Email already exists"}, status=400)
+            existing_user = CustomUser.objects.filter(email=email).first()
+            if existing_user:
+                if existing_user.is_active:
+                    return JsonResponse({"status": "failure", "message": "Email already exists"}, status=400)
+                else:
+                    existing_user.delete()  # Delete the inactive user
+
             
             user = CustomUser.objects.create_user(email=email, password=password)
             user.first_name = firstName
@@ -78,11 +84,24 @@ def user_signup(request):
             user.qualification = selectedQualification
             address = Address.objects.create()
             user.address = address
-        
-            
+            # Save the user
             user.save()
-            return JsonResponse({"status": "success", "message": "Server: Sign Up Successful! Please Login."}, status=200)
 
+            # Send activation token for Email confirmation
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            current_site = get_current_site(request)
+            mail_subject = 'Activate your account!'
+            message = render_to_string('activation_mail.html', {
+                'user': user,
+                'domain': os.environ.get("DJANGO_APP_API_URL"),  # Or just directly use the domain name
+                'uid': uid,
+                'token': token,
+            })
+            email = EmailMessage(mail_subject, message, to=[user.email])
+            email.send()
+
+            return JsonResponse({"status": "success", "message": "Server: Sign Up Successful! Please check your email to activate your account."}, status=200)
         except ValidationError as e:
             return JsonResponse({"status": "failure", "Server: message": str(e)}, status=400)
         
@@ -95,9 +114,14 @@ def login_auth(request):
         email = data.get('email')
         password = data.get('password')
 
+        user = CustomUser.objects.filter(email=email).first()
         # Check for the existence of the user
-        if not CustomUser.objects.filter(email=email).exists():
+        if not user:
             return JsonResponse({'status': 'error', 'message': 'Server: User does not exist'}, status=400)
+        
+        # Check if the user's account is active
+        if not user.is_active:
+            return JsonResponse({'status': 'error', 'message': 'Server: Please activate your account before logging in'}, status=400)
         
         user = authenticate(request, email=email, password=password)
         
@@ -142,8 +166,89 @@ def logout(request):
     auth_logout(request)
     # request.session.save()  # Save the session after clearing it
     return JsonResponse({'status': 'success', 'message': 'Server: Logged out successfully'}, status=200)
-    
 
+
+
+@csrf_exempt
+def activateUser(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return redirect(f'{os.environ.get("REACT_APP_API_URL")}/Login?activated=true')
+        else:
+            return redirect(f'{os.environ.get("REACT_APP_API_URL")}/Login?activated=false')
+    except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+        return redirect(f'{os.environ.get("REACT_APP_API_URL")}/Login?activated=false')
+
+
+    
+@csrf_exempt
+def fetchMentors(request):
+    if request.user.is_authenticated:
+        mentors = CustomUser.objects.filter(user_type="Mentor")
+        mentors_data = {mentor.email: mentor.first_name for mentor in mentors}
+        response_data = {'mentors': mentors_data}
+        return JsonResponse(response_data)
+    else:
+        return JsonResponse({'is_authenticated': False})
+
+
+@csrf_exempt
+def getMentor(email):
+    try:
+        user = CustomUser.objects.get(email=email)
+        return user
+    except CustomUser.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=400)
+    
+@csrf_exempt
+def addCampaign(request):
+    # return (request)
+    if request.user.is_authenticated:
+        # Check if the user is a Mentor
+        if request.user.user_type != 'Changemaker':
+            return JsonResponse({'status': 'error', 'message': 'Only Changemakers can create campaigns!'}, status=403)
+        if request.method == 'POST':
+            try:
+                title = request.POST.get('title')
+                description = request.POST.get('description')
+                goal_amount = int(request.POST.get('goalAmount'))
+                creator = request.user
+                email = request.POST.get('Mentor')
+                Mentor = getMentor(email)
+                current_amount=0
+       
+                if not CustomUser.objects.filter(email=email).exists():
+                    return JsonResponse({'status': 'error', 'message': 'Server: User does not exist'}, status=400)
+        
+                # # Check if all required fields are provided
+                if not title or not description:
+                    return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)
+                
+                if goal_amount<0:
+                    return JsonResponse({'status': 'error', 'message': 'Goal Amount should be greater than zero!'}, status=400)
+
+                edu = Campaign.objects.create(
+                    title=title,
+                    description=description,
+                    mentor=Mentor,
+                    current_amount=0,
+                    goal_amount=goal_amount,
+                    changemaker=creator,
+                    created_date=timezone.now(),
+                    updated_date=timezone.now(),
+                    # image=image,
+                )
+                return JsonResponse({"status": "success", "message":"Campaign  Added Successfully!"}, status=200)
+            
+            except ValidationError as e:
+                return JsonResponse({"status": "failure", "Server: message": str(e)}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=401)
+    
 @csrf_exempt
 def addEducationalResource(request):
     if request.user.is_authenticated:
@@ -152,11 +257,19 @@ def addEducationalResource(request):
             return JsonResponse({'status': 'error', 'message': 'Only Mentors can add resources!'}, status=403)
 
         if request.method == 'POST':
+            print("request data",request.POST.get('title'))
+            
+            print("request data",request.POST.get('contenttype'))
+            
+            print("request data",request.POST.get('resourceUrl'))
+            
             title = request.POST.get('title')
+            print(title)
             contenttype = request.POST.get('contenttype')
             resource_url = request.POST.get('resourceUrl')
             creator = request.user
             image = request.FILES.get('image')
+            print(title, contenttype,resource_url)
             # Check if all required fields are provided
             if not title or not contenttype or not resource_url:
                 return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)
@@ -183,6 +296,12 @@ def fetchEducationalResources(request):
         resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__email', 'created_date', 'updated_date', 'image'))
         return JsonResponse(resources_list, safe=False)
 
+@csrf_exempt
+def fetchCampaigns(request):
+    if request.method == 'GET':
+        resources = Campaign.objects.all()
+        resources_list = list(resources.values('title', 'description', 'mentor__first_name', 'changemaker__first_name'))
+        return JsonResponse(resources_list, safe=False)
 @csrf_exempt
 def get_feed(request):
     if request.method == 'GET':
