@@ -1,301 +1,170 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,700|Trade+Winds&display=swap');
-
-*{
-  margin: 0;
-  padding: 0;
-  text-decoration: none;
-  list-style: none;
-  box-sizing: border-box;
+body {
   font-family: 'Montserrat';
 }
 
-body{
-  background: #dfecff;
-  color: #7f8db0;
+.navbar {
+  background-color: #333;
 }
 
-a{
-   color: #7f8db0;
+.navbar-brand {
+  color: #fff;
+  font-size: 1.5em;
 }
 
-.wrapper{
-  width: 100%;
-  height: 100%;
+.nav-link {
+  color: #fff;
 }
 
-.navbar{
-  background: #fff;
-  width: 100%;
-  height: 60px;
-  padding: 0 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+/* Remove the down arrow background image */
+/* .dropdown-toggle::after {
+  display: none !important;
+} */
+
+.dropdown-toggle {
+  color: #fff;
 }
 
-.navbar .navbar_left .logo a{
-   font-family: 'Trade Winds';
-   font-size: 20px;
+.dropdown-toggle img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
 }
 
-.navbar .navbar_right{
-   display: flex;
-}
-
-.navbar .navbar_right img{
-  width: 35px;
-}
-
-.navbar .navbar_right .icon_wrap{
-  cursor: pointer;
-}
-
-.navbar .navbar_right .notifications{
-  margin-right: 25px;
-}
-
-.navbar .navbar_right .notifications .icon_wrap{
-  font-size: 28px;
-}
-
-.navbar .navbar_right .profile,
-.navbar .navbar_right .notifications{
-  position: relative;
-}
-
-.navbar .profile .profile_dd,
-.notification_dd{
-  position: absolute;
-  top: 48px;
-  right: -15px;
-  user-select: none;
-  background: #fff;
-  border: 1px solid #c7d8e2;
-  width: 350px;
-  height: auto;
-  display: none;
-  border-radius: 3px;
-  box-shadow: 10px 10px 35px rgba(0,0,0,0.125),
-              -10px -10px 35px rgba(0,0,0,0.125);
-}
-
-.navbar .profile .profile_dd:before,
-.notification_dd:before{
-    content: "";
-    position: absolute;
-    top: -20px;
-    right: 15px;
-    border: 10px solid;
-    border-color: transparent transparent #fff transparent;
-}
-
-.notification_dd li {
-    border-bottom: 1px solid #f1f2f4;
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-}
-
-.notification_dd li .notify_icon{
-  display: flex;
-}
-
-.notification_dd li .notify_icon .icon{
+.dropdown-toggle .name {
   display: inline-block;
-  background: url('https://i.imgur.com/MVJNkqW.png') no-repeat 0 0;
-	width: 40px;
-	height: 42px;
+  color: #fff !important; /* Use !important to ensure the style takes precedence */
+  font-size: 1.2em;
 }
 
-.notification_dd li.baskin_robbins .notify_icon .icon{
-  background-position: 0 -43px;
+.fas.fa-chevron-down {
+  margin-left: auto;
+  margin-right: 5px;
 }
 
-.notification_dd li.mcd .notify_icon .icon{
-  background-position: 0 -86px;
+.dropdown-item .picon {
+  margin-left: 5px;
+  margin-right: 10px;
 }
 
-.notification_dd li.pizzahut .notify_icon .icon{
-  background-position: 0 -129px;
-}
-
-.notification_dd li.kfc .notify_icon .icon{
-  background-position: 0 -178px;
-}
-
-.notification_dd li .notify_data{
-  margin: 0 15px;
-  width: 185px;
-}
-
-.notification_dd li .notify_data .title{
-  color: #000;
-  font-weight: 600;
-}
-
-.notification_dd li .notify_data .sub_title{
-  font-size: 14px;
+.dropdown-menu {
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 5px;
+  width: 100%;
 }
 
-.notification_dd li .notify_status p{
-  font-size: 12px;
+.dropdown-item {
+  color: #fff;
 }
 
-.notification_dd li.success .notify_status p{
-  color: #47da89;
-}
-
-.notification_dd li.failed .notify_status p{
-  color: #fb0001;
-}
-
-.notification_dd li.show_all{
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.notification_dd li.show_all p{
-  font-weight: 700;
-  color: #3b80f9;
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
   cursor: pointer;
+  padding: 10px;
 }
 
-.notification_dd li.show_all p:hover{
-  text-decoration: underline;
+/* Additional styles for better visibility */
+.dropdown-menu {
+  border-radius: 0;
 }
 
-.navbar .navbar_right .profile .icon_wrap{
-  display: flex;
-  align-items: center;
+.dropdown-menu a {
+  padding: 10px 10px; /* Adjusted padding */
 }
 
-.navbar .navbar_right .profile .name{
-  display: inline-block;
-  margin: 0 10px;
-}
-
-.navbar .navbar_right .icon_wrap:hover,
-.navbar .navbar_right .profile.active .icon_wrap,
-.navbar .navbar_right .notifications.active .icon_wrap{
+.dropdown-menu a:hover {
+  background-color: #f0f5ff;
   color: #3b80f9;
 }
- 
-.navbar .profile .profile_dd{
-  width: 225px;
-}
-.navbar .profile .profile_dd:before{
-  rigth: 10px;
+
+/* Styles for profile-dropdown-toggle class */
+.profile-dropdown-toggle::after {
+  display: none !important;
 }
 
-.navbar .profile .profile_dd ul li {
-    border-bottom: 1px solid #f1f2f4;
+.profile-dropdown-toggle {
+  color: #333;
+  height: 50px; 
 }
 
-.navbar .profile .profile_dd ul li  a{
-    display: block;
-    padding: 15px 35px;
-    position: relative;
+.profile-dropdown-toggle img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
 }
 
-.navbar .profile .profile_dd ul li  a .picon{
+.profile-dropdown-toggle .name {
   display: inline-block;
-  width: 30px;
+  color: #ffffff; /* Change color for profile-dropdown-toggle */
+  font-size: 1.2em;
+  margin-right: 12px;
 }
 
-.navbar .profile .profile_dd ul li  a:hover{
+.profile-dropdown-toggle .fas.fa-chevron-down {
+  margin-left: auto;
+  margin-right: 5px;
+}
+
+/* Additional styles for better visibility */
+.profile-dropdown-menu {
+  white-space: nowrap;
+  width: 100%;
+}
+
+.profile-dropdown-item {
+  color: #333; /* Change color for profile-dropdown-toggle */
+}
+
+.profile-dropdown-menu a {
+  padding: 10px 10px; /* Adjusted padding */
+}
+
+.profile-dropdown-menu a:hover {
+  background-color: #f0f5ff;
   color: #3b80f9;
-  background: #f0f5ff;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
 }
 
-.navbar .profile .profile_dd ul li.profile_li a:hover {
-    background: transparent;
-    cursor: default;
-    color: #7f8db0;
-}
-
-.navbar .profile .profile_dd ul li .btn{
-    height: 32px;
-    padding: 7px 10px;
-    color: #fff;
-    border-radius: 3px;
-    cursor: pointer;
-    text-align: center;
-    background: #3b80f9;
-    width: 125px;
-    margin: 5px auto 15px;
-}
-
-.navbar .profile .profile_dd ul li .btn:hover{
-  background: #6593e4;
-}
-
-.navbar .profile.active .profile_dd,
-.navbar .notifications.active .notification_dd{
-  display: block;
-}
-
-.popup {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transition: all 0.2s ease;
-    display: none;
-}
-
-.popup .shadow {
-    width: 100%;
-    height: 100%;
-    background: #000;
-    opacity: 0.6;
-}
-
-.popup .inner_popup {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 100%;
+/* Optional: Adjustments for small screens */
+@media (max-width: 767px) {
+  .dropdown-toggle {
     height: auto;
-}
+  }
 
-.popup .notification_dd{
-  display: block;
-  position: static;
-  margin: 0 auto;
-  height: 357px;
-  overflow: auto;
-}
+  .dropdown-toggle img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px; /* Adjusted margin for small screens */
+  }
 
-.popup .notification_dd:before{
-   display: none;
-}
+  .dropdown-toggle .name {
+    font-size: 1em;
+    margin-right: 8px; /* Adjusted margin for small screens */
+  }
 
-.popup .notification_dd li.title{
-  font-weight: 700;
-  color: #3b80f9;
-  display: flex;
-  justify-content: center;
-  position: relative;
-}
+  .button {
+    padding: 8px;
+  }
 
-.popup .notification_dd li.title .close{
-  position: absolute;
-  top: 2px;
-  right: 10px;
-  font-size: 20px;
-  cursor: pointer;
-}
+  /* Adjustments for profile-dropdown-toggle on small screens */
+  .profile-dropdown-toggle {
+    height: auto;
+  }
 
-.popup .notification_dd li.title .close:hover{
-  opacity: 0.5;
+  .profile-dropdown-toggle img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px; /* Adjusted margin for small screens */
+  }
+
+  .profile-dropdown-toggle .name {
+    font-size: 1em;
+    margin-right: 8px; /* Adjusted margin for small screens */
+  }
 }

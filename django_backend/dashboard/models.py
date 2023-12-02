@@ -21,7 +21,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     updated_time = models.DateTimeField(null=True)
     social_handle = models.ForeignKey('SocialMediaHandle', on_delete=models.CASCADE, related_name='users', null=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = "email"

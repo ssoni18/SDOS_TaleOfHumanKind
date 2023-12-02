@@ -5,38 +5,16 @@ import RegistrationCounter from "./Counter";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function UserProfile() {
-  const location = useLocation(); // Use useLocation hook to access location state
   const navigate = useNavigate();
-  let userData = location.state?.userData; // Access userData from location state
-  // If userData is not available in location state, get it from local storage
-  if (!userData) {
-    userData = JSON.parse(localStorage.getItem("userData"));
-  }
+  const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
   console.log("user data at profile", userData);
-
-  const [userType, setUserType] = useState(null);
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/get_user_role/`,
-          { withCredentials: true }
-        );
-        console.log("User role:", response.data.user_type);
-        setUserType(response.data.user_type);
-      } catch (error) {
-        console.error("Error fetching user role: ", error);
-      }
-    };
-
-    fetchUserRole();
-  }, []);
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/is_authenticated/`, {
+      .get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/is_authenticated/`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -69,9 +47,9 @@ export default function UserProfile() {
         <div className="row align-items-center flex-row-reverse">
           <div className="col-lg-6">
             <div className="about-text go-to">
-              <h3 className="dark-color">{userData.first_name}</h3>
+              <h3 className="dark-color">{userData.first_name + " " + userData.last_name}</h3>
               <h6 className="theme-color lead">{userData.user_type}</h6>
-              {userType === "Mentor" && (
+              {userData.user_type === "Mentor" && (
                 <Link to="/manageEducationalResources">
                   <Button variant="success">Manage Resources</Button> 
                 </Link>
@@ -81,6 +59,7 @@ export default function UserProfile() {
                   <Button variant="success">Manage Campaigns</Button> 
                 </Link>
               )}
+              {/* <h6 className="theme-color lead">Role</h6> */}
               <p>
                 Some description that is optional that the user will write about
                 himself in his profile
@@ -89,11 +68,11 @@ export default function UserProfile() {
                 <div className="col-md-6">
                   <div className="media">
                     <label>Birthday</label>
-                    <p>{userData.dob}</p>
+                    <p>{userData.dob || "None"}</p>
                   </div>
                   <div className="media">
                     <label>Age</label>
-                    <p>22 Yr</p>
+                    <p>{userData.dob ? `${new Date().getFullYear() - new Date(userData.dob).getFullYear()} Yr` : "None"}</p>
                   </div>
                   <div className="media">
                     <label>Country</label>
@@ -102,19 +81,20 @@ export default function UserProfile() {
                   <div className="media">
                     <label>Address</label>
                     <p>
-                      Country: {userData.country}
+                      Country: {userData.country || "None"}
                       <br />
-                      Street Name: {userData.street_name}
+                      Street Name: {userData.street_name || "None"}
                       <br />
-                      State: {userData.state}
+                      State: {userData.state || "None"}
                       <br />
-                      Pincode: {userData.pincode}
+                      Pincode: {userData.pincode || "None"}
                     </p>{" "}
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="media">
                     <label>E-mail</label>
+                    {/* Don't display email here for privacy reasons (add a user setting to allow or not allow users to display their email) */}
                     <p>{userData.email}</p>
                   </div>
                   <div className="media">
@@ -137,7 +117,7 @@ export default function UserProfile() {
         </div>
         <br></br>
         <h6>
-          This could include information realted to maybe students he/she taught
+          This could include information related to maybe students he/she has mentored
         </h6>
 
         <div className="counter">
