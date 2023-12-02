@@ -14,6 +14,7 @@ import TeamSection from "./components/js/TeamSection";
 import UserProfile from "./components/js/UserProfile";
 import EducationalResources from "./components/js/ManageEducationalResources";
 import ViewEducationalResources from "./components/js/ViewEducationalResources";
+import Profile from './components/js/EditProfile';
 import { Payment } from "./components/js/payments";
 import Home from "./components/js/Home";
 import ForbiddenPage from "./components/js/403Page";
@@ -41,6 +42,7 @@ function App() {
         <Route path="/viewEducationalResources" element={<ViewEducationalResources />}></Route>
         <Route path="/payment" element={<Payment />}></Route>
         <Route path="/home" element={<Home />}></Route>
+        <Route path="/editprofile" element={<Profile />}></Route>
       </Routes>
     </>
   );

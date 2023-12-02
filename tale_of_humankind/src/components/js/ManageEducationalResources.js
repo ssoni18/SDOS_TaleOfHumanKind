@@ -48,7 +48,7 @@ export default function EducationalResources() {
         <div className="container">
           <div className="row align-items-center">
             <div className="show col-lg-6 px-lg-4">
-              <div className="card post">
+              <div className="card ">
                 <div className="card-image post-image post-image-1"></div>
                 <div className="card-content post-content">
                   <div className="card-header px-lg-5">

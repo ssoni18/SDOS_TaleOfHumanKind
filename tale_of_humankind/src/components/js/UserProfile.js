@@ -54,6 +54,9 @@ export default function UserProfile() {
                   <Button variant="success">Manage Resources</Button> 
                 </Link>
               )}
+              <Link to="/editprofile">
+                <Button variant="success">Edit Profile</Button> 
+              </Link>
 
               {/* <h6 className="theme-color lead">Role</h6> */}
               <p>

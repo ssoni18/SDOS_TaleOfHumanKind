@@ -23,7 +23,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
-
+    profile_image = models.ImageField(upload_to='images/', null=True)
+    age = models.IntegerField(blank=True,null=True)
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []    
 
