@@ -225,9 +225,11 @@ def addCampaign(request):
                     return JsonResponse({'status': 'error', 'message': 'Server: User does not exist'}, status=400)
         
                 # # Check if all required fields are provided
-                if not title or not description or not goal_amount:
+                if not title or not description:
                     return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)
                 
+                if goal_amount<0:
+                    return JsonResponse({'status': 'error', 'message': 'Goal Amount should be greater than zero!'}, status=400)
 
                 edu = Campaign.objects.create(
                     title=title,
