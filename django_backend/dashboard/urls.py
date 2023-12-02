@@ -7,6 +7,7 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('is_authenticated/', views.is_authenticated, name='is_authenticated'),
+    path('activateUser/<uidb64>/<token>/', views.activateUser, name='activateUser'),
 
     # path('google-login/', views.google_login, name='google_login'),
     path('addEducationalResource/' , views.addEducationalResource ,  name='addEducationalResource'),

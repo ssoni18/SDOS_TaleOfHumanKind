@@ -21,7 +21,7 @@ export default function EducationalResources() {
     console.log("Educational ", formData);
 
     axios
-      .post(`${process.env.REACT_APP_API_URL}/addEducationalResource/`, formData, {
+      .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/addEducationalResource/`, formData, {
         headers: {
           'content-type': 'multipart/form-data'
         }, withCredentials: true

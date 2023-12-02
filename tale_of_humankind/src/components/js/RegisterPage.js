@@ -3,6 +3,7 @@ import "../css/LoginPage.css";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Loading from './Loading';
 
 
 export default function RegisterPage() {
@@ -17,11 +18,13 @@ export default function RegisterPage() {
   const [password, setpassword] = useState("NULL")
   const [confirmPassword, setConfirmPassword] = useState("NULL")
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isloading, setisLoading] = useState(false); 
 
   const handleSubmit = () => {
+    setisLoading(true);
 
     axios
-      .post(`${process.env.REACT_APP_API_URL}/user_signup/`, {
+      .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/user_signup/`, {
         email: email,
         password: password,
         confirmPassword: confirmPassword,
@@ -32,8 +35,9 @@ export default function RegisterPage() {
         selectedQualification: selectedQualification,
       })
       .then((response) => {
+        setisLoading(false);
         if (response.data.status === 'success') {
-          navigate('/Login');
+          navigate('/Login?registered=true');  // Redirect to the login page with a query parameter
           console.log(response);
         } else {
           setErrorMessage(response.data.message);
@@ -41,6 +45,7 @@ export default function RegisterPage() {
         }
       })
       .catch((error) => {
+        setisLoading(false); 
         console.error(error);
         // Check if the error has a response and response data
         if (error.response && error.response.data) {
@@ -49,6 +54,11 @@ export default function RegisterPage() {
         }
       });
   };
+
+  if (isloading) {
+    return <Loading />;
+  }
+
   const handleRoleChange = (e) => {
     console.log("current target value: ", e.target.value);
     setSelectedRole(e.target.value);
