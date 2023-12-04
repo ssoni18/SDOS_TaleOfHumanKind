@@ -224,9 +224,11 @@ def addCampaign(request):
                     return JsonResponse({'status': 'error', 'message': 'Server: User does not exist'}, status=400)
         
                 # # Check if all required fields are provided
-                if not title or not description or not goal_amount:
+                if not title or not description:
                     return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)
                 
+                if goal_amount<0:
+                    return JsonResponse({'status': 'error', 'message': 'Goal Amount should be greater than zero!'}, status=400)
 
                 edu = Campaign.objects.create(
                     title=title,
@@ -331,3 +333,79 @@ def unlikeFeedItem(request, id, email):
         feed_item.likes = feed_item.get_likes()  # Update the likes field
         feed_item.save()  # Save the changes
         return JsonResponse({'status': 'success', 'message': 'Feed item unliked'})
+
+@csrf_exempt
+def edit_profile(request):
+    print(request)
+    from .functions import validate_phonenumber,validate_firstname, validate_lastname,validate_pincode
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            try:
+                # print(request.FILES)
+                phoneNumber = request.POST.get('phone')
+                firstName=request.POST.get('first_name')
+                lastName = request.POST.get('last_name')
+                country = request.POST.get('address[country]')
+                email = request.POST.get('email')
+                pincode = request.POST.get('address[pincode]')
+                streetname = request.POST.get('address[streetname]')
+                state = request.POST.get('address[state]')
+                dob = request.POST.get('dob')
+                age = request.POST.get('age')
+                image = request.FILES.get('profileImage')
+                print(image)
+                user = CustomUser.objects.get(email=email)  # Fetch the user
+                print(user)
+                # Update fields
+                
+                
+                if not validate_phonenumber(phoneNumber):
+                  
+                    return JsonResponse({"status": "failure", "message": "Server: Invalid phone number"}, status=400)
+
+                if not validate_firstname(firstName):
+                    
+                    return JsonResponse({"status": "failure", "message": "Server: Invalid first name"}, status=400)
+
+                if not validate_lastname(lastName):
+                 
+                    return JsonResponse({"status": "failure", "message": "Server: Invalid last name"}, status=400)
+                
+                if not validate_pincode(pincode):
+                    
+                    return JsonResponse({"status": "failure", "message": "Server: Invalid last name"}, status=400)
+                
+                user.first_name = firstName
+                user.last_name = lastName
+                user.primary_phone_number = phoneNumber
+                print('dob')
+                user.date_of_birth = dob
+                user.age = age
+                user.profile_image = image
+                print(user.first_name)
+                print(user.date_of_birth)
+                # Update address
+                address = user.address
+                
+                user.address.country = country
+                user.address.street_name = streetname
+                user.address.state = state
+                user.address.pincode = pincode
+                print(user.address.country)
+                address.save()
+
+                # Save changes
+                user.address = address
+                user.save()
+
+                return JsonResponse({"status": "success", "message": "Profile updated successfully!"}, status=200)
+
+            except CustomUser.DoesNotExist:
+                return JsonResponse({"status": "failure", "message": "User does not exist"}, status=400)
+
+            except Exception as e:
+                return JsonResponse({"status": "failure", "message": str(e)}, status=400)
+
+        return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=401)
