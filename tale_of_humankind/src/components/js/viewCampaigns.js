@@ -15,7 +15,7 @@ const ViewCampaigns = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/fetchCampaigns/`, { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchCampaigns/`, { withCredentials: true });
         console.log("response", response.data);
         setResources(response.data);
       } catch (error) {

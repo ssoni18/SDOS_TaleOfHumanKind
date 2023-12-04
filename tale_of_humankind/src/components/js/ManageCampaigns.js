@@ -15,7 +15,7 @@ export default function EducationalResources() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/fetchMentors/`, { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchMentors/`, { withCredentials: true });
         setMentorsData(response.data.mentors || {});
       } catch (error) {
         console.error('Error fetching data: ', error);
@@ -33,7 +33,7 @@ export default function EducationalResources() {
     console.log(formData)
       axios({
         method: "post",
-        url: `${process.env.REACT_APP_API_URL}/addCampaign/`,
+        url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/addCampaign/`,
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true

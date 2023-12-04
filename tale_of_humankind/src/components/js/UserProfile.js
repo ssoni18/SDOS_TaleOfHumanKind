@@ -57,7 +57,7 @@ export default function UserProfile() {
               <Link to="/editprofile">
                 <Button variant="success">Edit Profile</Button> 
               </Link>
-              {userType === "Changemaker" && (
+              {userData.user_type === "Changemaker" && (
                 <Link to="/manageCampaigns">
                   <Button variant="success">Manage Campaigns</Button> 
                 </Link>
