@@ -183,7 +183,6 @@ def activateUser(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
         return redirect(f'{os.environ.get("REACT_APP_API_URL")}/Login?activated=false')
 
-
     
 @csrf_exempt
 def fetchMentors(request):
@@ -247,6 +246,7 @@ def addCampaign(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=401)
     
+
 @csrf_exempt
 def addEducationalResource(request):
     if request.user.is_authenticated:
@@ -279,7 +279,8 @@ def addEducationalResource(request):
                 creator=creator,
                 created_date=timezone.now(),
                 updated_date=timezone.now(),
-                image=image,
+                image=image,  # If no image is provided, add a default image
+
             )
             
             return JsonResponse({"status": "success", "message":"Resource Added Successfully!"}, status=200)

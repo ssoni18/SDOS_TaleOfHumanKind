@@ -54,7 +54,7 @@ export default function UserProfile() {
                   <Button variant="success">Manage Resources</Button> 
                 </Link>
               )}
-              {userType === "Changemaker" && (
+              {userData.user_type === "Changemaker" && (
                 <Link to="/manageCampaigns">
                   <Button variant="success">Manage Campaigns</Button> 
                 </Link>
