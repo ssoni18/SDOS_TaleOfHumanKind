@@ -50,9 +50,18 @@ export default function UserProfile() {
               <h3 className="dark-color">{userData.first_name + " " + userData.last_name}</h3>
               <h6 className="theme-color lead">{userData.user_type}</h6>
               <Link to="/editprofile">
-                <Button variant="success">Edit Profile</Button> 
+                <Button variant="success" className="mr-2">Edit Profile</Button>
               </Link>
-              
+              {userData.user_type === "Mentor" && (
+                <Link to="/manageEducationalResources">
+                  <Button variant="success">Manage Resources</Button>
+                </Link>
+              )}
+              {userData.user_type === "Changemaker" && (
+                <Link to="/manageCampaigns">
+                  <Button variant="success">Manage Campaigns</Button>
+                </Link>
+              )}
               {/* <h6 className="theme-color lead">Role</h6> */}
               <p>
                 Some description that is optional that the user will write about
@@ -66,7 +75,7 @@ export default function UserProfile() {
                   </div>
                   <div className="media">
                     <label>Age</label>
-                    <p>{userData.dob ? `${new Date().getFullYear() - new Date(userData.dob).getFullYear()} Yr` : "None"}</p>
+                    <p>{userData.age ? `${userData.age} Yr` : "None"}</p>
                   </div>
                   <div className="media">
                     <label>Country</label>
@@ -101,11 +110,19 @@ export default function UserProfile() {
           </div>
           <div className="col-lg-6">
             <div className="about-avatar">
-              <img
-                src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                title=""
-                alt=""
-              />
+              {userData.profile_image ? (
+                <img
+                  src={`${process.env.REACT_APP_DJANGO_APP_API_URL}${userData.profile_image}`}
+                  title=""
+                  alt=""
+                />
+              ) : (
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                  title=""
+                  alt=""
+                />
+              )}
             </div>
           </div>
         </div>

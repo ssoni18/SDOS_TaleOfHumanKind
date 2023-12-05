@@ -14,7 +14,7 @@ urlpatterns = [
     path('fetchCampaigns/' , views.fetchCampaigns , name = 'fetchCampaigns'),
     path('addCampaign/' , views.addCampaign ,  name='addCampaign'),
     path('fetchMentors/', views.fetchMentors, name='fetchMentors'),
-
+    path('getUserData/', views.getUserData, name='getUserData'),
     path('getfeed/',views.get_feed,name='feed'),
     path('likeFeedItem/<int:id>/<str:email>/' , views.likeFeedItem , name='likeFeedItem'),
     path('unlikeFeedItem/<int:id>/<str:email>/' , views.unlikeFeedItem , name='unlikeFeedItem'),
@@ -29,4 +29,8 @@ urlpatterns = [
     path('delete_feed/' , views.delete_feed , name = 'delete_feed'),
     path('get_feed_id/<int:id>/' , views.get_feed_id , name = 'get_resource_id'),
     path('edit_feed/' , views.edit_feed , name = 'edit_feed'),
+    path('likeFeedItem/<int:id>/<str:email>/' , views.likeFeedItem, name='likeFeedItem'),
+    path('unlikeFeedItem/<int:id>/<str:email>/', views.unlikeFeedItem, name='unlikeFeedItem'),
+    path('editProfile/', views.editProfile, name="editProfile"),
+    path('contactUs/', views.contactUs, name="contactUs"),
 ]

@@ -11,12 +11,12 @@ export default function RegisterPage() {
 
   const [selectedRole, setSelectedRole] = useState("Changemaker"); // Initialize with a default role
   const [selectedQualification, setSelectedQualification] = useState("High School"); // Initialize with a default qualification
-  const [firstName, setfirstname] = useState("NULL")
-  const [lastName, setlastname] = useState("NULL")
-  const [phoneNumber, setphone] = useState("NULL")
-  const [email, setemail] = useState("NULL")
-  const [password, setpassword] = useState("NULL")
-  const [confirmPassword, setConfirmPassword] = useState("NULL")
+  const [firstName, setfirstname] = useState("")
+  const [lastName, setlastname] = useState("")
+  const [phoneNumber, setphone] = useState("")
+  const [email, setemail] = useState("")
+  const [password, setpassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState(null);
   const [isloading, setisLoading] = useState(false); 
 

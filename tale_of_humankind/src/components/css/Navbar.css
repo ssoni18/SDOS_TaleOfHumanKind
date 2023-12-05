@@ -1,5 +1,6 @@
 body {
   font-family: 'Montserrat';
+  padding-top: 56px;
 }
 
 .navbar {
@@ -97,6 +98,7 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  object-fit: cover;
   margin-right: 12px;
 }
 
@@ -160,6 +162,7 @@ body {
   .profile-dropdown-toggle img {
     width: 20px;
     height: 20px;
+    object-fit: cover;
     margin-right: 5px; /* Adjusted margin for small screens */
   }
 

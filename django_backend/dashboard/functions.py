@@ -54,7 +54,6 @@ def validate_phonenumber(phoneNumber):
 
 def validate_selectedRole(selectedRole):
     if not selectedRole or selectedRole not in ['Mentor', 'Changemaker']:
-
         return False
     return True
 
@@ -64,8 +63,6 @@ def validate_selectedQualification(selectedQualification):
     return True
 
 def validate_pincode(pincode):
-    if len(pincode) == 6 :
-        return True
-    else:
+    if pincode and not pincode.isdigit():
         return False
-
+    return True
