@@ -8,13 +8,14 @@ import os
 from django.contrib.auth import logout as auth_logout
 from django.core.serializers import serialize
 from django.core.exceptions import ValidationError
-from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.shortcuts import redirect
+from datetime import datetime
+from django.contrib.auth import get_user_model
 
 
 @csrf_exempt
@@ -90,7 +91,6 @@ def user_signup(request):
             # Send activation token for Email confirmation
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            current_site = get_current_site(request)
             mail_subject = 'Activate your account!'
             message = render_to_string('activation_mail.html', {
                 'user': user,
@@ -131,8 +131,13 @@ def login_auth(request):
             user.last_login = timezone.now()
             user.save(update_fields=['last_login'])
             
+            # Serialize the address and profile image
             address_data = serialize('json', [user.address])
             address = json.loads(address_data)[0]['fields']
+            if user.profile_image:
+                profile_image_url = user.profile_image.url
+            else:
+                profile_image_url = None
             
             user_data = {
                 'first_name' : user.first_name,
@@ -140,11 +145,13 @@ def login_auth(request):
                 'email': user.email,
                 'user_type': user.user_type,
                 'dob' : user.date_of_birth,
+                'age': user.age,
                 'address': address,
-                'phone' : user.primary_phone_number
+                'phone' : user.primary_phone_number,
+                'profile_image': profile_image_url
             }
-            print("auth?", request.user.is_authenticated)
-            print("sesh items in login", request.session.items())
+            # print("auth?", request.user.is_authenticated)
+            # print("sesh items in login", request.session.items())
             
             return JsonResponse({'status': 'success' , 'message': "Server: Login Successful", 'user_data': user_data}, status=200)
         else:
@@ -154,9 +161,35 @@ def login_auth(request):
 
 
 @csrf_exempt
-def get_user_role(request):
-    user_type = request.session.get('user_type', None)
-    return JsonResponse({'user_type': user_type})
+def getUserData(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            user = CustomUser.objects.get(email=request.user.email)
+
+            # Serialize the address and profile image
+            address_data = serialize('json', [user.address])
+            address = json.loads(address_data)[0]['fields']
+            if user.profile_image:
+                profile_image_url = user.profile_image.url
+            else:
+                profile_image_url = None
+
+            user_data = {
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'user_type': user.user_type,
+                'dob': user.date_of_birth,
+                'age': user.age,
+                'address': address,
+                'phone': user.primary_phone_number,
+                'profile_image': profile_image_url
+            }
+            return JsonResponse({'status': 'success', 'user_data': user_data}, status=200)
+        else:
+            return JsonResponse({'status': 'error', 'message': 'User not authenticated'}, status=401)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 
 @csrf_exempt
@@ -282,7 +315,6 @@ def addEducationalResource(request):
                 created_date=timezone.now(),
                 updated_date=timezone.now(),
                 image=image,  # If no image is provided, add a default image
-
             )
             
             return JsonResponse({"status": "success", "message":"Resource Added Successfully!"}, status=200)
@@ -297,12 +329,15 @@ def fetchEducationalResources(request):
         resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__email', 'created_date', 'updated_date', 'image'))
         return JsonResponse(resources_list, safe=False)
 
+
 @csrf_exempt
 def fetchCampaigns(request):
     if request.method == 'GET':
         resources = Campaign.objects.all()
         resources_list = list(resources.values('title', 'description', 'mentor__first_name', 'changemaker__first_name'))
         return JsonResponse(resources_list, safe=False)
+    
+
 @csrf_exempt
 def get_feed(request):
     if request.method == 'GET':
@@ -311,6 +346,7 @@ def get_feed(request):
         feed_list = list(feed_items.values('id','creator__email', 'content', 'image', 'likes', 'created_at', 'resource_url'))
         return JsonResponse(feed_list, safe=False)
     
+
 @csrf_exempt
 def likeFeedItem(request, id, email):
     print(request)
@@ -324,6 +360,7 @@ def likeFeedItem(request, id, email):
         feed_item.save()  # Save the changes
         return JsonResponse({'status': 'success', 'message': 'Feed item liked'})
 
+
 @csrf_exempt
 def unlikeFeedItem(request, id, email):
     if request.method == 'POST':
@@ -334,71 +371,85 @@ def unlikeFeedItem(request, id, email):
         feed_item.save()  # Save the changes
         return JsonResponse({'status': 'success', 'message': 'Feed item unliked'})
 
+
 @csrf_exempt
-def edit_profile(request):
+def editProfile(request):
     print(request)
-    from .functions import validate_phonenumber,validate_firstname, validate_lastname,validate_pincode
+    from .functions import validate_phonenumber, validate_firstname, validate_lastname,validate_pincode
     if request.user.is_authenticated:
         if request.method == 'POST':
             try:
-                # print(request.FILES)
+                email = request.user.email  # Get the email of the authenticated user
+
                 phoneNumber = request.POST.get('phone')
                 firstName=request.POST.get('first_name')
                 lastName = request.POST.get('last_name')
                 country = request.POST.get('address[country]')
-                email = request.POST.get('email')
                 pincode = request.POST.get('address[pincode]')
                 streetname = request.POST.get('address[streetname]')
                 state = request.POST.get('address[state]')
                 dob = request.POST.get('dob')
-                age = request.POST.get('age')
                 image = request.FILES.get('profileImage')
-                print(image)
-                user = CustomUser.objects.get(email=email)  # Fetch the user
-                print(user)
-                # Update fields
                 
+                if email != request.POST.get('email'):
+                    return JsonResponse({"status": "failure", "message": "Server: Unauthorized Operation"}, status=401)
                 
                 if not validate_phonenumber(phoneNumber):
-                  
                     return JsonResponse({"status": "failure", "message": "Server: Invalid phone number"}, status=400)
 
                 if not validate_firstname(firstName):
-                    
                     return JsonResponse({"status": "failure", "message": "Server: Invalid first name"}, status=400)
 
                 if not validate_lastname(lastName):
-                 
                     return JsonResponse({"status": "failure", "message": "Server: Invalid last name"}, status=400)
                 
                 if not validate_pincode(pincode):
-                    
-                    return JsonResponse({"status": "failure", "message": "Server: Invalid last name"}, status=400)
+                    return JsonResponse({"status": "failure", "message": "Server: Invalid Pincode"}, status=400)
                 
+                # Update fields
+                user = CustomUser.objects.get(email=email)  # Fetch the user
                 user.first_name = firstName
                 user.last_name = lastName
                 user.primary_phone_number = phoneNumber
-                print('dob')
+                dob = datetime.strptime(dob, '%Y-%m-%d').date()
                 user.date_of_birth = dob
-                user.age = age
                 user.profile_image = image
                 print(user.first_name)
                 print(user.date_of_birth)
-                # Update address
-                address = user.address
                 
+                address = user.address
                 user.address.country = country
                 user.address.street_name = streetname
                 user.address.state = state
                 user.address.pincode = pincode
                 print(user.address.country)
                 address.save()
+                user.address = address
 
                 # Save changes
-                user.address = address
                 user.save()
+                
+                # Serialize the address and profile image
+                address_data = serialize('json', [user.address])
+                address = json.loads(address_data)[0]['fields']
+                if user.profile_image:
+                    profile_image_url = user.profile_image.url
+                else:
+                    profile_image_url = None
 
-                return JsonResponse({"status": "success", "message": "Profile updated successfully!"}, status=200)
+                user_data = {
+                    'first_name' : user.first_name,
+                    'last_name' : user.last_name,
+                    'email': user.email,
+                    'user_type': user.user_type,
+                    'dob' : user.date_of_birth,
+                    'age' : user.age,
+                    'address': address,
+                    'phone' : user.primary_phone_number,
+                    'profile_image': profile_image_url
+                }
+
+                return JsonResponse({"status": "success", "message": "Profile updated successfully!", 'user_data': user_data}, status=200)
 
             except CustomUser.DoesNotExist:
                 return JsonResponse({"status": "failure", "message": "User does not exist"}, status=400)
@@ -409,3 +460,49 @@ def edit_profile(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
     else:
         return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=401)
+    
+
+@csrf_exempt
+def contactUs(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            name = data.get('name')
+            email = data.get('email')
+            message = data.get('message')
+            phone = data.get('phone')
+            inquiryType = data.get('inquiryType')
+            print(name, email, message, phone, inquiryType)
+            if not name or not email or not message:
+                return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)
+
+            mail_subject = ''
+            if request.user.is_authenticated:
+                User = get_user_model()
+                try:
+                    user = User.objects.get(email=email)
+                    if user == request.user:
+                        mail_subject = 'Contact Us Form - Authenticated User'
+                    else:
+                        return JsonResponse({'status': 'error', 'message': 'Unauthorized user'}, status=401)
+                except User.DoesNotExist:
+                    return JsonResponse({'status': 'error', 'message': 'Invalid user ID'}, status=400)
+            else:
+                mail_subject = 'Contact Us Form - Anonymous User'
+                email = 'anon@taleofhumankind.com'  # Set a default email for anonymous users
+
+            message = render_to_string('contact_us_mail.html', {
+                'name': name,
+                'email': email,
+                'phone': phone,
+                'inquiryType': inquiryType,
+                'message': message,
+            })
+
+            email = EmailMessage(mail_subject, message, to=[os.environ.get("EMAIL_HOST_USER")])
+            email.send()
+            return JsonResponse({'status': 'success', 'message': 'Message sent successfully!'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)

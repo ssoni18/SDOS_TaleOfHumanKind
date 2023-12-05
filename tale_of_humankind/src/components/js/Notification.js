@@ -1,29 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Alert } from 'react-bootstrap';
 
-const Notification = () => {
-    const [show, setShow] = useState(false);
-    const [message, setMessage] = useState('');
-
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const registered = urlParams.get('registered');
-        const activated = urlParams.get('activated');
-        if (registered) {
-            setMessage('Sign up was successful, please check your email to activate your account!');
-            setShow(true);
-        } else if (activated === 'true') {
-            setMessage('Account activated successfully :)');
-            setShow(true);
-        } else if (activated === 'false') {
-            setMessage('Activation link is invalid :(');
-            setShow(true);
+const Notification = ({ message, showNotification, onClose }) => {
+    const handleClose = () => {
+        if (onClose) {
+            onClose();
         }
-    }, []);
+    };
 
-    if (show) {
+    if (showNotification) {
         return (
-            <Alert variant="success" onClose={() => setShow(false)} dismissible>
+            <Alert variant="success" onClose={handleClose} dismissible>
                 <Alert.Heading>{message}</Alert.Heading>
             </Alert>
         );

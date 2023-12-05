@@ -52,7 +52,7 @@ function NavFunction() {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-dark text-white body-tertiary">
+      <Navbar expand="lg" className="bg-dark text-white body-tertiary fixed-top">
         <Container>
           <Navbar.Brand as={Link} to="/" style={{ color: "white" }}>
             Tale of HumanKind
@@ -65,10 +65,10 @@ function NavFunction() {
               </Nav.Link>
               <Nav.Link as={Link} to="/viewCampaigns" style={{ color: "white" }}>
                 Campaigns
-              </Nav.Link> 
+              </Nav.Link>
               <Nav.Link as={Link} to="/viewEducationalResources" style={{ color: "white" }}>
                 Resources
-              </Nav.Link> 
+              </Nav.Link>
               <Nav.Item as={Dropdown}>
                 <Dropdown.Toggle variant="links" id="dropdown-basic" as={Nav.Link} style={{ color: "white" }}>
                   More
@@ -94,7 +94,19 @@ function NavFunction() {
                 <Dropdown>
                   <Dropdown.Toggle variant="success" id="dropdown-basic" className="profile-dropdown-toggle">
                     <div className="icon_wrap">
-                      <img src="https://i.imgur.com/x3omKbe.png" alt="profile_pic" />
+                      {userData.profile_image ? (
+                        <img
+                          src={`${process.env.REACT_APP_DJANGO_APP_API_URL}${userData.profile_image}`}
+                          title=""
+                          alt=""
+                        />
+                      ) : (
+                        <img
+                          src="https://i.imgur.com/x3omKbe.png"
+                          title=""
+                          alt=""
+                        />
+                      )}
                       <span className="name">{userData.first_name + " " + userData.last_name}</span>
                       <FontAwesomeIcon icon={faChevronDown} />
                     </div>

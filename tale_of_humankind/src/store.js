@@ -13,6 +13,8 @@ function reducer(state = initialState, action) {
       return { ...state, isLoggedIn: true, userData: action.userData };
     case 'LOGOUT':
       return { ...state, isLoggedIn: false, userData: null };
+    case 'UPDATE_USER_DATA':
+      return { ...state, userData: action.userData };
     default:
       return state;
   }

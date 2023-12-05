@@ -14,10 +14,11 @@ urlpatterns = [
     path('fetchCampaigns/' , views.fetchCampaigns , name = 'fetchCampaigns'),
     path('addCampaign/' , views.addCampaign ,  name='addCampaign'),
     path('fetchMentors/', views.fetchMentors, name='fetchMentors'),
+    path('getUserData/', views.getUserData, name='getUserData'),
 
     path('getfeed/',views.get_feed,name='feed'),
-    path('likeFeedItem/<int:id>/<str:email>/' , views.likeFeedItem , name='likeFeedItem'),
-    path('unlikeFeedItem/<int:id>/<str:email>/' , views.unlikeFeedItem , name='unlikeFeedItem'),
-    path('get_user_role/' , views.get_user_role , name='get_user_role'),
-    path('edit_profie/',views.edit_profile,name="edit_profile"),
+    path('likeFeedItem/<int:id>/<str:email>/' , views.likeFeedItem, name='likeFeedItem'),
+    path('unlikeFeedItem/<int:id>/<str:email>/', views.unlikeFeedItem, name='unlikeFeedItem'),
+    path('editProfile/', views.editProfile, name="editProfile"),
+    path('contactUs/', views.contactUs, name="contactUs"),
 ]

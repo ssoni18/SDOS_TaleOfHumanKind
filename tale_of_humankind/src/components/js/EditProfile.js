@@ -1,35 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import "../css/LoginPage.css";
 import { Link } from "react-router-dom";
 
 
 export default function Profile() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData); // Access userData from Redux store
+  const dispatch = useDispatch();
+
   console.log("user data at profile", userData);
   const [feedbackMessage, setFeedbackMessage] = useState(null);
   const [formState, setFormState] = useState({
     ...userData,
     address: userData.address || {},
   });
-  //   const [feedbackMessage, setFeedbackMessage] = useState(null);
-
-//   console.log("form data at profile", formState);
   const handleSubmit = () => {
+    console.log("formState", formState);
     axios
-      .post(`${process.env.REACT_APP_API_URL}/edit_profie/`, formState, {
+      .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/editProfile/`, formState, {
         headers: {
-            // 'content-type': 'application/json'
-            'content-type' : 'multipart/form-data'
+          'content-type': 'multipart/form-data'
         },
         withCredentials: true,
       })
       .then((response) => {
         console.log(response);
         setFeedbackMessage("Profile updated successfully!");
+        dispatch({ type: 'UPDATE_USER_DATA', userData: response.data.user_data }); // Update userData in redux store
         navigate('/userProfile');
       })
       .catch((error) => {
@@ -51,10 +51,10 @@ export default function Profile() {
                 <div className="card-body p-lg-5">
                   <h3 className="mb-4">Edit Yourself</h3>
                   {feedbackMessage && (
-                      <div className={feedbackMessage.includes("successfully") ? "alert alert-success" : "alert alert-danger"}>
-                        {feedbackMessage}
-                      </div>
-                    )}
+                    <div className={feedbackMessage.includes("successfully") ? "alert alert-success" : "alert alert-danger"}>
+                      {feedbackMessage}
+                    </div>
+                  )}
                   <form action="index.html">
                     {/* <div className="form-floating mb-3">
                       <input className="form-control" id="lastName" type="text" placeholder="Last Name" required  onChange={(event) => {
@@ -127,7 +127,7 @@ export default function Profile() {
                         required
                         readOnly
                       />
-                      <label htmlFor="email">Email address</label>
+                      <label htmlFor="email">Email Address</label>
                     </div>
 
                     <div className="form-floating mb-3">
@@ -146,34 +146,15 @@ export default function Profile() {
                           });
                         }}
                       />
-                      <label htmlFor="DateOfBirth">DateOfBirth</label>
+                      <label htmlFor="DateOfBirth">Date of Birth</label>
                     </div>
-
-                    <div className="form-floating mb-3">
-                      <input
-                        className="form-control"
-                        id="Age"
-                        type="text"
-                        placeholder="Age"
-                        name="age"
-                        value={formState.age || ""}
-                        required
-                        onChange={(event) => {
-                          setFormState({
-                            ...formState,
-                            [event.target.name]: event.target.value,
-                          });
-                        }}
-                      />
-                      <label htmlFor="Age">Age</label>
-                    </div>
-
+                    
                     <div className="form-floating mb-3">
                       <input
                         className="form-control"
                         id="country"
                         type="text"
-                        placeholder="country"
+                        placeholder="Country"
                         name="country"
                         value={formState.address?.country || ""}
                         required
@@ -187,7 +168,7 @@ export default function Profile() {
                           });
                         }}
                       />
-                      <label htmlFor="country">country</label>
+                      <label htmlFor="country">Country</label>
                     </div>
 
                     <div className="form-floating mb-3">
@@ -195,7 +176,7 @@ export default function Profile() {
                         className="form-control"
                         id="streetname"
                         type="text"
-                        placeholder="streetname"
+                        placeholder="Street Name"
                         name="streetname"
                         value={formState.address?.streetname || ""}
                         required
@@ -209,7 +190,7 @@ export default function Profile() {
                           });
                         }}
                       />
-                      <label htmlFor="streetname">streetname</label>
+                      <label htmlFor="streetname">Street Name</label>
                     </div>
 
                     <div className="form-floating mb-3">
@@ -217,7 +198,7 @@ export default function Profile() {
                         className="form-control"
                         id="state"
                         type="text"
-                        placeholder="state"
+                        placeholder="State"
                         name="state"
                         value={formState.address?.state || ""}
                         required
@@ -231,7 +212,7 @@ export default function Profile() {
                           });
                         }}
                       />
-                      <label htmlFor="state">state</label>
+                      <label htmlFor="state">State</label>
                     </div>
 
                     <div className="form-floating mb-3">
@@ -239,7 +220,7 @@ export default function Profile() {
                         className="form-control"
                         id="pincode"
                         type="text"
-                        placeholder="pincode"
+                        placeholder="Pincode"
                         name="pincode"
                         value={formState.address?.pincode || ""}
                         required
@@ -253,28 +234,28 @@ export default function Profile() {
                           });
                         }}
                       />
-                      <label htmlFor="pincode">pincode</label>
+                      <label htmlFor="pincode">Pincode</label>
                     </div>
 
                     <div className="form-floating mb-3">
-                        <input
-                          className="form-control"
-                          id="image"
-                          type="file"
-                          accept="image/*"
-                          required
-                          onChange={(event) => {
-                            const file = event.target.files[0];
-                            setFormState({
-                              ...formState,
-                              profileImage: file
-                            });
-                            console.log(file);
-                          }}
-                        />
-                        <label htmlFor="image">Image</label>
+                      <input
+                        className="form-control"
+                        id="image"
+                        type="file"
+                        accept="image/*"
+                        required
+                        onChange={(event) => {
+                          const file = event.target.files[0];
+                          setFormState({
+                            ...formState,
+                            profileImage: file
+                          });
+                          console.log(file);
+                        }}
+                      />
+                      <label htmlFor="image">Image</label>
                     </div>
-              
+
 
                     <div className="form-group">
                       <button
@@ -282,8 +263,7 @@ export default function Profile() {
                         id="register"
                         type="button"
                         name="registerSubmit"
-                        onClick={handleSubmit}
-                      >
+                        onClick={handleSubmit}>
                         Save Changes
                       </button>
                     </div>
