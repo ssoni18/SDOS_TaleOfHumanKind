@@ -86,3 +86,15 @@
       /* padding: 20px 0; */
     }
   }
+
+  .fixed-button {
+    position: fixed;
+    top: 70px; /* Adjust the top position as needed */
+    right: 20px; /* Adjust the left position as needed */
+    z-index: 1000; /* Ensure the button is above other content */
+  }
+  
+  .fixed-button button {
+    display: flex;
+    align-items: center;
+  }

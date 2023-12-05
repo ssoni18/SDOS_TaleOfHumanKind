@@ -45,9 +45,20 @@ export default function Home() {
     setResources(updatedResources.data);
   };
 
+  const handleAddUser = () => {
+    navigate('/feedForm');
+  };
+
 
   return (
     <div>
+      <div className="fixed-button" onClick={handleAddUser}>
+        <button className="btn btn-secondary">
+          <i className="material-icons">&#xE147;</i>
+          <span>Add New Feed</span>
+        </button>
+      </div>
+
       {resources.length === 0 ? (
         <EmptyData
           title="No feed to show"
@@ -56,7 +67,8 @@ export default function Home() {
         resources.map((resource, index) => (
           <div className="post" key={index}>
             <div className={`post-image post-image-${index + 1}`}>
-              <img src={resource.image} alt={resource.title} />
+              {/* {console.log("image" , resource.image)} */}
+              <img src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} />
             </div>
             <div className="post-content">
               <p className="post-date">Posted on <time datetime={resource.created_date}>{resource.created_at}</time> by <a className="post-author" href="#">{resource.creator}</a></p>
