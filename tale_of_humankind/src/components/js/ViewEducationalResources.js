@@ -3,12 +3,13 @@ import axios from "axios"
 import "../css/EducationResources.css"
 import EmptyData from './EmptyData'; 
 import Loading from './Loading'; // Import the Loading component
-
+import { useNavigate } from "react-router-dom";
 const ViewEducationalResource = () => {
 
   const [resources, setResources] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -26,6 +27,11 @@ const ViewEducationalResource = () => {
     fetchData();
   }, []);
 
+  const handleAddUser = () => {
+    navigate('/form');
+  };
+
+
   if (isLoading) {
     // Render the Loading component while the fetch is in progress
     return <Loading />;
@@ -33,6 +39,14 @@ const ViewEducationalResource = () => {
 
   return (
     <div>
+
+      <div className="fixed-button" onClick={handleAddUser}>
+        <button className="btn btn-secondary">
+          <i className="material-icons">&#xE147;</i>
+          <span>Add New Resource</span>
+        </button>
+      </div>
+
       {resources.length === 0 ? (
         <EmptyData
           title="No resources to show"
