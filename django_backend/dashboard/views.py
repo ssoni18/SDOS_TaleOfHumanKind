@@ -251,15 +251,16 @@ def addCampaign(request):
                 creator = request.user
                 email = request.POST.get('Mentor')
                 Mentor = getMentor(email)
-                current_amount=0
-       
+                image = request.FILES.get('image')
+
+
                 if not CustomUser.objects.filter(email=email).exists():
                     return JsonResponse({'status': 'error', 'message': 'Server: User does not exist'}, status=400)
         
                 # # Check if all required fields are provided
                 if not title or not description:
                     return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)
-                
+
                 if goal_amount<0:
                     return JsonResponse({'status': 'error', 'message': 'Goal Amount should be greater than zero!'}, status=400)
 
@@ -272,7 +273,7 @@ def addCampaign(request):
                     changemaker=creator,
                     created_date=timezone.now(),
                     updated_date=timezone.now(),
-                    # image=image,
+                    image=image,
                 )
                 return JsonResponse({"status": "success", "message":"Campaign  Added Successfully!"}, status=200)
             
@@ -282,6 +283,73 @@ def addCampaign(request):
         return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=401)
     
 
+@csrf_exempt
+def fetchCampaignInvitations(request):
+     if request.user.is_authenticated:
+        # Check if the user is a Mentor
+        if request.user.user_type != 'Mentor':
+            return JsonResponse({'status': 'error', 'message': 'Only Mentors can handle Invites to campaigns!'}, status=403)
+     
+        if request.method == 'GET':
+            try:
+                print(request.user.first_name)
+                email = request.user.email
+                campaign = Campaign.objects.filter(isApproved=False, mentor__email=email)
+                campaign_list = list(campaign.values('id', 'title', 'description', 'mentor__first_name', 'changemaker__first_name', 'image'))
+                return JsonResponse(campaign_list, safe=False)
+                        
+            except ValidationError as e:
+                return JsonResponse({"status": "failure", "Server: message": str(e)}, status=400)
+        else:
+            return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=401)
+
+@csrf_exempt
+def manageCampaignInvitations(request):
+    if request.user.is_authenticated:
+        
+        # Check if the user is a Mentor
+        if request.user.user_type != 'Mentor':
+            return JsonResponse({'status': 'error', 'message': 'Only Mentors can accept/reject Invites!'}, status=403)
+        
+        campaignId = request.POST.get('id')
+        status = request.POST.get('status')
+        campaignObj=None
+        email = request.user.email
+        print(campaignId)
+
+        #Check if the Campaign Exists
+        campaignObj = Campaign.objects.filter(id=campaignId).first()
+        if not campaignObj:
+            return JsonResponse({'status': 'error', 'message': 'Server: Campaign does not exist'}, status=400)
+        
+        print(campaignId)
+        print(campaignObj.title)
+        
+        #check if Mentor is only changing the status of Campaigns for which he has the rights to
+        if not campaignObj.mentor.email==email:
+            return JsonResponse({'status': 'error', 'message': 'No rights to update on this campaign.'}, status=403)
+    
+        if status not in ['accepted', 'rejected']:
+            return JsonResponse({'status': 'error', 'message': 'Invalid Operations on this campaign.'}, status=403)
+    
+        if request.method == 'POST':
+            if(status=='accepted'):
+                campaignObj.isApproved=True
+            
+            elif(status=='rejected'):
+                campaignObj.isApproved=False
+            
+            campaignObj.save()
+            
+            # Delete campaign if rejected
+            if status == 'rejected':
+                campaignObj.delete()
+            
+            
+            return JsonResponse({"status": "success", "message":"Operation done successfully!"}, status=200)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=401)
+    
 @csrf_exempt
 def addEducationalResource(request):
     if request.user.is_authenticated:
@@ -297,7 +365,6 @@ def addEducationalResource(request):
             print("request data",request.POST.get('resourceUrl'))
             
             title = request.POST.get('title')
-            print(title)
             contenttype = request.POST.get('contenttype')
             resource_url = request.POST.get('resourceUrl')
             creator = request.user
@@ -333,10 +400,10 @@ def fetchEducationalResources(request):
 @csrf_exempt
 def fetchCampaigns(request):
     if request.method == 'GET':
-        resources = Campaign.objects.all()
-        resources_list = list(resources.values('title', 'description', 'mentor__first_name', 'changemaker__first_name'))
-        return JsonResponse(resources_list, safe=False)
-    
+        # campaign = Campaign.objects.filter(isApproved=True, goal_amount__gt=0)
+        campaign = Campaign.objects.filter(isApproved=True)
+        campaign_list = list(campaign.values('title', 'description', 'mentor__first_name', 'changemaker__first_name', 'image', 'goal_amount', 'current_amount'))
+        return JsonResponse(campaign_list, safe=False)
 
 @csrf_exempt
 def get_feed(request):

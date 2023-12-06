@@ -19,7 +19,7 @@
   forbiddenH1 {
     position: fixed;
     z-index: 1;
-    font-size: 23em;
+    font-size: 10em;
     color: #000;
     margin: auto;
     top: 0;
@@ -51,7 +51,7 @@
   }
   
   forbiddenSpan:after {
-    content: "403";
+    content: "Access Denied";
     position: absolute;
     top: 0;
     bottom: -96px;

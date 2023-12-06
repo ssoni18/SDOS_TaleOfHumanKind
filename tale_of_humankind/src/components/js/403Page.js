@@ -8,7 +8,7 @@ const ForbiddenPage = () => {
         {/* Partial content */}
         <div className={styles.cage}></div>
         <forbiddenH1 className={styles.forbiddenH1}>
-          <forbiddenSpan className={styles.forbiddenSpan}>403</forbiddenSpan>
+          <forbiddenSpan className={styles.forbiddenSpan}>Access Denied!</forbiddenSpan>
         </forbiddenH1>
         {/* End of partial content */}
       </body>
