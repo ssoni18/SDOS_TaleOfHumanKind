@@ -17,10 +17,106 @@ export default function RegisterPage() {
   const [email, setemail] = useState("NULL")
   const [password, setpassword] = useState("NULL")
   const [confirmPassword, setConfirmPassword] = useState("NULL")
+  const [agreeTerms, setAgreeTerms] = useState(false); 
   const [errorMessage, setErrorMessage] = useState(null);
   const [isloading, setisLoading] = useState(false); 
+  
+// Validate Email
+  const validateEmail = (email) => {
+    if (!email) {
+      return false;
+    }
+    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
+    return emailRegex.test(email);
+  };
 
+  // Validate Password Length
+  const validatePasswordLength = (password) => {
+    if (!password || password.length < 8 || password.length > 32) {
+      return false;
+    }
+    return true;
+  };
+
+  // Validate Password Match
+  const validatePasswordMatch = (password, confirmPassword) => {
+    if (!password || !confirmPassword || password !== confirmPassword) {
+      return false;
+    }
+    return true;
+  };
+
+  // Validate Firstname
+  const validateFirstname = (firstName) => {
+    if (!firstName || firstName.length > 32) {
+      return false;
+    }
+    return true;
+  };
+
+  // Validate Lastname
+  const validateLastname = (lastName) => {
+    if (!lastName || lastName.length > 32) {
+      return false;
+    }
+    return true;
+  };
+
+  // Validate Phone Number
+  const validatePhoneNumber = (phoneNumber) => {
+    if (!phoneNumber || phoneNumber.length !== 10) {
+      return false;
+    }
+    return true;
+  };
+
+  // Validate Selected Role
+  const validateSelectedRole = (selectedRole) => {
+    if (!selectedRole || !['Mentor', 'Changemaker'].includes(selectedRole)) {
+      return false;
+    }
+    return true;
+  };
+
+  // Validate Selected Qualification
+  const validateSelectedQualification = (selectedQualification) => {
+    if (!selectedQualification || !['High School', 'Bachelor\'s Degree', 'Master\'s Degree'].includes(selectedQualification)) {
+      return false;
+    }
+    return true;
+  };
+
+  
   const handleSubmit = () => {
+    if(!agreeTerms){
+      setisLoading(false);
+      setErrorMessage("Accept the T&C");
+    }else if (!validateEmail(email)) {
+      setisLoading(false);
+      setErrorMessage("Invalid email");
+    }else if(!validatePasswordLength(password)){
+      setisLoading(false);
+      setErrorMessage("Invalid password");
+    }else if(!validatePasswordMatch(password, confirmPassword)){
+      setisLoading(false);
+      setErrorMessage("Password doesnt match");
+    }else if(!validateFirstname(firstName)){
+      setisLoading(false);
+      setErrorMessage("Invalid firstname");
+    }else if(!validateLastname(lastName)){
+      setisLoading(false);
+      setErrorMessage("Invalid lastname");
+    }else if(!validatePhoneNumber(phoneNumber)){
+      setisLoading(false);
+      setErrorMessage("Invalid phone number");
+    }else if(!validateSelectedRole(selectedRole)){
+      setisLoading(false);
+      setErrorMessage("Invalid role");
+    }else if(!validateSelectedQualification(selectedQualification)){
+      setisLoading(false);
+      setErrorMessage("Invalid qualification");
+    }
+    else{
     setisLoading(true);
 
     axios
@@ -53,6 +149,7 @@ export default function RegisterPage() {
           setErrorMessage(error.response.data.message);
         }
       });
+    }
   };
 
   if (isloading) {
@@ -68,6 +165,9 @@ export default function RegisterPage() {
     setSelectedQualification(e.target.value);
   };
 
+  const handleCheckboxChange = () => {
+    setAgreeTerms(!agreeTerms);
+  };
   return (
     <div className="App">
       <div className="page-holder align-items-center py-4 bg-gray-100 vh-100">
@@ -142,7 +242,7 @@ export default function RegisterPage() {
                       </select>
                     </div>
                     <div className="form-check mb-3">
-                      <input className="form-check-input" type="checkbox" name="agree" id="agree" required />
+                      <input className="form-check-input" type="checkbox" name="agree" id="agree" onChange={handleCheckboxChange} required />
                       <label className="form-check-label" htmlFor="agree">I agree with the <a href="/">Terms & Conditions</a>.</label>
                     </div>
                     <div className="form-group">

@@ -14,7 +14,8 @@ urlpatterns = [
     path('fetchCampaigns/' , views.fetchCampaigns , name = 'fetchCampaigns'),
     path('addCampaign/' , views.addCampaign ,  name='addCampaign'),
     path('fetchMentors/', views.fetchMentors, name='fetchMentors'),
-
+    path('fetchCampaignInvitations/', views.fetchCampaignInvitations, name='fetchCampaignInvitations'),
+    path('manageCampaignInvitations/', views.manageCampaignInvitations, name='manageCampaignInvitations'),
     path('getfeed/',views.get_feed,name='feed'),
     path('likeFeedItem/<int:id>/<str:email>/' , views.likeFeedItem , name='likeFeedItem'),
     path('unlikeFeedItem/<int:id>/<str:email>/' , views.unlikeFeedItem , name='unlikeFeedItem'),

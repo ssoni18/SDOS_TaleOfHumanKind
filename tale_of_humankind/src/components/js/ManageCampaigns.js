@@ -3,6 +3,7 @@ import "../css/LoginPage.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import EmptyData from './EmptyData'; 
 
 export default function EducationalResources() {
   const [title, setTitle] = useState("");
@@ -11,11 +12,14 @@ export default function EducationalResources() {
   const [Mentor, setMentor] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState(null);
   const [mentorsData, setMentorsData] = useState({});
+  const [image, setImage] = useState("");
 
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/fetchMentors/`, { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchMentors/`, { withCredentials: true });
+
         setMentorsData(response.data.mentors || {});
       } catch (error) {
         console.error('Error fetching data: ', error);
@@ -30,10 +34,11 @@ export default function EducationalResources() {
     formData.append('description', description);
     formData.append('goalAmount', goalAmount);
     formData.append('Mentor', Mentor);
-    console.log(formData)
+    formData.append('image', image);  // make sure 'image' is the state where your File object is stored
+
       axios({
         method: "post",
-        url: `${process.env.REACT_APP_API_URL}/addCampaign/`,
+        url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/addCampaign/`,
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true
@@ -41,18 +46,16 @@ export default function EducationalResources() {
       .then((response) => {
         console.log(response);
         setFeedbackMessage("Campaign added successfully!");
-        // Clear the form fields
-        setTitle("");
-        setdescription("");
-        setgoalAmount(0);
-        setMentorsData({});
-        setMentor("");
-
+        // setTitle("");
+        // setdescription("");
+        // setgoalAmount(0);
+        // setMentor("");
         // setImage("");
       })
       .catch((error) => {
         console.error(error);
-        setFeedbackMessage("Error adding resource. Please try again.");
+        console.log(error.response.data.message)
+        setFeedbackMessage(`${error.response.data.message}`);
       });
   };
 
@@ -139,15 +142,34 @@ export default function EducationalResources() {
 
                           <label htmlFor="Mentor">Mentor</label>
                         </div>
+                        <div className="form-floating mb-3">
+                        <input
+                          className="form-control"
+                          id="image"
+                          type="file"
+                          accept="image/*"
+                          required
+                          onChange={(event) => {
+                            const file = event.target.files[0];
+                            setImage(file);
+                            console.log("Image after set", image);
+                          }}
+                        />
+                        
+                        <label htmlFor="image">Image</label>
+                      </div>
                       <div className="form-group">
                         <button
                           className="btn btn-primary"
                           id="register"
                           type="button"
                           name="registerSubmit"
-                          onClick={handleSubmit}
+                          onClick={() => {
+                            console.log(Mentor);
+                            handleSubmit();
+                          }}
                         >
-                          Add Resource
+                          Add Campaign
                         </button>
                       </div>
                     </form>

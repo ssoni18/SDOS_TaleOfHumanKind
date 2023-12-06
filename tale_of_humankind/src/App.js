@@ -12,6 +12,7 @@ import SupportUs from "./components/js/SupportUs";
 import TeamSection from "./components/js/TeamSection";
 import UserProfile from "./components/js/UserProfile";
 import EducationalResources from "./components/js/ManageEducationalResources";
+import ManageInvitations from "./components/js/ManageInvitations"
 import ManageCampaigns from "./components/js/ManageCampaigns";
 import ViewEducationalResources from "./components/js/ViewEducationalResources";
 import { Payment } from "./components/js/payments";
@@ -40,6 +41,9 @@ function App() {
         <Route path="/userProfile" element={<UserProfile />}></Route>
         {userType === 'Mentor' && <Route path="/manageEducationalResources" element={<EducationalResources />} />}
         {userType !== 'Mentor' && <Route path="/manageEducationalResources" element={<ForbiddenPage />} />}
+        {userType === 'Mentor' && <Route path="/manageInvitations" element={<ManageInvitations />} />}
+        {userType !== 'Mentor' && <Route path="/manageInvitations" element={<ForbiddenPage />} />}
+
         {userType === 'Changemaker' && <Route path="/manageCampaigns" element={<ManageCampaigns />} />}
         {userType !== 'Changemaker' && <Route path="/manageCampaigns" element={<ForbiddenPage />} />}
         <Route path="/viewEducationalResources" element={<ViewEducationalResources />}></Route>
