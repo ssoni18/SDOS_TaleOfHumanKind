@@ -32,6 +32,21 @@ def validate_lastname(lastname):
         return False
     return True
 
+def validate_Street(street):
+    if street and len(street) > 125:
+        return False
+    return True
+
+def validate_country(country):
+    if country and len(country) > 25:
+        return False
+    return True
+
+def validate_state(state):
+    if state and len(state) > 25:
+        return False
+    return True
+    
 def validate_phonenumber(phoneNumber):
     if not phoneNumber or len(phoneNumber) != 10:
         return False
@@ -39,7 +54,6 @@ def validate_phonenumber(phoneNumber):
 
 def validate_selectedRole(selectedRole):
     if not selectedRole or selectedRole not in ['Mentor', 'Changemaker']:
-
         return False
     return True
 
@@ -48,3 +62,7 @@ def validate_selectedQualification(selectedQualification):
         return False
     return True
 
+def validate_pincode(pincode):
+    if pincode and not pincode.isdigit():
+        return False
+    return True

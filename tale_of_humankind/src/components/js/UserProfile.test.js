@@ -49,14 +49,19 @@ export default function UserProfile() {
             <div className="about-text go-to">
               <h3 className="dark-color">{userData.first_name + " " + userData.last_name}</h3>
               <h6 className="theme-color lead">{userData.user_type}</h6>
-                {userData.user_type === "Mentor" && (
-                <Link to="/manageInvitations">
-                  <Button variant="success">Manage Invitations</Button> 
-                </Link>
-              )}
               <Link to="/editprofile">
                 <Button variant="success" className="mr-2">Edit Profile</Button>
-              </Link> 
+              </Link>
+              {userData.user_type === "Mentor" && (
+                <Link to="/manageEducationalResources">
+                  <Button variant="success">Manage Resources</Button>
+                </Link>
+              )}
+              {userData.user_type === "Changemaker" && (
+                <Link to="/manageCampaigns">
+                  <Button variant="success">Manage Campaigns</Button>
+                </Link>
+              )}
               {/* <h6 className="theme-color lead">Role</h6> */}
               <p>
                 Some description that is optional that the user will write about

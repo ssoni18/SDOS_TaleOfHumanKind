@@ -1,60 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../css/LoginPage.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import EmptyData from './EmptyData'; 
 
-export default function EducationalResources() {
+export default function EducationForm() {
   const [title, setTitle] = useState("");
-  const [description, setdescription] = useState("");
-  const [goalAmount, setgoalAmount] = useState(0);
-  const [Mentor, setMentor] = useState("");
-  const [feedbackMessage, setFeedbackMessage] = useState(null);
-  const [mentorsData, setMentorsData] = useState({});
+  const [contenttype, setContentType] = useState("");
+  const [resourceUrl, setResourceUrl] = useState("");
   const [image, setImage] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState(null);
+  const navigate = useNavigate();
 
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchMentors/`, { withCredentials: true });
-        setMentorsData(response.data.mentors || {});
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      }
-    };
-
-    fetchData();
-  }, []);
   const handleSubmit = () => {
-    var formData = new FormData();
+    const formData = new FormData();
     formData.append('title', title);
-    formData.append('description', description);
-    formData.append('goalAmount', goalAmount);
-    formData.append('Mentor', Mentor);
+    formData.append('contenttype', contenttype);
+    formData.append('resourceUrl', resourceUrl);
     formData.append('image', image);  // make sure 'image' is the state where your File object is stored
+    console.log("Image", image);
+    console.log("Educational ", formData);
 
-      axios({
-        method: "post",
-        url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/addCampaign/`,
-        data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true
+    axios
+      .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/addEducationalResource/`, formData, {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }, withCredentials: true
       })
       .then((response) => {
         console.log(response);
-        setFeedbackMessage("Campaign added successfully!");
-        // setTitle("");
-        // setdescription("");
-        // setgoalAmount(0);
-        // setMentor("");
-        // setImage("");
+        setFeedbackMessage("Resource added successfully!");
+        // Clear the form fields
+        setTitle("");
+        setContentType("");
+        setResourceUrl("");
+        setImage("");
+        navigate('/manageEducationalResources');
       })
       .catch((error) => {
         console.error(error);
-        console.log(error.response.data.message)
-        setFeedbackMessage(`${error.response.data.message}`);
+        setFeedbackMessage("Error adding resource. Please try again.");
       });
   };
 
@@ -65,14 +50,14 @@ export default function EducationalResources() {
         <div className="container">
           <div className="row align-items-center">
             <div className="show col-lg-6 px-lg-4">
-              <div className="card post">
-                {/* <div className="card-image post-image post-image-1"></div> */}
+              <div className="card ">
+                <div className="card-image post-image post-image-1"></div>
                 <div className="card-content post-content">
                   <div className="card-header px-lg-5">
-                    <div className="card-heading text-primary">Campaigns</div>
+                    <div className="card-heading text-primary">Resources</div>
                   </div>
                   <div className="card-body p-lg-5">
-                    <h3 className="mb-4">Add Campaign</h3>
+                    <h3 className="mb-4">Add Resources</h3>
                     {feedbackMessage && (
                       <div className={feedbackMessage.includes("successfully") ? "alert alert-success" : "alert alert-danger"}>
                         {feedbackMessage}
@@ -96,52 +81,33 @@ export default function EducationalResources() {
                       <div className="form-floating mb-3">
                         <input
                           className="form-control"
-                          id="description"
+                          id="contentType"
                           type="text"
                           placeholder="Content Type"
                           required
                           onChange={(event) => {
-                            setdescription(event.target.value);
+                            setContentType(event.target.value);
                           }}
                         />
-                        <label htmlFor="description">Description</label>
+                        <label htmlFor="contentType">Content Type</label>
                       </div>
                       <div className="form-floating mb-3">
                         <input
                           className="form-control"
-                          id="goalAmount"
-                          type="number"
+                          id="resourceURL"
+                          type="tel"
                           placeholder="Resource URL"
                           required
                           onChange={(event) => {
-                            setgoalAmount(event.target.value);
+                            setResourceUrl(event.target.value);
                           }}
                         />
-                        <label htmlFor="goalAmount">Goal Amount</label>
+                        <label htmlFor="resourceURL">Resource URL</label>
                       </div>
 
-                        <div className="form-floating mb-3">
-                          <select
-                          className="form-control"
-                          id="mentor"
-                          type="text"
-                          placeholder="Mentor"
-                          required
-                          onChange={(event) => {
-                            setMentor(event.target.value);
-                          }}
-                          >
-                          <option value="" disabled selected className="form-floating mb-3"></option>
-                          {Object.entries(mentorsData).map(([email, name], index) => (
-                            <optgroup label={name} key={index}>
-                              <option value={email}>{email}</option>
-                            </optgroup>
-                          ))}
-                          </select>
 
-                          <label htmlFor="Mentor">Mentor</label>
-                        </div>
-                        <div className="form-floating mb-3">
+
+                      <div className="form-floating mb-3">
                         <input
                           className="form-control"
                           id="image"
@@ -154,21 +120,18 @@ export default function EducationalResources() {
                             console.log("Image after set", image);
                           }}
                         />
-                        
                         <label htmlFor="image">Image</label>
                       </div>
+
                       <div className="form-group">
                         <button
                           className="btn btn-primary"
                           id="register"
                           type="button"
                           name="registerSubmit"
-                          onClick={() => {
-                            console.log(Mentor);
-                            handleSubmit();
-                          }}
+                          onClick={handleSubmit}
                         >
-                          Add Campaign
+                          Add Resource
                         </button>
                       </div>
                     </form>

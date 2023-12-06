@@ -15,10 +15,25 @@ export default function LoginPage() {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const registered = urlParams.get('registered');
+    const activated = urlParams.get('activated');
+    if (registered) {
+      setNotificationMessage('Sign up was successful, please check your email to activate your account!');
+      setShowNotification(true);
+    } else if (activated === 'true') {
+      setNotificationMessage('Account activated successfully :)');
+      setShowNotification(true);
+    } else if (activated === 'false') {
+      setNotificationMessage('Activation link is invalid :(');
+      setShowNotification(true);
+    }
     axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/is_authenticated/`, { withCredentials: true })
       .then((response) => {
         setLoading(false); // Set loading to false once the authentication check is complete
@@ -31,6 +46,8 @@ export default function LoginPage() {
       .catch((error) => {
         setLoading(false); // Set loading to false if there is an error
         console.error(error);
+        setErrorMessage('Authentication error occurred'); // Set the error message
+        setShowNotification(true); // Show the notification
       });
   }, [navigate]); // Added navigate to the dependency array
 
@@ -57,6 +74,7 @@ export default function LoginPage() {
         else {
           setErrorMessage(response.data.message);
           console.log(response.data.message);
+          setShowNotification(true);
         }
       })
       .catch((error) => {
@@ -65,6 +83,7 @@ export default function LoginPage() {
         if (error.response && error.response.data) {
           console.error('Response data:', error.response.data);
           setErrorMessage(error.response.data.message);
+          setShowNotification(true); // Show the notification with the error message
         }
       });
   };
@@ -88,9 +107,14 @@ export default function LoginPage() {
     }
   };
 
+  const handleNotificationClose = () => {
+    setShowNotification(false);
+  };
+
   return (
     <div className="App">
-      <Notification />
+      {console.log("notificationMessage", notificationMessage)}
+      {showNotification ? <Notification message={notificationMessage} showNotification={showNotification} onClose={handleNotificationClose} /> : null}
       <div className="page-holder align-items-center py-4 bg-gray-100 vh-80">
         <div className="container">
           <div className="row align-items-center">

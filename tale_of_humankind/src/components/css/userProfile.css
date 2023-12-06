@@ -81,6 +81,13 @@ img {
   font-size: 15px;
 }
 
+.about-avatar img {
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 50%; /* Make the image round */
+}
+
 @media (max-width: 991px) {
   .about-avatar {
     margin-top: 30px;

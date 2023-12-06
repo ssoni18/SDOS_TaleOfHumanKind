@@ -15,12 +15,16 @@ import EducationalResources from "./components/js/ManageEducationalResources";
 import ManageInvitations from "./components/js/ManageInvitations"
 import ManageCampaigns from "./components/js/ManageCampaigns";
 import ViewEducationalResources from "./components/js/ViewEducationalResources";
+import Profile from './components/js/EditProfile';
 import { Payment } from "./components/js/payments";
 import Home from "./components/js/Home";
 import ForbiddenPage from "./components/js/403Page";
 import ViewCampaigns from "./components/js/viewCampaigns";
-
-
+import EducationForm from './components/js/form';
+import Resource from './components/js/EditResources';
+import ManageFeed from './components/js/Managefeed';
+import FeedForm from './components/js/FeedForm';
+import Feed from './components/js/EditFeed';
 function App() {
   const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
   const userType = userData ? userData.user_type : null; // Access userType from userData
@@ -50,6 +54,12 @@ function App() {
         <Route path="/viewCampaigns" element={<ViewCampaigns />}></Route>
         <Route path="/payment" element={<Payment />}></Route>
         <Route path="/home" element={<Home />}></Route>
+        <Route path="/editprofile" element={<Profile />}></Route>
+        <Route path="/form" element={<EducationForm />}></Route>
+        <Route path="/editresource/:id" element={<Resource />}></Route>
+        <Route path="/managefeed" element={<ManageFeed />}></Route>
+        <Route path="/feedForm" element={<FeedForm />}></Route>
+        <Route path="/editfeed/:id" element={<Feed />}></Route>
       </Routes>
     </>
   );
