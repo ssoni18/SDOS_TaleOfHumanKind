@@ -22,3 +22,5 @@ jobs:
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
         TARGET: ${{ secrets.REMOTE_TARGET }}
+        BEFORE_INSTALL: "pip install -r requirements.txt"
+        READY_CMD: "python manage.py collectstatic --noinput && sudo systemctl restart gunicorn"
