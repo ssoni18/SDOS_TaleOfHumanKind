@@ -25,6 +25,8 @@ import Resource from './components/js/EditResources';
 import ManageFeed from './components/js/Managefeed';
 import FeedForm from './components/js/FeedForm';
 import Feed from './components/js/EditFeed';
+import PublicProfile from './components/js/PublicProfile';
+
 function App() {
   const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
   const userType = userData ? userData.user_type : null; // Access userType from userData
@@ -60,6 +62,8 @@ function App() {
         <Route path="/managefeed" element={<ManageFeed />}></Route>
         <Route path="/feedForm" element={<FeedForm />}></Route>
         <Route path="/editfeed/:id" element={<Feed />}></Route>
+        <Route path="/publicprofile/:id" element={<PublicProfile />}></Route>
+
       </Routes>
     </>
   );
