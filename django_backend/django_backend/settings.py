@@ -14,7 +14,9 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
- 
+env_path = Path('..') / '.env'
+load_dotenv(dotenv_path=env_path)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,12 +28,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-&4-x2p&g2fm=))6(1pzc-!4o)yrf)(tc1b)j6lg_0x^msp8&2u"
 
 DJANGO_SETTINGS_MODULE = os.getenv('DJANGO_SETTINGS_MODULE')
+
+# Import settings from the specified module
+if DJANGO_SETTINGS_MODULE == 'django_backend.production':
+    from .production import *
+else:
+    from .development import *
+
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False  # Production only
-DEBUG = True  # Development only
 
 SITE_ID = 1
-ALLOWED_HOSTS = []  # Development only
 # ALLOWED_HOSTS = ["http://test-website.taleofhumankind.com"]  # Production only
 
 
@@ -71,27 +77,16 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://test-website.taleofhumankind.com'
-]
-
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-    'http://test-website.taleofhumankind.com'
-]
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db" 
 SESSION_COOKIE_NAME = "e6a8f8223be7c31be4e07eee2ea2f634d6cca5a937c43c81"
 # SESSION_COOKIE_AGE = 3600  # Session timeout in seconds
-SESSION_COOKIE_SECURE = False  # Set to True in production if using HTTPS
 SESSION_SAVE_EVERY_REQUEST = True  # Save the session on every request
 
 
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -101,6 +96,10 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
+
+# During developemnt, add the middleware to the top of the list
+if os.getenv('DJANGO_SETTINGS_MODULE') == 'django_backend.development':
+    MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
 
 ROOT_URLCONF = "django_backend.urls"
 
@@ -178,7 +177,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -191,13 +191,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = 'dashboard.CustomUser'
 
-RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
-RAZORPAY_SECRET_KEY =os.environ.get("RAZORPAY_SECRET_KEY")
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
+RAZORPAY_SECRET_KEY = os.getenv("RAZORPAY_SECRET_KEY")
 
 # Email Backend Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD") 
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD") 
