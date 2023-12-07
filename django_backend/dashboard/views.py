@@ -240,7 +240,7 @@ def getMentor(email):
 def addCampaign(request):
     # return (request)
     if request.user.is_authenticated:
-        # Check if the user is a Mentor
+        # Verify that the user is a Changemaker
         if request.user.user_type != 'Changemaker':
             return JsonResponse({'status': 'error', 'message': 'Only Changemakers can create campaigns!'}, status=403)
         if request.method == 'POST':
@@ -402,7 +402,9 @@ def fetchCampaigns(request):
     if request.method == 'GET':
         # campaign = Campaign.objects.filter(isApproved=True, goal_amount__gt=0)
         campaign = Campaign.objects.filter(isApproved=True)
+        print("campaign", campaign)
         campaign_list = list(campaign.values('title', 'description', 'mentor__first_name', 'changemaker__first_name', 'image', 'goal_amount', 'current_amount'))
+        print('campaign list', campaign_list)
         return JsonResponse(campaign_list, safe=False)
 
 @csrf_exempt
