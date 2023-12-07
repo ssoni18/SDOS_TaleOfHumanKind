@@ -34,4 +34,6 @@ urlpatterns = [
     path('unlikeFeedItem/<int:id>/<str:email>/', views.unlikeFeedItem, name='unlikeFeedItem'),
     path('editProfile/', views.editProfile, name="editProfile"),
     path('contactUs/', views.contactUs, name="contactUs"),
+    path('publicProfile/' , views.publicProfile , name="publicProfile")
+
 ]

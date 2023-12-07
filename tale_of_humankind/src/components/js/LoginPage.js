@@ -47,7 +47,6 @@ export default function LoginPage() {
         setLoading(false); // Set loading to false if there is an error
         console.error(error);
         setErrorMessage('Authentication error occurred'); // Set the error message
-        setShowNotification(true); // Show the notification
       });
   }, [navigate]); // Added navigate to the dependency array
 
@@ -74,7 +73,6 @@ export default function LoginPage() {
         else {
           setErrorMessage(response.data.message);
           console.log(response.data.message);
-          setShowNotification(true);
         }
       })
       .catch((error) => {
@@ -83,7 +81,6 @@ export default function LoginPage() {
         if (error.response && error.response.data) {
           console.error('Response data:', error.response.data);
           setErrorMessage(error.response.data.message);
-          setShowNotification(true); // Show the notification with the error message
         }
       });
   };
