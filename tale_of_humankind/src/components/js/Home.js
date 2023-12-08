@@ -19,7 +19,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/getfeed/`, { withCredentials: true });
-        console.log("response", response.data);
+        //console.log("response", response.data);
         setResources(response.data);
       } catch (error) {
         console.error('Error fetching data: ', error);
@@ -39,7 +39,7 @@ export default function Home() {
     } else {
       response = await axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/unlikeFeedItem/${id}/${email}/`, {}, { withCredentials: true });
     }
-    console.log(response);
+    //console.log(response);
 
     const updatedResources = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/getfeed/`, { withCredentials: true });
     setResources(updatedResources.data);
@@ -67,7 +67,7 @@ export default function Home() {
         resources.map((resource, index) => (
           <div className="post" key={index}>
             <div className={`post-image post-image-${index + 1}`}>
-              {/* {console.log("image" , resource.image)} */}
+              {/* {//console.log("image" , resource.image)} */}
               <img src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} />
             </div>
             <div className="post-content">

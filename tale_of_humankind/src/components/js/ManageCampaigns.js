@@ -43,17 +43,12 @@ export default function EducationalResources() {
         withCredentials: true
       })
       .then((response) => {
-        console.log(response);
+        //console.log(response);
         setFeedbackMessage("Campaign added successfully!");
-        // setTitle("");
-        // setdescription("");
-        // setgoalAmount(0);
-        // setMentor("");
-        // setImage("");
       })
       .catch((error) => {
         console.error(error);
-        console.log(error.response.data.message)
+        //console.log(error.response.data.message)
         setFeedbackMessage(`${error.response.data.message}`);
       });
   };
@@ -66,7 +61,6 @@ export default function EducationalResources() {
           <div className="row align-items-center">
             <div className="show col-lg-6 px-lg-4">
               <div className="card post">
-                {/* <div className="card-image post-image post-image-1"></div> */}
                 <div className="card-content post-content">
                   <div className="card-header px-lg-5">
                     <div className="card-heading text-primary">Campaigns</div>
@@ -78,7 +72,6 @@ export default function EducationalResources() {
                         {feedbackMessage}
                       </div>
                     )}
-                    {/* <p className="text-muted text-sm mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p> */}
                     <form action="index.html">
                       <div className="form-floating mb-3">
                         <input
@@ -151,7 +144,7 @@ export default function EducationalResources() {
                           onChange={(event) => {
                             const file = event.target.files[0];
                             setImage(file);
-                            console.log("Image after set", image);
+                            //console.log("Image after set", image);
                           }}
                         />
                         
@@ -164,7 +157,7 @@ export default function EducationalResources() {
                           type="button"
                           name="registerSubmit"
                           onClick={() => {
-                            console.log(Mentor);
+                            //console.log(Mentor);
                             handleSubmit();
                           }}
                         >

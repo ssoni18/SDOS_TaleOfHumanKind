@@ -16,7 +16,6 @@ import ManageInvitations from "./components/js/ManageInvitations"
 import ManageCampaigns from "./components/js/ManageCampaigns";
 import ViewEducationalResources from "./components/js/ViewEducationalResources";
 import Profile from './components/js/EditProfile';
-import { Payment } from "./components/js/payments";
 import Home from "./components/js/Home";
 import ForbiddenPage from "./components/js/403Page";
 import ViewCampaigns from "./components/js/viewCampaigns";
@@ -29,7 +28,6 @@ import DonationPage from './components/js/DonationPage';
 function App() {
   const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
   const userType = userData ? userData.user_type : null; // Access userType from userData
-  console.log("userType now at App.js", userType);
 
   return (  
     <>
@@ -52,7 +50,6 @@ function App() {
         <Route path="/donationPage" element={<DonationPage />}></Route>
         <Route path="/viewEducationalResources" element={<ViewEducationalResources />}></Route>
         <Route path="/viewCampaigns" element={<ViewCampaigns />}></Route>
-        <Route path="/payment" element={<Payment />}></Route>
         <Route path="/home" element={<Home />}></Route>
         <Route path="/editprofile" element={<Profile />}></Route>
         <Route path="/form" element={<EducationForm />}></Route>

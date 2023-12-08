@@ -39,7 +39,6 @@ export default function LoginPage() {
         setLoading(false); // Set loading to false once the authentication check is complete
 
         if (response.data.is_authenticated) {
-          console.log('user authenticated')
           navigate('/'); // Redirect to the home page if the user is authenticated
         }
       })
@@ -57,7 +56,6 @@ export default function LoginPage() {
   }
 
   const handleLogin = () => {
-    console.log(email);
     axios
       .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/login_auth/`, {
         email: email,
@@ -73,7 +71,7 @@ export default function LoginPage() {
         }
         else {
           setErrorMessage(response.data.message);
-          console.log(response.data.message);
+          //console.log(response.data.message);
           setShowNotification(true);
         }
       })
@@ -98,7 +96,7 @@ export default function LoginPage() {
         }, { withCredentials: true }) // Include session cookie with request
         .then((response) => {
           // Handle the server response or redirect as needed.
-          console.log(response);
+          //console.log(response);
         })
         .catch((error) => {
           // Handle the error.
@@ -113,7 +111,6 @@ export default function LoginPage() {
 
   return (
     <div className="App">
-      {console.log("notificationMessage", notificationMessage)}
       {showNotification ? <Notification message={notificationMessage} showNotification={showNotification} onClose={handleNotificationClose} /> : null}
       <div className="page-holder align-items-center py-4 bg-gray-100 vh-80">
         <div className="container">
@@ -171,13 +168,6 @@ export default function LoginPage() {
                     </div>
                   </form>
 
-                  {/* <GoogleLogin
-                    clientId="335351655350-vnafv8fmml40qfrv2m3tt41ro4m47gko.apps.googleusercontent.com"
-                    buttonText="Login with Google"
-                    onSuccess={responseGoogle}
-                    onFailure={responseGoogle}
-                    cookiePolicy={"single_host_origin"}
-                  /> */}
                 </div>
                 <div className="card-footer px-lg-5 py-lg-4">
                   <Link to="/registerPage">

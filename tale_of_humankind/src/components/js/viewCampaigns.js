@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import "../css/TeamSection.css"
 import EmptyData from './EmptyData'; 
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ViewCampaigns = () => {
 
@@ -19,7 +19,7 @@ const ViewCampaigns = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchCampaigns/`, { withCredentials: true });
-        console.log("response", response.data);
+        //console.log("response", response.data);
         setResources(response.data);
       } catch (error) {
         console.error('Error fetching data: ', error);
@@ -52,9 +52,7 @@ const ViewCampaigns = () => {
         />) :fundedCampaigns.map((resource, index) => (
           <Col xs={12} sm={6} lg={3} key={index} className="mt-5">
             <Card style={{ width: '18rem' }}>
-              {console.log(resource)}
               <Card.Img variant="top"src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} /> 
-              {console.log(`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`)}
               <Card.Body>
               <center><Card.Title> {resource.title}</Card.Title></center>
                 <Card.Text>
@@ -64,13 +62,7 @@ const ViewCampaigns = () => {
                   <p>ChangeMaker: {resource.changemaker__first_name}</p>
                   <p>Mentor: {resource.mentor__first_name}</p>
                 </Card.Text>
-                <Link to={{
-                  pathname: "/donationPage",
-                  state: { 
-                      campaignId: resource.id, 
-                      campaignName: resource.title 
-                  }
-              }}>
+                <Link to="/donationPage" state={{campaignId: resource.id, campaignName: resource.title}}>
                   <center> <Button variant="primary">Fund Now!</Button></center>
               </Link>
               </Card.Body>
@@ -87,9 +79,7 @@ const ViewCampaigns = () => {
         />) :nonFundedCampaigns.map((resource, index) => (
           <Col xs={12} sm={6} lg={3} key={index} className="mt-5">
             <Card style={{ width: '18rem' }}>
-              {console.log(resource)}
               <Card.Img variant="top"src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} /> 
-              {console.log(`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`)}
               <Card.Body>
                 <center><Card.Title> {resource.title}</Card.Title></center>
                 <Card.Text>

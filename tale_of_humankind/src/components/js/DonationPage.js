@@ -1,46 +1,127 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/DonationPage.css";
+import { useLocation } from "react-router-dom"
 import fundraisingImage from "../static/fundraising.jpg";
-const MakeDonations = () => {
-  const [resources, setResources] = useState([]);
-  const [selectedCampaign, setSelectedCampaign] = useState("");
-  const [amountToDonate, setAmountToDonate] = useState(0);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchCampaigns/`,
-          { withCredentials: true }
-        );
-        console.log("response", response.data);
-        setResources(response.data);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
+function loadScript(src) {
+	return new Promise((resolve) => {
+		const script = document.createElement('script')
+		script.src = src
+		script.onload = () => {
+			resolve(true)
+		}
+		script.onerror = () => {
+			resolve(false)
+		}
+		document.body.appendChild(script)
+	})
+}
 
-    fetchData();
-  }, []);
+const MakeDonations = () => 
+{
+    const location = useLocation();
+    const {campaignId, campaignName} = location.state;
+    const [isCustomValueSelected, setIsCustomValueSelected] = useState(false);
+    const [resources, setResources] = useState([]);
+    const [amountToDonate, setAmountToDonate] = useState(0);
+    const [name, setName] = useState("");
+    const [feedbackMessage, setFeedbackMessage] = useState(null);
+    const [email, setEmail] = useState("");
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(
+              `${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchCampaigns/`,
+              { withCredentials: true }
+            );
+            setResources(response.data);
+          } catch (error) {
+            
+          }
+        };
+    
+        fetchData();
+    }, []);
 
+    const fundedCampaigns = resources.filter(
+        (resource) =>
+          resource.goal_amount > 0 && resource.current_amount < resource.goal_amount
+      );
+      const handleCustomValueChange = (e) => {
+        const value = e.target.value;
+        const amount = value !== '' ? parseInt(value, 10) : 0;
+        setAmountToDonate(amount);
+      };
+      const handlePaymentSuccess = async (response) => {
+        try {
+          let bodyData = new FormData();
+    
+          // we will send the response we've got from razorpay to the backend to validate the payment
+          bodyData.append("response", JSON.stringify(response));
+    
+          await axios({
+            url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/verifySignature/`,
+            method: "POST",
+            data: bodyData,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          })
+            .then((res) => {
+              setFeedbackMessage("Donation made successfully!")
+              setName("");
+              setAmountToDonate(0);
+            })
+            .catch((err) => {
+            });
+        } catch (error) {
+        }
+      };
+    
+    async function handleSubmit() {
+        const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js')
 
+        if (!res) {
+            alert('Failure loading the Razorpay SDK. PLease make sure you are connected to the internet')
+            return
+    }
+    var formData = new FormData();
+    formData.append('campaignId', campaignId);
+    formData.append('amount', amountToDonate);
+    formData.append('name', name);
+    formData.append('email', email);
+ 
+    const orderData = await axios({
+        method: "post",
+        url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/makeDonation/`,
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true
+    })
 
-  const handleCampaignChange = (e) => {
-    setSelectedCampaign(e.target.value);
-  };
-  const fundedCampaigns = resources.filter(
-    (resource) =>
-      resource.goal_amount > 0 && resource.current_amount < resource.goal_amount
-  );
-  const handleCustomValueChange = (e) => {
-    const value = e.target.value;
-    const amount = value !== '' ? parseInt(value, 10) : 0;
-    setAmountToDonate(amount);
-  };
-
+    const { amount, order_id } = orderData.data
+    const options = {
+        key: "rzp_test_XUhwUXj0Rb3rI1", 
+        amount: amount.toString(),
+        currency: 'INR',
+        name: "Test Company",
+        description: "Test Transaction",
+        image: "",
+        order_id: order_id,
+        handler: async function (response) {
+            handlePaymentSuccess(response);
+        },
+        theme: {
+          color: "#61dafb",
+        },
+      };
+      
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    }
   return (
-
-    <div className="container d-lg-flex" id="donationContainer">
+    <div className="container d-lg-flex my-5" id="donationContainer">
       <div className="box-1 bg-light user">
         <div className="box-inner-1 pb-3 mb-3">
           <div
@@ -53,11 +134,11 @@ const MakeDonations = () => {
               <img src={fundraisingImage} />
             </div>
           </div>
-          <h4 className="my-3">Some Denominations to Choose from</h4>
+          <h4 className="my-3">Some Denominations</h4>
           <div className="radiobtn">
-            <input type="radio" name="box" id="one" value="2000" onChange={handleCustomValueChange}/>
-            <input type="radio" name="box" id="two" value="5000" onChange={handleCustomValueChange}/>
-            <input type="radio" name="box" id="three" value="10000" onChange={handleCustomValueChange}/>
+            <input type="radio" name="box" id="one" value="2000" onChange={handleCustomValueChange} checked={!isCustomValueSelected && amountToDonate === 2000} onClick={() => setIsCustomValueSelected(false)}/>
+            <input type="radio" name="box" id="two" value="5000" onChange={handleCustomValueChange}  checked={!isCustomValueSelected && amountToDonate === 5000} onClick={() => setIsCustomValueSelected(false)}/>
+            <input type="radio" name="box" id="three" value="10000" onChange={handleCustomValueChange}  checked={!isCustomValueSelected && amountToDonate === 10000} onClick={() => setIsCustomValueSelected(false)}/>
             <label htmlFor="one" className="box py-2 first">
               <div className="d-flex align-items-start">
                 <span className="circle"></span>
@@ -92,56 +173,70 @@ const MakeDonations = () => {
           
         </div>
       </div>
+      
       <div className="box-2">
+      {feedbackMessage && (
+                      <div className={feedbackMessage.includes("successfully") ? "alert alert-success" : "alert alert-danger"}>
+                        {feedbackMessage}
+                      </div>
+        )}
+        
         <div className="box-inner-2">
           <div>
             <p className="fw-bold">Payment Details</p>
             <p className="dis mb-3">
-              Complete your purchase by providing your payment details
+              Make a Change now!
             </p>
           </div>
           <form action="">
             <div className="mb-3">
               <p className="dis fw-bold mb-2">Name</p>
-              <input className="form-control" type="text" />
+              <input
+                    className="form-control"
+                    id="title"
+                    type="text"
+                    onChange={(event) => {
+                        setName(event.target.value);
+                        }}
+                    />
             </div>
             <div className="mb-3">
               <p className="dis fw-bold mb-2">Email address</p>
-              <input className="form-control" type="email" />
+              <input
+                    className="form-control"
+                    id="title"
+                    type="email"
+                    onChange={(event) => {
+                        setEmail(event.target.value);
+                        }}
+                    />
             </div>
             <div>
               <div className="address">
-                <p className="dis fw-bold mb-3">Campaign Selected</p>
-                <div className="inputWithcheck">
-                  <select
-                    className="dis fw-bold mb-2 form-control custom-select"
-                    readOnly
-                  >
-                    {fundedCampaigns.map((resource, index) => (
-                      <option key={index} value={resource.id}>
-                        {resource.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+             
+              <div className=" my-3">
+                                <p className="dis fw-bold mb-2">Campaign Selected</p>
+                                <div className="inputWithcheck">
+                                    <input className="form-control" type="text" value={campaignName} readOnly/> 
+                                    <span className="fas fa-check"></span>
+
+                                </div>
+                            </div>
                 <div className=" my-3">
                   <p className="dis fw-bold mb-2">Custom Value</p>
                   <div>
                     <input
                       className="form-control"
                       type="number"
-                      min="0" // Set minimum value to 0 (or any other minimum allowed number)
-                      step="100" // Set step to 100 (increments)
+                      min="0" 
+                      step="100" 
                       onChange={handleCustomValueChange}
+                      onFocus={() => setIsCustomValueSelected(true)}
                     />
                   </div>
                 </div>
-                <div className="d-flex flex-column dis">
+                <div className="d-flex flex-column dis" onClick={handleSubmit}>
                   <div className="d-flex align-items-center justify-content-between mb-2">
-                    <p>Total</p>
-                    <p>
-                      <span className="fas fa-dollar-sign"></span>{amountToDonate}
-                    </p>
                   </div>
                   <div className="btn btn-primary mt-2">
                     Pay<span className="fas fa-dollar-sign px-1"></span>{amountToDonate}

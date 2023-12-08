@@ -68,17 +68,12 @@ class Campaign(models.Model):
     image = models.ImageField(upload_to='images/', null=True)
 
 class Donation(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     order_payment_id = models.CharField(max_length=200, verbose_name="Order ID")
     is_paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    # razorpay_payment_id = models.CharField(max_length=200, verbose_name="Razorpay Payment ID", null=True, blank=True)
-    # razorpay_order_id = models.CharField(max_length=200, verbose_name="Razorpay Order ID", null=True, blank=True)
-    # razorpay_signature = models.CharField(max_length=500, verbose_name="Razorpay Signature", null=True, blank=True)
-    
     def __str__(self):
         return f"Donation - {self.name} - {self.amount}"
 

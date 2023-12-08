@@ -16,7 +16,7 @@ export default function Resource() {
   useEffect(() => {
     const fetchResource = async () => {
         const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/get_resource_id/${id}`, { withCredentials: true });
-        console.log("response", response.data);
+        //console.log("response", response.data);
   
         setFormState(response.data);
     };
@@ -25,7 +25,7 @@ export default function Resource() {
   }, [id]);
 
   const handleSubmit = () => {
-    console.log("formData" , formState);
+    //console.log("formData" , formState);
     axios
       .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/edit_resource/`, formState, {
         headers: {
@@ -34,7 +34,7 @@ export default function Resource() {
         withCredentials: true,
       })
       .then((response) => {
-        console.log(response);
+        //console.log(response);
         setFeedbackMessage("Resources updated successfully!");
         navigate('/manageEducationalResources');
       })
@@ -137,7 +137,7 @@ export default function Resource() {
                               ...formState,
                               profileImage: file
                             });
-                            console.log(file);
+                            //console.log(file);
                           }}
                         />
                         <label htmlFor="image">Image</label>

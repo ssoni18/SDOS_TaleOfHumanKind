@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "../css/LoginPage.css";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -18,8 +17,8 @@ export default function EducationForm() {
     formData.append('contenttype', contenttype);
     formData.append('resourceUrl', resourceUrl);
     formData.append('image', image);  // make sure 'image' is the state where your File object is stored
-    console.log("Image", image);
-    console.log("Educational ", formData);
+    //console.log("Image", image);
+    //console.log("Educational ", formData);
 
     axios
       .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/addEducationalResource/`, formData, {
@@ -28,7 +27,7 @@ export default function EducationForm() {
         }, withCredentials: true
       })
       .then((response) => {
-        console.log(response);
+        //console.log(response);
         setFeedbackMessage("Resource added successfully!");
         // Clear the form fields
         setTitle("");
@@ -117,7 +116,7 @@ export default function EducationForm() {
                           onChange={(event) => {
                             const file = event.target.files[0];
                             setImage(file);
-                            console.log("Image after set", image);
+                            //console.log("Image after set", image);
                           }}
                         />
                         <label htmlFor="image">Image</label>

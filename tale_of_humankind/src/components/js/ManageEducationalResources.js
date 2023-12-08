@@ -11,7 +11,7 @@ export default function EducationalResources() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/get_resources/`, { withCredentials: true });
-      console.log("response", response.data);
+      //console.log("response", response.data);
 
       setData(response.data);
     };
