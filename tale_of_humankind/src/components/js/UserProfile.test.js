@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 export default function UserProfile() {
   const navigate = useNavigate();
   const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
-  console.log("user data at profile", userData);
+  //console.log("user data at profile", userData);
 
   useEffect(() => {
     axios

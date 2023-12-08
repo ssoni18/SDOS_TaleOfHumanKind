@@ -16,8 +16,8 @@ export default function FeedForm() {
     formData.append('content', content);
     formData.append('resourceUrl', resourceUrl);
     formData.append('image', image);  // make sure 'image' is the state where your File object is stored
-    console.log("Image", image);
-    console.log("feed ", formData);
+    //console.log("Image", image);
+    //console.log("feed ", formData);
 
     axios
       .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/addfeed/`, formData, {
@@ -26,7 +26,7 @@ export default function FeedForm() {
         }, withCredentials: true
       })
       .then((response) => {
-        console.log(response);
+        //console.log(response);
         setFeedbackMessage("Feed added successfully!");
         // Clear the form fields
         setcontent("");
@@ -102,7 +102,7 @@ export default function FeedForm() {
                           onChange={(event) => {
                             const file = event.target.files[0];
                             setImage(file);
-                            console.log("Image after set", image);
+                            //console.log("Image after set", image);
                           }}
                         />
                         <label htmlFor="image">Image</label>

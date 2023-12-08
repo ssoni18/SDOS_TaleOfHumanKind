@@ -19,7 +19,7 @@ const ManageInvitations = () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchCampaignInvitations/`, { withCredentials: true });
         setResources(response.data);
-        console.log(response.data);
+        //console.log(response.data);
       } catch (error) {
         console.error('Error fetching data: ', error);
       }
@@ -28,7 +28,7 @@ const ManageInvitations = () => {
     fetchData();
   }, [feedbackMessage]);
   const handleSubmit = (campaignId, status) => {
-    console.log("campaign Id", campaignId);
+    //console.log("campaign Id", campaignId);
     var formData = new FormData();
     formData.append('status', status);
     formData.append('id', campaignId);
@@ -40,7 +40,7 @@ const ManageInvitations = () => {
         withCredentials: true
       })
       .then((response) => {
-        console.log(response);
+        //console.log(response);
         setFeedbackMessage(`Campaign ${status} successfully!`);
         setResources((prevResources) =>
           prevResources.filter((resource) => resource.id !== campaignId)
@@ -90,8 +90,8 @@ const ManageInvitations = () => {
                   <p>Mentor: {resource.mentor__first_name}</p>
                 </Card.Text>
                 <div className="d-flex justify-content-between">
-                    <Button variant="success" onClick={() => { console.log(`${resources}`); handleSubmit(resource.id, "accepted"); }}>Accept</Button>
-                    <Button variant="danger" onClick={() => { console.log(`${resources}`); handleSubmit(resource.id, "rejected"); }}>Reject</Button>
+                    <Button variant="success" onClick={() => { handleSubmit(resource.id, "accepted"); }}>Accept</Button>
+                    <Button variant="danger" onClick={() => {  handleSubmit(resource.id, "rejected"); }}>Reject</Button>
                 </div>
               </Card.Body>
             </Card>

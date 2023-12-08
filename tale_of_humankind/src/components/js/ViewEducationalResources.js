@@ -15,7 +15,7 @@ const ViewEducationalResource = () => {
       try {
         setIsLoading(true); // Set loading to true at the start of the fetch
         const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchEducationalResources/`, { withCredentials: true });
-        console.log("response", response.data);
+        //console.log("response", response.data);
         setResources(response.data);
         setIsLoading(false); // Set loading to false once the fetch is complete
       } catch (error) {

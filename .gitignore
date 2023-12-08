@@ -71,3 +71,4 @@ build/
 *.tar.xz
 *.tar.lzma
 *.tar.lzo
+**/media/
