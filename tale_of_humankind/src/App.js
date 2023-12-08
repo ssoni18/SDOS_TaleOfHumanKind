@@ -17,14 +17,14 @@ import ManageCampaigns from "./components/js/ManageCampaigns";
 import ViewEducationalResources from "./components/js/ViewEducationalResources";
 import Profile from './components/js/EditProfile';
 import { Payment } from "./components/js/payments";
-import Home from "./components/js/Home";
+import Feed from "./components/js/Feed";
 import ForbiddenPage from "./components/js/403Page";
 import ViewCampaigns from "./components/js/viewCampaigns";
 import EducationForm from './components/js/form';
 import Resource from './components/js/EditResources';
 import ManageFeed from './components/js/Managefeed';
 import FeedForm from './components/js/FeedForm';
-import Feed from './components/js/EditFeed';
+import EditFeed from './components/js/EditFeed';
 import PublicProfile from './components/js/PublicProfile';
 
 function App() {
@@ -55,13 +55,13 @@ function App() {
         <Route path="/viewEducationalResources" element={<ViewEducationalResources />}></Route>
         <Route path="/viewCampaigns" element={<ViewCampaigns />}></Route>
         <Route path="/payment" element={<Payment />}></Route>
-        <Route path="/home" element={<Home />}></Route>
+        <Route path="/feed" element={<Feed />}></Route>
         <Route path="/editprofile" element={<Profile />}></Route>
         <Route path="/form" element={<EducationForm />}></Route>
         <Route path="/editresource/:id" element={<Resource />}></Route>
         <Route path="/managefeed" element={<ManageFeed />}></Route>
         <Route path="/feedForm" element={<FeedForm />}></Route>
-        <Route path="/editfeed/:id" element={<Feed />}></Route>
+        <Route path="/editfeed/:id" element={<EditFeed />}></Route>
         <Route path="/publicprofile/:id" element={<PublicProfile />}></Route>
 
       </Routes>

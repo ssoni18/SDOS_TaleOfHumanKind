@@ -140,6 +140,7 @@ def login_auth(request):
                 profile_image_url = None
             
             user_data = {
+                'id': user.id,
                 'first_name' : user.first_name,
                 'last_name' : user.last_name,
                 'email': user.email,
@@ -175,14 +176,15 @@ def getUserData(request):
                 profile_image_url = None
 
             user_data = {
-                'first_name': user.first_name,
-                'last_name': user.last_name,
+                'id': user.id,
+                'first_name' : user.first_name,
+                'last_name' : user.last_name,
                 'email': user.email,
                 'user_type': user.user_type,
-                'dob': user.date_of_birth,
+                'dob' : user.date_of_birth,
                 'age': user.age,
                 'address': address,
-                'phone': user.primary_phone_number,
+                'phone' : user.primary_phone_number,
                 'profile_image': profile_image_url
             }
             return JsonResponse({'status': 'success', 'user_data': user_data}, status=200)
@@ -393,7 +395,7 @@ def addEducationalResource(request):
 def fetchEducationalResources(request):
     if request.method == 'GET':
         resources = EducationalResource.objects.all()
-        resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__email', 'created_date', 'updated_date', 'image'))
+        resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__email', 'creator__id', 'created_date', 'updated_date', 'image'))
         return JsonResponse(resources_list, safe=False)
 
 
@@ -412,7 +414,7 @@ def get_feed(request):
     if request.method == 'GET':
         print(request)
         feed_items = FeedItem.objects.all()
-        feed_list = list(feed_items.values('id','creator__email', 'content', 'image', 'likes', 'created_at', 'resource_url'))
+        feed_list = list(feed_items.values('id','creator__email', 'creator__id', 'content', 'image', 'likes', 'created_at', 'resource_url'))
         return JsonResponse(feed_list, safe=False)
     
 
@@ -536,12 +538,13 @@ def editProfile(request):
                     profile_image_url = None
 
                 user_data = {
+                    'id': user.id,
                     'first_name' : user.first_name,
                     'last_name' : user.last_name,
                     'email': user.email,
                     'user_type': user.user_type,
                     'dob' : user.date_of_birth,
-                    'age' : user.age,
+                    'age': user.age,
                     'address': address,
                     'phone' : user.primary_phone_number,
                     'profile_image': profile_image_url
@@ -627,16 +630,22 @@ def delete_resource(request):
         resource.delete()
 
     return JsonResponse({'status': 'ok'})
+
+
 @csrf_exempt
-def fetch_feed(request):
-    print(request)
+def fetchUserFeed(request):
     if request.user.is_authenticated:
         feed = FeedItem.objects.filter(creator=request.user)
-        data = [{"id": r.id,"content": r.content, "image": r.image.url, "resource_url": r.resource_url} for r in feed]
-        print(data)
+        data = [{
+            "id": r.id,
+            "content": r.content,
+            "image": str(r.image) if r.image else None,  # Convert to string to get the relative path
+            "resource_url": r.resource_url
+        } for r in feed]
         return JsonResponse(data, safe=False)
     else:
         return JsonResponse({'status': 'error', 'message': 'User not authenticated!'}, status=401)
+    
     
 @csrf_exempt  
 def addfeed(request):
@@ -785,23 +794,37 @@ def contactUs(request):
 
 @csrf_exempt
 def publicProfile(request):
-    if(request.method == 'POST'):
+    if request.method == 'POST':
         data = json.loads(request.body)
         id = data.get('id')
+        
         if not id.isdigit():
-            return JsonResponse({'status': 'failure', 'message': 'INVALID ID'}, status=400)
+            return JsonResponse({'status': 'failure', 'message': 'Invalid ID'}, status=400)
+
         try:
-            user = CustomUser.objects.get(id=id)
+            user = CustomUser.objects.get(id=id, is_active=True)  # Check for is_active
+
+            # Serialize the address and profile image
+            address_data = serialize('json', [user.address])
+            address = json.loads(address_data)[0]['fields']
+            if user.profile_image:
+                profile_image_url = user.profile_image.url
+            else:
+                profile_image_url = None
+
             user_data = {
+                'id': user.id,
                 'first_name' : user.first_name,
                 'last_name' : user.last_name,
                 'email': user.email,
                 'user_type': user.user_type,
                 'dob' : user.date_of_birth,
                 'age': user.age,
+                'address': address,
                 'phone' : user.primary_phone_number,
+                'profile_image': profile_image_url
             }
-            return JsonResponse({'status': 'success' , 'message': "Server: public profile received", 'user_data': user_data}, status=200)
+            return JsonResponse({'status': 'success', 'message': "Server: public profile received", 'user_data': user_data}, status=200)
         except CustomUser.DoesNotExist:
             return JsonResponse({'status': 'failure', 'message': 'User not found'}, status=400)
 

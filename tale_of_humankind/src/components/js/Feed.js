@@ -49,6 +49,10 @@ export default function Home() {
     navigate('/feedForm');
   };
 
+  function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
 
   return (
     <div>
@@ -71,10 +75,10 @@ export default function Home() {
               <img src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} />
             </div>
             <div className="post-content">
-              <p className="post-date">Posted on <time datetime={resource.created_date}>{resource.created_at}</time> by <a className="post-author" href="#">{resource.creator}</a></p>
+              {console.log(resource.created_date)}
+              <p className="post-date">Posted on <time datetime={resource.created_at}>{formatDate(resource.created_at)}</time> by <a className="post-author" href={`/publicProfile/${resource.creator__id}`}>{resource.creator__email}</a></p>
               <div className="post-excerpt">
                 <p>{resource.content}</p>
-                <p>{resource.id}</p>
               </div>
               <a className="post-link" href={resource.resource_url}>Read More</a>
 

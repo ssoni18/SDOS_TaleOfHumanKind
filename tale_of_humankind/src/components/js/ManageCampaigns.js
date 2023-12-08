@@ -44,12 +44,7 @@ export default function EducationalResources() {
       })
       .then((response) => {
         console.log(response);
-        setFeedbackMessage("Campaign added successfully!");
-        // setTitle("");
-        // setdescription("");
-        // setgoalAmount(0);
-        // setMentor("");
-        // setImage("");
+        setFeedbackMessage("Campaign added successfully! Please wait for your mentor to approve it.");
       })
       .catch((error) => {
         console.error(error);
