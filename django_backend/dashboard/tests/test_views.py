@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from dashboard.models import Campaign, CampaignChangemakers, Donation, EducationalResource, CustomUser, Address, SocialMediaHandle, Transaction
+from dashboard.models import Campaign, Donation, EducationalResource, CustomUser, Address, SocialMediaHandle
 
 class TestViews(TestCase):
     def test_is_authenticated_GET(self):

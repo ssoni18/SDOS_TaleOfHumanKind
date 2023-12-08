@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import Campaign, CampaignChangemakers, Donation, EducationalResource, CustomUser, Address, SocialMediaHandle, Transaction
+from .models import Campaign, Donation, EducationalResource, CustomUser, Address, SocialMediaHandle
 
 class CampaignAdmin(admin.ModelAdmin):
     list_display = ("title", "changemaker", "mentor", "isApproved")
@@ -32,11 +32,9 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ("email",)
     ordering = ("email",)
 # Register your models here.
-admin.site.register(CampaignChangemakers)
 admin.site.register(Donation)
 admin.site.register(EducationalResource)
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Campaign, CampaignAdmin)
 admin.site.register(Address)
 admin.site.register(SocialMediaHandle)
-admin.site.register(Transaction)

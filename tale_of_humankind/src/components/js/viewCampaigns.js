@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import "../css/TeamSection.css"
 import EmptyData from './EmptyData'; 
+import { useNavigate, Link } from "react-router-dom";
 
 const ViewCampaigns = () => {
 
@@ -63,7 +64,15 @@ const ViewCampaigns = () => {
                   <p>ChangeMaker: {resource.changemaker__first_name}</p>
                   <p>Mentor: {resource.mentor__first_name}</p>
                 </Card.Text>
-                <center><Button variant="primary">Fund Now!</Button></center>
+                <Link to={{
+                  pathname: "/donationPage",
+                  state: { 
+                      campaignId: resource.id, 
+                      campaignName: resource.title 
+                  }
+              }}>
+                  <center> <Button variant="primary">Fund Now!</Button></center>
+              </Link>
               </Card.Body>
             </Card>
           </Col>

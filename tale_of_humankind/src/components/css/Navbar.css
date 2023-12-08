@@ -16,10 +16,6 @@ body {
   color: #fff;
 }
 
-/* Remove the down arrow background image */
-/* .dropdown-toggle::after {
-  display: none !important;
-} */
 
 .dropdown-toggle {
   color: #fff;
