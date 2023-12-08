@@ -36,4 +36,5 @@ urlpatterns = [
     path('fetchTeam/', views.fetchTeam, name="fetchTeam"),
     path('makeDonation/', views.createOrder, name="createOrder"),
     path('verifySignature/', views.verifySignature, name="verifySignature"),
+    path('publicProfile/' , views.publicProfile , name="publicProfile")
 ]

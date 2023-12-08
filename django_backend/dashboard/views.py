@@ -310,7 +310,7 @@ def getMentor(email):
 def addCampaign(request):
     # return (request)
     if request.user.is_authenticated:
-        # Check if the user is a Mentor
+        # Verify that the user is a Changemaker
         if request.user.user_type != 'Changemaker':
             return JsonResponse({'status': 'error', 'message': 'Only Changemakers can create campaigns!'}, status=403)
         if request.method == 'POST':
@@ -895,3 +895,31 @@ def contactUs(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+    
+
+
+@csrf_exempt
+def publicProfile(request):
+    if(request.method == 'POST'):
+        data = json.loads(request.body)
+        id = data.get('id')
+        if not id.isdigit():
+            return JsonResponse({'status': 'failure', 'message': 'INVALID ID'}, status=400)
+        try:
+            user = CustomUser.objects.get(id=id)
+            user_data = {
+                'first_name' : user.first_name,
+                'last_name' : user.last_name,
+                'email': user.email,
+                'user_type': user.user_type,
+                'dob' : user.date_of_birth,
+                'age': user.age,
+                'phone' : user.primary_phone_number,
+            }
+            return JsonResponse({'status': 'success' , 'message': "Server: public profile received", 'user_data': user_data}, status=200)
+        except CustomUser.DoesNotExist:
+            return JsonResponse({'status': 'failure', 'message': 'User not found'}, status=400)
+
+    
+
+

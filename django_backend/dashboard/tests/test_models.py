@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from dashboard.models import (
     CustomUser, Address, SocialMediaHandle, Campaign, 
@@ -9,7 +10,40 @@ class CustomUserModelTestCase(TestCase):
     def setUp(self):
         # Create a user for testing
         self.user = CustomUser.objects.create(username='testuser', email='test@example.com')
+    
+    def test_create_user(self):
+        # Verify that a user is created successfully
+        User = get_user_model()
+        user = User.objects.create_user(email="normal@user.com", password="Password@12345")
+        self.assertEqual(user.email, "normal@user.com")
+        self.assertTrue(user.is_active)
+        self.assertFalse(user.is_staff)
+        self.assertFalse(user.is_superuser)
+        try:
+            self.assertIsNone(user.username)
+        except AttributeError:
+            pass
+        with self.assertRaises(TypeError):
+            User.objects.create_user()
+        with self.assertRaises(TypeError):
+            User.objects.create_user(email="")
+        with self.assertRaises(ValueError):
+            User.objects.create_user(email="", password="foo")
 
+    def test_create_superuser(self):
+        # Verify the creation of a superuser
+        User = get_user_model()
+        admin_user = User.objects.create_superuser(email="super@user.com", password="Password@12345")
+        self.assertEqual(admin_user.email, "super@user.com")
+        self.assertTrue(admin_user.is_active)
+        self.assertTrue(admin_user.is_staff)
+        self.assertTrue(admin_user.is_superuser)
+        try:
+            self.assertIsNone(admin_user.username)
+        except AttributeError:
+            pass
+        with self.assertRaises(ValueError):
+            User.objects.create_superuser(email="super@user.com", password="foo", is_superuser=False)
     def test_create_user(self):
         # Verify that a user is created successfully
         self.assertEqual(CustomUser.objects.count(), 1)
