@@ -183,14 +183,14 @@ export default function EducationalResources() {
                 alt=""
                 style={{ transform: "rotate(10deg)" }}
               />
-              <h1 className="mb-4">
+              {/* <h1 className="mb-4">
                 Therichpost.com <br className="d-none d-lg-inline" />
                 free code snippets.
               </h1>
               <p className="lead text-muted">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
                 eiusmod tempor incididunt ut labore.
-              </p>
+              </p> */}
             </div>
           </div>
         </div>
