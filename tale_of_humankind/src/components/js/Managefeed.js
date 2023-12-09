@@ -10,8 +10,8 @@ export default function ManageFeed() {
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetch_feed/`, { withCredentials: true });
-      //console.log("response", response.data);
+      const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchUserFeed/`, { withCredentials: true });
+      // console.log("response", response.data);
 
       setData(response.data);
     };
@@ -69,7 +69,8 @@ const handleDelete = async (id) => {
               <tbody>
                 {data.map((resource, index) => (
                   <tr key={index}>
-                    <img src={`${process.env.REACT_APP_DJANGO_APP_API_URL}${resource.image}`} alt={resource.title} />
+                    {console.log("managefeed", resource.image)}
+                    <img src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} />
                     {/* <td>{resource.image}</td> */}
                     <td>{resource.content}</td>
                     <td><a href={resource.resource_url}>View Link</a></td>

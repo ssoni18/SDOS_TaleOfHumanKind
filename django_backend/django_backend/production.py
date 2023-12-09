@@ -1,8 +1,7 @@
 from .settings import *
 
 DEBUG = False
-ALLOWED_HOSTS = ['test-website.taleofhumankind.com']
-
+ALLOWED_HOSTS = ['54.83.17.157', 'test-website.taleofhumankind.com', '127.0.0.1', 'localhost', '127.0.0.1:8000']
 
 # Session
-SESSION_COOKIE_SECURE = True  # True in production if using HTTPS
+SESSION_COOKIE_SECURE = False  # True in production if using HTTPS

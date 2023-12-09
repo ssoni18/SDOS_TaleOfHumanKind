@@ -43,8 +43,8 @@ export default function EducationalResources() {
         withCredentials: true
       })
       .then((response) => {
-        //console.log(response);
-        setFeedbackMessage("Campaign added successfully!");
+        // console.log(response);
+        setFeedbackMessage("Campaign added successfully! Please wait for your mentor to approve it.");
       })
       .catch((error) => {
         console.error(error);
