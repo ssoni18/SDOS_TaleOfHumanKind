@@ -4,7 +4,6 @@ import 'react-social-icons/linkedin'
 import 'react-social-icons/facebook'
 import 'react-social-icons/twitter'
 import 'react-social-icons/instagram'
-// renders: vimeo icon
 <SocialIcon url="www.vimeo.com" />
 export default function Footer() {
   return (
