@@ -259,8 +259,8 @@ export default function RegisterPage() {
 
             <div className="col-lg-6 col-xl-5 ms-xl-auto px-lg-4 text-center text-primary">
               <img className="img-fluid mb-4" width="300" src="https://therichpost.com/wp-content/uploads/2021/06/login_page_image.png" alt="" style={{ transform: "rotate(10deg)" }} />
-              <h1 className="mb-4">Therichpost.com <br className="d-none d-lg-inline" />free code snippets.</h1>
-              <p className="lead text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+              {/* <h1 className="mb-4">Therichpost.com <br className="d-none d-lg-inline" />free code snippets.</h1>
+              <p className="lead text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p> */}
             </div>
           </div>
         </div>
