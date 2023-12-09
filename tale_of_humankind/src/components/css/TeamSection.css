@@ -1,12 +1,19 @@
-body{
-    background:#eee;
+    body{
+        background:#eee;
     }
+    .advisor_thumb img {
+        width: 100%; /* Ensure the image fills the container horizontally */
+        height: 100%; /* Ensure the image fills the container vertically */
+        display: block; /* Remove any default inline styling */
+        object-fit: cover; /* Maintain aspect ratio and cover the container */
+      }
     .single_advisor_profile {
         position: relative;
         margin-bottom: 50px;
         -webkit-transition-duration: 500ms;
         transition-duration: 500ms;
         z-index: 1;
+        overflow: hidden;
         border-radius: 15px;
         -webkit-box-shadow: 0 0.25rem 1rem 0 rgba(47, 91, 234, 0.125);
         box-shadow: 0 0.25rem 1rem 0 rgba(47, 91, 234, 0.125);
@@ -17,7 +24,7 @@ body{
         border-radius: 15px 15px 0 0;
         margin: 0 auto;
         padding: 30px 30px 0 30px;
-        background-color: #3f43fd;
+        background-color: black;
         overflow: hidden;
     }
     .single_advisor_profile .advisor_thumb::after {

@@ -134,10 +134,10 @@ export default function RegisterPage() {
         setisLoading(false);
         if (response.data.status === 'success') {
           navigate('/Login?registered=true');  // Redirect to the login page with a query parameter
-          console.log(response);
+          //console.log(response);
         } else {
           setErrorMessage(response.data.message);
-          console.log(response.data.message);
+          //console.log(response.data.message);
         }
       })
       .catch((error) => {
@@ -157,7 +157,7 @@ export default function RegisterPage() {
   }
 
   const handleRoleChange = (e) => {
-    console.log("current target value: ", e.target.value);
+    //console.log("current target value: ", e.target.value);
     setSelectedRole(e.target.value);
   };
 

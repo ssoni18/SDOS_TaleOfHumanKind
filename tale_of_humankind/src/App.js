@@ -24,18 +24,17 @@ import EducationForm from './components/js/form';
 import Resource from './components/js/EditResources';
 import ManageFeed from './components/js/Managefeed';
 import FeedForm from './components/js/FeedForm';
+import DonationPage from './components/js/DonationPage';
 import EditFeed from './components/js/EditFeed';
 import PublicProfile from './components/js/PublicProfile';
 
 function App() {
   const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
   const userType = userData ? userData.user_type : null; // Access userType from userData
-  console.log("userType now at App.js", userType);
 
   return (  
     <>
       <Navbar />
-      
       <Routes>
         <Route path="/contactUs" element={<ContactUs />}></Route>
         <Route path="/" element={<HomePage />}></Route>
@@ -49,9 +48,9 @@ function App() {
         {userType !== 'Mentor' && <Route path="/manageEducationalResources" element={<ForbiddenPage />} />}
         {userType === 'Mentor' && <Route path="/manageInvitations" element={<ManageInvitations />} />}
         {userType !== 'Mentor' && <Route path="/manageInvitations" element={<ForbiddenPage />} />}
-
         {userType === 'Changemaker' && <Route path="/manageCampaigns" element={<ManageCampaigns />} />}
         {userType !== 'Changemaker' && <Route path="/manageCampaigns" element={<ForbiddenPage />} />}
+        <Route path="/donationPage" element={<DonationPage />}></Route>
         <Route path="/viewEducationalResources" element={<ViewEducationalResources />}></Route>
         <Route path="/viewCampaigns" element={<ViewCampaigns />}></Route>
         <Route path="/payment" element={<Payment />}></Route>

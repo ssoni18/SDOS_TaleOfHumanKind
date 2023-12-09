@@ -3,8 +3,10 @@ from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import CustomUser, Address, EducationalResource, FeedItem ,Like, Campaign
+from .models import CustomUser, Address, EducationalResource, FeedItem ,Like, Campaign, Donation
 import os
+from django.db.models import Q
+
 from django.contrib.auth import logout as auth_logout
 from django.core.serializers import serialize
 from django.core.exceptions import ValidationError
@@ -17,6 +19,62 @@ from django.shortcuts import redirect
 from datetime import datetime
 from django.contrib.auth import get_user_model
 
+import razorpay
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+import razorpay
+from rest_framework.response import Response
+from rest_framework import status
+import json
+
+@api_view(['POST'])
+def verifySignature(request):
+    # request.data is coming from frontend
+    res = json.loads(request.data["response"])
+
+    ord_id = ""
+    raz_pay_id = ""
+    raz_signature = ""
+    print(res)
+    for key in res.keys():
+        if key == 'razorpay_order_id':
+            ord_id = res[key]
+        elif key == 'razorpay_payment_id':
+            raz_pay_id = res[key]
+        elif key == 'razorpay_signature':
+            raz_signature = res[key]
+
+    # get order by payment_id which we've created earlier with isPaid=False
+    order = Donation.objects.get(order_payment_id=ord_id)
+
+    # we will pass this whole data in razorpay client to verify the payment
+    data = {
+        'razorpay_order_id': ord_id,
+        'razorpay_payment_id': raz_pay_id,
+        'razorpay_signature': raz_signature
+    }
+
+    client = razorpay.Client(auth=(os.environ.get("PUBLIC_KEY"), os.environ.get("SECRET_KEY")))
+
+    # checking if the transaction is valid or not by passing above data dictionary in 
+    # razorpay client if it is "valid" then check will return None
+    check = client.utility.verify_payment_signature(data)
+
+    if check is not None:
+        print("Redirect to error url or error page")
+        return Response({'error': 'Something went wrong'})
+
+    # if payment is successful that means check is None then we will turn isPaid=True
+    order.is_paid = True
+    order.save()
+
+    res_data = {
+        'message': 'payment successfully received!'
+    }
+
+    return Response(res_data)
 
 @csrf_exempt
 def is_authenticated(request):
@@ -151,8 +209,6 @@ def login_auth(request):
                 'phone' : user.primary_phone_number,
                 'profile_image': profile_image_url
             }
-            # print("auth?", request.user.is_authenticated)
-            # print("sesh items in login", request.session.items())
             
             return JsonResponse({'status': 'success' , 'message': "Server: Login Successful", 'user_data': user_data}, status=200)
         else:
@@ -222,13 +278,27 @@ def activateUser(request, uidb64, token):
 @csrf_exempt
 def fetchMentors(request):
     if request.user.is_authenticated:
-        mentors = CustomUser.objects.filter(user_type="Mentor")
-        mentors_data = {mentor.email: mentor.first_name for mentor in mentors}
-        response_data = {'mentors': mentors_data}
-        return JsonResponse(response_data)
+        if request.method == 'GET':
+            try:
+                mentors = CustomUser.objects.filter(user_type="Mentor")
+                mentors_data = {mentor.email: mentor.first_name for mentor in mentors}
+                response_data = {'mentors': mentors_data}
+                return JsonResponse(response_data)
+            except ValidationError as e:
+                return JsonResponse({"status": "failure", "Server: message": str(e)}, status=400)
     else:
         return JsonResponse({'is_authenticated': False})
 
+@csrf_exempt
+def fetchTeam(request):
+    if request.method == 'GET':
+        try:
+            print("here")
+            members = CustomUser.objects.filter(is_active=True).exclude(user_type="")
+            member_list = list(members.values("first_name", "user_type", "profile_image"))
+            return JsonResponse(member_list, safe=False)
+        except ValidationError as e:
+            return JsonResponse({"status": "failure", "Server: message": str(e)}, status=400)
 
 @csrf_exempt
 def getMentor(email):
@@ -398,15 +468,60 @@ def fetchEducationalResources(request):
         resources_list = list(resources.values('title', 'content_type', 'resource_url', 'creator__email', 'creator__id', 'created_date', 'updated_date', 'image'))
         return JsonResponse(resources_list, safe=False)
 
+@csrf_exempt
+def createOrder(request):
+    if request.method == 'POST':
+        try:
+            client = razorpay.Client(auth=(os.environ.get("PUBLIC_KEY"), os.environ.get("SECRET_KEY")))
+            print(os.environ.get("PUBLIC_KEY"),os.environ.get("SECRET_KEY"))
+            amount = int(request.POST.get('amount'))
+            campaignId = request.POST.get('campaignId')
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            print(type(amount))
+            
+            if not Campaign.objects.filter(id=campaignId).exists():
+                return JsonResponse({'status': 'error', 'message': 'Server: Campaign does not exist'}, status=400)
+            campaignArr = Campaign.objects.filter(id=campaignId)
+            campaignObj=campaignArr[0]
+            if amount<=0:
+                return JsonResponse({'status': 'error', 'message': 'Goal Amount should be greater than zero!'}, status=400)
+
+            if name!="" and email!="":
+                notes={
+                    'name': name,
+                    'email': email
+                }
+            else:
+                notes={}
+            print("here", amount, campaignId, name, email)
+            
+            response = client.order.create({
+                'amount': amount * 100,  # amount in the smallest currency unit
+                'currency': 'INR',
+                'receipt':  "for Campaign: "+campaignId,
+                'notes': notes
+            })
+
+            donation = Donation.objects.create(
+                email=email, 
+                campaign=campaignObj,
+                amount=amount,
+                order_payment_id=response['id'],
+                is_paid=False,
+                created_at=timezone.now(),
+            )
+            
+            return JsonResponse({'order_id': response['id'], 'amount': response['amount']})
+            
+        except ValidationError as e:
+                return JsonResponse({"status": "failure", "Server: message": str(e)}, status=400)
 
 @csrf_exempt
 def fetchCampaigns(request):
     if request.method == 'GET':
-        # campaign = Campaign.objects.filter(isApproved=True, goal_amount__gt=0)
         campaign = Campaign.objects.filter(isApproved=True)
-        print("campaign", campaign)
-        campaign_list = list(campaign.values('title', 'description', 'mentor__first_name', 'changemaker__first_name', 'image', 'goal_amount', 'current_amount'))
-        print('campaign list', campaign_list)
+        campaign_list = list(campaign.values('id', 'title', 'description', 'mentor__first_name', 'changemaker__first_name', 'image', 'goal_amount', 'current_amount'))
         return JsonResponse(campaign_list, safe=False)
 
 @csrf_exempt

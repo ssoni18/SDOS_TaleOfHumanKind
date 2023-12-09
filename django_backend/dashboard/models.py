@@ -59,25 +59,25 @@ class Campaign(models.Model):
     title = models.CharField(max_length=200, null=True)
     description = models.TextField(null=True)
     mentor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='mentored_campaigns', null=True)
-    current_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    goal_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    current_amount = models.IntegerField(default=0)
+    goal_amount = models.IntegerField(default=0)
     isApproved = models.BooleanField(default=False, null=True)
     changemaker = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='created_campaigns', null=True)
     created_date = models.DateTimeField(null=True)
     updated_date = models.DateTimeField(null=True)
     image = models.ImageField(upload_to='images/', null=True)
 
-class CampaignChangemakers(models.Model):
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True)
-    changemaker = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
-
 class Donation(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
-    receipt_id = models.CharField(max_length=100, blank=True, null=True)
-    created_at = models.DateTimeField(null=True)
-    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, null=True)
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
+    amount = models.IntegerField(default=0)
+    order_payment_id = models.CharField(max_length=200, verbose_name="Order ID")
+    is_paid = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"Donation - {self.name} - {self.amount}"
 
+    
 class EducationalResource(models.Model):
     title = models.CharField(max_length=200, null=True)
     content_type = models.CharField(max_length=100, null=True)
@@ -86,14 +86,6 @@ class EducationalResource(models.Model):
     created_date = models.DateTimeField(null=True)
     updated_date = models.DateTimeField(null=True)
     image = models.ImageField(upload_to='images/', null=True)
-
-class Transaction(models.Model):
-    payment_id = models.CharField(max_length=200, verbose_name="Payment ID")
-    order_id = models.CharField(max_length=200, verbose_name="Order ID")
-    signature = models.CharField(max_length=500, verbose_name="Signature", blank=True, null=True)
-    amount = models.IntegerField(verbose_name="Amount")
-    created_at = models.DateTimeField(auto_now_add=True)
-    
     
 class FeedItem(models.Model):
     creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True)

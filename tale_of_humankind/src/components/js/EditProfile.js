@@ -11,14 +11,12 @@ export default function Profile() {
   const userData = useSelector((state) => state.auth.userData); // Access userData from Redux store
   const dispatch = useDispatch();
 
-  console.log("user data at profile", userData);
   const [feedbackMessage, setFeedbackMessage] = useState(null);
   const [formState, setFormState] = useState({
     ...userData,
     address: userData.address || {},
   });
   const handleSubmit = () => {
-    console.log("formState", formState);
     axios
       .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/editProfile/`, formState, {
         headers: {
@@ -27,7 +25,6 @@ export default function Profile() {
         withCredentials: true,
       })
       .then((response) => {
-        console.log(response);
         setFeedbackMessage("Profile updated successfully!");
         dispatch({ type: 'UPDATE_USER_DATA', userData: response.data.user_data }); // Update userData in redux store
         navigate('/userProfile');
@@ -250,7 +247,6 @@ export default function Profile() {
                             ...formState,
                             profileImage: file
                           });
-                          console.log(file);
                         }}
                       />
                       <label htmlFor="image">Image</label>
