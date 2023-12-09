@@ -6,7 +6,6 @@ import Navbar from "./components/js/Navbar";
 import HomePage from "./components/js/HomePage";
 import ContactUs from "./components/js/ContactUs";
 import RegisterPage from "./components/js/RegisterPage";
-import AboutUs from "./components/js/AboutUs";
 import LoginPage from "./components/js/LoginPage";
 import TeamSection from "./components/js/TeamSection";
 import UserProfile from "./components/js/UserProfile";
@@ -37,7 +36,6 @@ function App() {
       <Routes>
         <Route path="/contactUs" element={<ContactUs />}></Route>
         <Route path="/" element={<HomePage />}></Route>
-        <Route path="/aboutUs" element={<AboutUs />}></Route>
         <Route path="/Login" element={<LoginPage />}></Route>
         <Route path="/registerPage" element={<RegisterPage />}></Route>
         <Route path="/teamSection" element={<TeamSection />}></Route>
