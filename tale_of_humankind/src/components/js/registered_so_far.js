@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 
 const columnContent = [
   {
-    limit: 100,
+    limit: 5,
     type:" Collaborations with Organizations"
   },
   {
