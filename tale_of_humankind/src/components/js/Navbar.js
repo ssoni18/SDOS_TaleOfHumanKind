@@ -177,7 +177,7 @@ function NavFunction() {
                         <span className="picon">
                           <FontAwesomeIcon icon={faEnvelope} />
                         </span>
-                        View Campaign Invitations
+                          Campaign Invitations
                       </Dropdown.Item>
                     )}
                     {/* <Dropdown.Item as={Link} to="/Settings">

@@ -121,7 +121,11 @@ body {
 }
 
 .profile-dropdown-menu a {
+  white-space: normal;
   padding: 10px 10px; /* Adjusted padding */
+  max-width: 200px; /* Adjust the value based on your preference */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .profile-dropdown-menu a:hover {

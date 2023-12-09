@@ -16,7 +16,7 @@ import ManageInvitations from "./components/js/ManageInvitations"
 import ManageCampaigns from "./components/js/ManageCampaigns";
 import ViewEducationalResources from "./components/js/ViewEducationalResources";
 import Profile from './components/js/EditProfile';
-import { Payment } from "./components/js/payments";
+// import { Payment } from "./components/js/payments";
 import Feed from "./components/js/Feed";
 import ForbiddenPage from "./components/js/403Page";
 import ViewCampaigns from "./components/js/viewCampaigns";
@@ -53,7 +53,7 @@ function App() {
         <Route path="/donationPage" element={<DonationPage />}></Route>
         <Route path="/viewEducationalResources" element={<ViewEducationalResources />}></Route>
         <Route path="/viewCampaigns" element={<ViewCampaigns />}></Route>
-        <Route path="/payment" element={<Payment />}></Route>
+        {/* <Route path="/payment" element={<Payment />}></Route> */}
         <Route path="/feed" element={<Feed />}></Route>
         <Route path="/editprofile" element={<Profile />}></Route>
         <Route path="/form" element={<EducationForm />}></Route>
