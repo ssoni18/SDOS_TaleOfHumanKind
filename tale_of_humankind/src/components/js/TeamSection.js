@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import "font-awesome/css/font-awesome.min.css";
 import "../css/TeamSection.css";
-import EmptyData from './EmptyData'; 
+import EmptyData from './EmptyData';
 
 function TeamSection() {
   const [resources, setResources] = useState([]);
@@ -16,12 +16,12 @@ function TeamSection() {
           { withCredentials: true }
         );
         setResources(response.data);
-      } catch (error) {}
+      } catch (error) { }
     };
 
     fetchData();
   }, []);
-  
+
   const Mentors = resources.filter(resource => resource.user_type === "Mentor");
   const Changemakers = resources.filter(resource => resource.user_type === "Changemaker");
 
@@ -46,23 +46,23 @@ function TeamSection() {
       </h5>
 
       <Row className="justify-content-center">
-      {Mentors.length === 0 ? (
-        <EmptyData
-          title="No Mentors till now"
-          description="Looks like there are no Mentors."
-        />) :Mentors.map((resource, index) => (
+        {Mentors.length === 0 ? (
+          <EmptyData
+            title="No Mentors till now"
+            description="Looks like there are no Mentors."
+          />) : Mentors.map((resource, index) => (
             <Col key={index} xs={12} sm={6} lg={3}>
               <div className="single_advisor_profile wow fadeInUp">
                 <div className="advisor_thumb">
-                  
-                <img src={
+
+                  <img src={
                     resource.profile_image
                       ? `${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${resource.profile_image}`
                       : "https://bootdey.com/img/Content/avatar/avatar1.png"
                   }
-                  title=""
-                  alt=""
-                />
+                    title=""
+                    alt=""
+                  />
                   <div className="social-info">
                     <a href={resource.facebook}>
                       <i className="fa fa-facebook"></i>
@@ -88,16 +88,20 @@ function TeamSection() {
       </h5>
 
       <Row className="justify-content-center">
-      {Changemakers.length === 0 ? (
-        <EmptyData
-          title="No Changemakers till now"
-          description="Looks like there are no Changemakers."
-        />) :Changemakers.map((resource, index) => (
+        {Changemakers.length === 0 ? (
+          <EmptyData
+            title="No Changemakers till now"
+            description="Looks like there are no Changemakers."
+          />) : Changemakers.map((resource, index) => (
             <Col key={index} xs={12} sm={6} lg={3}>
               <div className="single_advisor_profile wow fadeInUp">
                 <div className="advisor_thumb">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                  <img src={
+                    resource.profile_image
+                      ? `${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${resource.profile_image}`
+                      : "https://bootdey.com/img/Content/avatar/avatar1.png"
+                  }
+                    title=""
                     alt=""
                   />
                   <div className="social-info">

@@ -53,7 +53,8 @@ function App() {
         {/* <Route path="/payment" element={<Payment />}></Route> */}
         <Route path="/feed" element={<Feed />}></Route>
         <Route path="/editprofile" element={<Profile />}></Route>
-        <Route path="/form" element={<EducationForm />}></Route>
+        {userType === 'Mentor' && <Route path="/form" element={<EducationForm />} />}
+        {userType !== 'Mentor' && <Route path="/form" element={<ForbiddenPage />} />}
         <Route path="/editresource/:id" element={<Resource />}></Route>
         <Route path="/managefeed" element={<ManageFeed />}></Route>
         <Route path="/feedForm" element={<FeedForm />}></Route>
