@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import "font-awesome/css/font-awesome.min.css";
 import "../css/TeamSection.css";
+import EmptyData from './EmptyData'; 
 
 function TeamSection() {
   const [resources, setResources] = useState([]);
@@ -20,11 +21,13 @@ function TeamSection() {
 
     fetchData();
   }, []);
+  
+  const Mentors = resources.filter(resource => resource.user_type === "Mentor");
+  const Changemakers = resources.filter(resource => resource.user_type === "Changemaker");
 
   return (
     <Container>
       <Row className="justify-content-center">
-        {console.log(resources)}
         <Col xs={12} sm={8} lg={6}>
           <div className="section_heading text-center wow fadeInUp">
             <h3 className="mt-3">
@@ -43,9 +46,11 @@ function TeamSection() {
       </h5>
 
       <Row className="justify-content-center">
-        {resources
-          .filter((resource) => resource.user_type === "Mentor")
-          .map((resource, index) => (
+      {Mentors.length === 0 ? (
+        <EmptyData
+          title="No Mentors till now"
+          description="Looks like there are no Mentors."
+        />) :Mentors.map((resource, index) => (
             <Col key={index} xs={12} sm={6} lg={3}>
               <div className="single_advisor_profile wow fadeInUp">
                 <div className="advisor_thumb">
@@ -83,9 +88,11 @@ function TeamSection() {
       </h5>
 
       <Row className="justify-content-center">
-        {resources
-          .filter((resource) => resource.user_type === "Changemaker")
-          .map((resource, index) => (
+      {Changemakers.length === 0 ? (
+        <EmptyData
+          title="No Changemakers till now"
+          description="Looks like there are no Changemakers."
+        />) :Changemakers.map((resource, index) => (
             <Col key={index} xs={12} sm={6} lg={3}>
               <div className="single_advisor_profile wow fadeInUp">
                 <div className="advisor_thumb">
