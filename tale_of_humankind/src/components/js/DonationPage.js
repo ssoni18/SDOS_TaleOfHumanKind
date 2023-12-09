@@ -103,7 +103,7 @@ const MakeDonations = () =>
 
     const { amount, order_id } = orderData.data
     const options = {
-        key: "rzp_test_XUhwUXj0Rb3rI1", 
+        key: `${process.env.PUBLIC_KEY}`, 
         amount: amount.toString(),
         currency: 'INR',
         name: "The Tale of Humankind",
