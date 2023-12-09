@@ -98,9 +98,6 @@ function NavFunction() {
                   More
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item as={Link} to="/aboutUs">
-                    About Us
-                  </Dropdown.Item>
                   <Dropdown.Item as={Link} to="/teamSection">
                     Our Team
                   </Dropdown.Item>

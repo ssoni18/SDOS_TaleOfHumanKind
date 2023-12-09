@@ -56,7 +56,16 @@ export default function ContactUs() {
       {showNotification ? <Notification message={notificationMessage} showNotification={showNotification} onClose={handleNotificationClose} /> : null}
       <div className="container-fluid h-100">
         <div className="row">
-          <div className="col-lg-6">
+          <div className="col-lg-5">
+          <div className="card-shadow">
+                <img
+                  src="https://www.wrappixel.com/demos/ui-kit/wrapkit/assets/images/contact/2.jpg"
+                  className="img-fluid"
+                  alt="Contact"
+                />
+              </div>
+              </div>
+              <div className="col-lg-6">
             <div className="contact-box ml-3">
               <h1 className="font-weight-light mt-2">Quick Contact</h1>
               <form className="mt-4" onSubmit={handleSubmit}>
