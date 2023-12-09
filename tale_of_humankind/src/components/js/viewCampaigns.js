@@ -59,8 +59,8 @@ const ViewCampaigns = () => {
                   {resource.description}
                   <br></br>
                   <br></br>
-                  <p>ChangeMaker: {resource.changemaker__first_name}</p>
-                  <p>Mentor: {resource.mentor__first_name}</p>
+                  <p><b>ChangeMaker:</b> {resource.changemaker__first_name}</p>
+                  <p><b>Mentor:</b> {resource.mentor__first_name}</p>
                 </Card.Text>
                 <Link to="/donationPage" state={{campaignId: resource.id, campaignName: resource.title}}>
                   <center> <Button variant="primary">Fund Now!</Button></center>
@@ -86,8 +86,8 @@ const ViewCampaigns = () => {
                   {resource.description}
                   <br></br>
                   <br></br>
-                  <p>ChangeMaker: {resource.changemaker__first_name}</p>
-                  <p>Mentor: {resource.mentor__first_name}</p>
+                  <p><b>ChangeMaker:</b> {resource.changemaker__first_name}</p>
+                  <p><b>Mentor:</b> {resource.mentor__first_name}</p>
                 </Card.Text>
               </Card.Body>
             </Card>

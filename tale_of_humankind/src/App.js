@@ -8,7 +8,6 @@ import ContactUs from "./components/js/ContactUs";
 import RegisterPage from "./components/js/RegisterPage";
 import AboutUs from "./components/js/AboutUs";
 import LoginPage from "./components/js/LoginPage";
-import SupportUs from "./components/js/SupportUs";
 import TeamSection from "./components/js/TeamSection";
 import UserProfile from "./components/js/UserProfile";
 import EducationalResources from "./components/js/ManageEducationalResources";
@@ -41,7 +40,6 @@ function App() {
         <Route path="/aboutUs" element={<AboutUs />}></Route>
         <Route path="/Login" element={<LoginPage />}></Route>
         <Route path="/registerPage" element={<RegisterPage />}></Route>
-        <Route path="supportUs" element={<SupportUs />}></Route>
         <Route path="/teamSection" element={<TeamSection />}></Route>
         <Route path="/userProfile" element={<UserProfile />}></Route>
         {userType === 'Mentor' && <Route path="/manageEducationalResources" element={<EducationalResources />} />}
