@@ -25,6 +25,7 @@ import FeedForm from './components/js/FeedForm';
 import DonationPage from './components/js/DonationPage';
 import EditFeed from './components/js/EditFeed';
 import PublicProfile from './components/js/PublicProfile';
+import AboutUsPage from './components/js/AboutUs';
 
 function App() {
   const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
@@ -58,7 +59,7 @@ function App() {
         <Route path="/feedForm" element={<FeedForm />}></Route>
         <Route path="/editfeed/:id" element={<EditFeed />}></Route>
         <Route path="/publicprofile/:id" element={<PublicProfile />}></Route>
-
+        <Route path="/aboutus" element={<AboutUsPage />}></Route>
       </Routes>
     </>
   );
