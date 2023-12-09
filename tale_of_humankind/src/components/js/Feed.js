@@ -72,6 +72,8 @@ export default function Home() {
           <div className="post" key={index}>
             <div className={`post-image post-image-${index + 1}`}>
               {/* {//console.log("image" , resource.image)} */}
+              {console.log("feed", `${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${resource.image}`)}
+              {console.log("resource", `${resource.image}`)}
               <img src={`${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${resource.image}`} alt={resource.title} />
             </div>
             <div className="post-content">

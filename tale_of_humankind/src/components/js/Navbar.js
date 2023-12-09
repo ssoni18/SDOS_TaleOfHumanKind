@@ -121,7 +121,7 @@ function NavFunction() {
                     <div className="icon_wrap">
                       {userData.profile_image ? (
                         <img
-                          src={`${process.env.REACT_APP_DJANGO_APP_API_URL}${userData.profile_image}`}
+                          src={`${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${userData.profile_image}`}
                           title=""
                           alt=""
                         />
