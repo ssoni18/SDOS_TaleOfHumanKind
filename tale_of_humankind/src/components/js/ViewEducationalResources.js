@@ -9,7 +9,7 @@ const ViewEducationalResource = () => {
   const [resources, setResources] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,9 +37,13 @@ const ViewEducationalResource = () => {
     return <Loading />;
   }
 
+  function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
   return (
     <div>
-
       <div className="fixed-button" onClick={handleAddUser}>
         <button className="btn btn-secondary">
           <i className="material-icons">&#xE147;</i>
@@ -51,20 +55,26 @@ const ViewEducationalResource = () => {
         <EmptyData
           title="No resources to show"
           description="Looks like there are no resources added yet."
-        />) : (
+        />
+      ) : (
         resources.map((resource, index) => (
           <div className="post" key={index}>
             <div className={`post-image post-image-${index + 1}`}>
+              {console.log("manage resources", resource.image)}
               <img src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} />
             </div>
             <div className="post-content">
-              <p className="post-date">Posted by <a className="post-author" href="#">{resource.creator__email}</a> on <time>{new Date(resource.created_date).toLocaleString('en-GB')}</time></p>
+              <p className="post-date">
+                Posted on <time datetime={resource.created_date}>{formatDate(resource.created_date)}</time> by <a className="post-author" href={`/publicProfile/${resource.creator__id}`}>{resource.creator__email}</a>
+              </p>
               <div className="post-excerpt">
                 <p>{resource.content_type}</p>
               </div>
-              <a className="post-link" href={resource.resource_url} target={resource.resource_url.startsWith('http') ? "_self" : "_blank"}>Go to resource</a>            </div>
+              <a className="post-link" href={resource.resource_url} target={resource.resource_url.startsWith('http') ? "_self" : "_blank"}>Go to resource</a>
+            </div>
           </div>
-        )))}
+        ))
+      )}
     </div>
   );
 };

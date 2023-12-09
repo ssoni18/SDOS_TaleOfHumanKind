@@ -24,7 +24,7 @@ urlpatterns = [
     path('edit_resource/',views.edit_resource,name="edit_resource"),
     path('get_resource_id/<int:id>/' , views.get_resource_id , name = 'get_resource_id'),
     path('delete_resource/' , views.delete_resource , name = 'delete_resource'),
-    path('fetch_feed/' , views.fetch_feed , name = 'fetch_feed'),
+    path('fetchUserFeed/' , views.fetchUserFeed , name = 'fetchUserFeed'),
     path('addfeed/' , views.addfeed, name = 'addfeed'),
     path('delete_feed/' , views.delete_feed , name = 'delete_feed'),
     path('get_feed_id/<int:id>/' , views.get_feed_id , name = 'get_resource_id'),
@@ -36,4 +36,5 @@ urlpatterns = [
     path('fetchTeam/', views.fetchTeam, name="fetchTeam"),
     path('makeDonation/', views.createOrder, name="createOrder"),
     path('verifySignature/', views.verifySignature, name="verifySignature"),
+    path('publicProfile/' , views.publicProfile , name="publicProfile")
 ]

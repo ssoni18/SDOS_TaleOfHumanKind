@@ -9,36 +9,25 @@ import { useSelector, useDispatch } from 'react-redux';
 
 export default function UserProfile() {
   const navigate = useNavigate();
-  const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
-  //console.log("user data at profile", userData);
+
+  const [userData, setUserProfileData] = useState(null); // State to store user profile data
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/is_authenticated/`, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        if (!response.data.is_authenticated) {
-          // Redirect to login page if user is not authenticated
-          navigate("/Login");
-        }
-      })
-      .catch((error) => {
+    const fetchUserProfileData = async () => {
+      try {
+        const id = window.location.pathname.split("/").pop(); // Extract id from the URL
+        const response = await axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/publicProfile/`, { id });
+        setUserProfileData(response.data.user_data);
+      } catch (error) {
         console.error(error);
-      });
-  }, [navigate]); // Added navigate to the dependency array
-
-  // Check if userData is not available or user is not authenticated
-  useEffect(() => {
-    if (!userData) {
-      // Redirect to login page if userData is not available
-      navigate("/Login");
-    }
-  }, [userData, navigate]);
+      }
+    };
+  
+    fetchUserProfileData();
+  }, [window.location.pathname]);
 
   if (!userData) {
-    // Don't render anything if userData is not available
-    return null;
+    return <div></div>; // Render loading state while fetching data
   }
 
   return (
@@ -48,10 +37,7 @@ export default function UserProfile() {
           <div className="col-lg-6">
             <div className="about-text go-to">
               <h3 className="dark-color">{userData.first_name + " " + userData.last_name}</h3>
-              <h6 className="theme-color lead">{userData.user_type}</h6>
-              <Link to="/editprofile">
-                <Button variant="success" className="mr-2">Edit Profile</Button>
-              </Link>
+              <h6 className="theme-color lead">{userData.user_type}</h6> 
               {/* <h6 className="theme-color lead">Role</h6> */}
               <p>
                 Some description that is optional that the user will write about

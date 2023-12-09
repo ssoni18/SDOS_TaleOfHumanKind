@@ -3,7 +3,7 @@ import "../css/LoginPage.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import EmptyData from './EmptyData'; 
+import EmptyData from './EmptyData';
 
 export default function EducationalResources() {
   const [title, setTitle] = useState("");
@@ -14,7 +14,6 @@ export default function EducationalResources() {
   const [mentorsData, setMentorsData] = useState({});
   const [image, setImage] = useState("");
 
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,16 +34,22 @@ export default function EducationalResources() {
     formData.append('Mentor', Mentor);
     formData.append('image', image);  // make sure 'image' is the state where your File object is stored
 
-      axios({
-        method: "post",
-        url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/addCampaign/`,
-        data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true
-      })
+    axios({
+      method: "post",
+      url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/addCampaign/`,
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+      withCredentials: true
+    })
       .then((response) => {
-        //console.log(response);
-        setFeedbackMessage("Campaign added successfully!");
+        // console.log(response);
+        setFeedbackMessage("Campaign added successfully! Please wait for your mentor to approve it.");
+        // Clear the fields directly here
+        setTitle("");
+        setdescription("");
+        setgoalAmount(0);
+        setMentor("");
+        setImage("");
       })
       .catch((error) => {
         console.error(error);
@@ -113,8 +118,8 @@ export default function EducationalResources() {
                         <label htmlFor="goalAmount">Goal Amount</label>
                       </div>
 
-                        <div className="form-floating mb-3">
-                          <select
+                      <div className="form-floating mb-3">
+                        <select
                           className="form-control"
                           id="mentor"
                           type="text"
@@ -123,18 +128,18 @@ export default function EducationalResources() {
                           onChange={(event) => {
                             setMentor(event.target.value);
                           }}
-                          >
+                        >
                           <option value="" disabled selected className="form-floating mb-3"></option>
                           {Object.entries(mentorsData).map(([email, name], index) => (
                             <optgroup label={name} key={index}>
                               <option value={email}>{email}</option>
                             </optgroup>
                           ))}
-                          </select>
+                        </select>
 
-                          <label htmlFor="Mentor">Mentor</label>
-                        </div>
-                        <div className="form-floating mb-3">
+                        <label htmlFor="Mentor">Mentor</label>
+                      </div>
+                      <div className="form-floating mb-3">
                         <input
                           className="form-control"
                           id="image"
@@ -147,7 +152,7 @@ export default function EducationalResources() {
                             //console.log("Image after set", image);
                           }}
                         />
-                        
+
                         <label htmlFor="image">Image</label>
                       </div>
                       <div className="form-group">

@@ -15,6 +15,8 @@ import {
   faCog,
   faSignOutAlt,
   faChevronDown,
+  faRss,
+  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 
 function NavFunction() {
@@ -73,7 +75,7 @@ function NavFunction() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link as={Link} to="/home" style={{ color: "white" }}>
+              <Nav.Link as={Link} to="/feed" style={{ color: "white" }}>
                 Feed
               </Nav.Link>
               <Nav.Link
@@ -163,17 +165,24 @@ function NavFunction() {
 
                     <Dropdown.Item as={Link} to="/managefeed">
                       <span className="picon">
-                        <FontAwesomeIcon icon={faMapMarker} />{" "}
-                        {/* You can change this icon */}
+                        <FontAwesomeIcon icon={faRss} />
                       </span>
                       Manage Feed
                     </Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/Settings">
+                    {userData.user_type === "Mentor" && (
+                      <Dropdown.Item as={Link} to="/manageInvitations">
+                        <span className="picon">
+                          <FontAwesomeIcon icon={faEnvelope} />
+                        </span>
+                          Campaign Invitations
+                      </Dropdown.Item>
+                    )}
+                    {/* <Dropdown.Item as={Link} to="/Settings">
                       <span className="picon">
                         <FontAwesomeIcon icon={faCog} />
                       </span>
                       Settings
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
                     <Dropdown.Item onClick={handleLogout}>
                       <span className="picon">
                         <FontAwesomeIcon icon={faSignOutAlt} />

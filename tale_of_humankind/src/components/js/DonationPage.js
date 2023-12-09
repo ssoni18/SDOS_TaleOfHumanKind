@@ -67,6 +67,7 @@ const MakeDonations = () =>
               Accept: "application/json",
               "Content-Type": "application/json",
             },
+	    withCredentials: true
           })
             .then((res) => {
               setFeedbackMessage("Donation made successfully!")
@@ -105,7 +106,7 @@ const MakeDonations = () =>
         key: "rzp_test_XUhwUXj0Rb3rI1", 
         amount: amount.toString(),
         currency: 'INR',
-        name: "Test Company",
+        name: "The Tale of Humankind",
         description: "Test Transaction",
         image: "",
         order_id: order_id,
