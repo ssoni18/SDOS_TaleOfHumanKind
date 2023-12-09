@@ -17,6 +17,7 @@ export default function Profile() {
     address: userData.address || {},
   });
   const handleSubmit = () => {
+    console.log("formState image: ", formState.profileImage);
     axios
       .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/editProfile/`, formState, {
         headers: {
@@ -27,6 +28,7 @@ export default function Profile() {
       .then((response) => {
         setFeedbackMessage("Profile updated successfully!");
         dispatch({ type: 'UPDATE_USER_DATA', userData: response.data.user_data }); // Update userData in redux store
+        console.log("updated image: ", userData.profile_image)
         navigate('/userProfile');
       })
       .catch((error) => {

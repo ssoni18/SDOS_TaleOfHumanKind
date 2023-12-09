@@ -100,6 +100,7 @@ export default function UserProfile() {
           </div>
           <div className="col-lg-6">
             <div className="about-avatar">
+            {console.log(`${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${userData.profile_image}`)}
               {userData.profile_image ? (
                 <img
                   src={`${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${userData.profile_image}`}

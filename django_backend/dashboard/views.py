@@ -193,7 +193,7 @@ def login_auth(request):
             address_data = serialize('json', [user.address])
             address = json.loads(address_data)[0]['fields']
             if user.profile_image:
-                profile_image_url = user.profile_image.url
+                profile_image_url = user.profile_image.url[7:]  # Trim off the "/media" prefix
             else:
                 profile_image_url = None
             
@@ -227,7 +227,7 @@ def getUserData(request):
             address_data = serialize('json', [user.address])
             address = json.loads(address_data)[0]['fields']
             if user.profile_image:
-                profile_image_url = user.profile_image.url
+                profile_image_url = user.profile_image.url[7:]  # Trim off the "/media" prefix
             else:
                 profile_image_url = None
 
@@ -593,7 +593,7 @@ def editProfile(request):
                 state = request.POST.get('address[state]')
                 dob = request.POST.get('dob')
                 image = request.FILES.get('profileImage')
-                
+                print('image', image)
                 if email != request.POST.get('email'):
                     return JsonResponse({"status": "failure", "message": "Server: Unauthorized Operation"}, status=401)
                 
@@ -648,9 +648,11 @@ def editProfile(request):
                 address_data = serialize('json', [user.address])
                 address = json.loads(address_data)[0]['fields']
                 if user.profile_image:
-                    profile_image_url = user.profile_image.url
+                    profile_image_url = user.profile_image.url[7:]  # Trim off the "/media" prefix
                 else:
                     profile_image_url = None
+
+                print('profile before sending', profile_image_url)
 
                 user_data = {
                     'id': user.id,
@@ -779,6 +781,7 @@ def addfeed(request):
             creator = request.user
             image = request.FILES.get('image')
             print(content,resource_url)
+            print('feed image', image)
             # Check if all required fields are provided
             if not content  or not resource_url:
                 return JsonResponse({'status': 'error', 'message': 'All fields are required!'}, status=400)
@@ -923,7 +926,7 @@ def publicProfile(request):
             address_data = serialize('json', [user.address])
             address = json.loads(address_data)[0]['fields']
             if user.profile_image:
-                profile_image_url = user.profile_image.url
+                profile_image_url = user.profile_image.url[7:]  # Trim off the "/media" prefix
             else:
                 profile_image_url = None
 
