@@ -61,7 +61,7 @@ const ViewEducationalResource = () => {
           <div className="post" key={index}>
             <div className={`post-image post-image-${index + 1}`}>
               {console.log("manage resources", resource.image)}
-              <img src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} />
+              <img src={`${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${resource.image}`} alt={resource.title} />
             </div>
             <div className="post-content">
               <p className="post-date">

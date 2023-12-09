@@ -52,7 +52,7 @@ function TeamSection() {
                   
                 <img src={
                     resource.profile_image
-                      ? `${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.profile_image}`
+                      ? `${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${resource.profile_image}`
                       : "https://bootdey.com/img/Content/avatar/avatar1.png"
                   }
                   title=""

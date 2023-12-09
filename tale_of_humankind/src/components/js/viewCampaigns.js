@@ -52,7 +52,7 @@ const ViewCampaigns = () => {
         />) :fundedCampaigns.map((resource, index) => (
           <Col xs={12} sm={6} lg={3} key={index} className="mt-5">
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top"src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} /> 
+              <Card.Img variant="top"src={`${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${resource.image}`} alt={resource.title} /> 
               <Card.Body>
               <center><Card.Title> {resource.title}</Card.Title></center>
                 <Card.Text>
@@ -79,7 +79,7 @@ const ViewCampaigns = () => {
         />) :nonFundedCampaigns.map((resource, index) => (
           <Col xs={12} sm={6} lg={3} key={index} className="mt-5">
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top"src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} /> 
+              <Card.Img variant="top"src={`${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${resource.image}`} alt={resource.title} /> 
               <Card.Body>
                 <center><Card.Title> {resource.title}</Card.Title></center>
                 <Card.Text>

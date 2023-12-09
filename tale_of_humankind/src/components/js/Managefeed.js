@@ -70,7 +70,7 @@ const handleDelete = async (id) => {
                 {data.map((resource, index) => (
                   <tr key={index}>
                     {console.log("managefeed", resource.image)}
-                    <img src={`${process.env.REACT_APP_DJANGO_APP_API_URL}/media/${resource.image}`} alt={resource.title} />
+                    <img src={`${process.env.REACT_APP_DJANGO_MEDIA_URL}/media/${resource.image}`} alt={resource.title} />
                     {/* <td>{resource.image}</td> */}
                     <td>{resource.content}</td>
                     <td><a href={resource.resource_url}>View Link</a></td>
