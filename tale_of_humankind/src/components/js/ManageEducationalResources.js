@@ -19,7 +19,7 @@ export default function EducationalResources() {
     fetchData();
   }, []);
 const handleAddUser = () => {
-  navigate('/form');
+  navigate('/addEducationalResource');
 };
 const handleEdit = (id) => {
   navigate(`/editresource/${id}`);

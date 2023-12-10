@@ -27,7 +27,7 @@ const ViewEducationalResource = () => {
   }, []);
 
   const handleAddUser = () => {
-    navigate('/form');
+    navigate('/addEducationalResource');
   };
 
 

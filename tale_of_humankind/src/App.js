@@ -18,7 +18,7 @@ import Profile from './components/js/EditProfile';
 import Feed from "./components/js/Feed";
 import ForbiddenPage from "./components/js/403Page";
 import ViewCampaigns from "./components/js/viewCampaigns";
-import EducationForm from './components/js/form';
+import AddEducationalResource from './components/js/AddEducationalResource';
 import Resource from './components/js/EditResources';
 import ManageFeed from './components/js/ManageFeed';
 import AddFeed from './components/js/AddFeed';
@@ -33,7 +33,7 @@ function App() {
   const userType = userData ? userData.user_type : null; // Access userType from userData
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
-  return (  
+  return (
     <>
       <Navbar />
       <Routes>
@@ -43,26 +43,23 @@ function App() {
         <Route path="/registerPage" element={<RegisterPage />}></Route>
         <Route path="/teamSection" element={<TeamSection />}></Route>
         <Route path="/userProfile" element={<UserProfile />}></Route>
-        {isLoggedIn && userType === 'Mentor' && <Route path="/manageEducationalResources" element={<EducationalResources />} />}
-        {isLoggedIn && userType !== 'Mentor' && <Route path="/manageEducationalResources" element={<ForbiddenPage />} />}
-        {isLoggedIn && userType === 'Mentor' && <Route path="/manageInvitations" element={<ManageInvitations />} />}
-        {isLoggedIn && userType !== 'Mentor' && <Route path="/manageInvitations" element={<ForbiddenPage />} />}
-        {isLoggedIn && userType === 'Changemaker' && <Route path="/manageCampaigns" element={<ManageCampaigns />} />}
-        {isLoggedIn && userType !== 'Changemaker' && <Route path="/manageCampaigns" element={<ForbiddenPage />} />}
+        {isLoggedIn && userType === 'Mentor' ? <Route path="/manageEducationalResources" element={<EducationalResources />} /> : <Route path="/manageEducationalResources" element={<ForbiddenPage />} />}
+        {isLoggedIn && userType === 'Mentor' ? <Route path="/addEducationalResource" element={<AddEducationalResource />} /> : <Route path="/addEducationalResource" element={<ForbiddenPage />} />}
+        {isLoggedIn && userType === 'Mentor' ? <Route path="/manageInvitations" element={<ManageInvitations />} /> : <Route path="/manageInvitations" element={<ForbiddenPage />} />}
+        {isLoggedIn && userType === 'Changemaker' ? <Route path="/manageCampaigns" element={<ManageCampaigns />} /> : <Route path="/manageCampaigns" element={<ForbiddenPage />} />}
         <Route path="/donationPage" element={<DonationPage />}></Route>
         <Route path="/viewEducationalResources" element={<ViewEducationalResources />}></Route>
         <Route path="/viewCampaigns" element={<ViewCampaigns />}></Route>
         {/* <Route path="/payment" element={<Payment />}></Route> */}
         <Route path="/feed" element={<Feed />}></Route>
         <Route path="/editprofile" element={<Profile />}></Route>
-        {isLoggedIn && userType === 'Mentor' && <Route path="/form" element={<EducationForm />} />}
-        {isLoggedIn && userType !== 'Mentor' && <Route path="/form" element={<ForbiddenPage />} />}
         <Route path="/editresource/:id" element={<Resource />}></Route>
         <Route path="/manageFeed" element={<ManageFeed />}></Route>
         {isLoggedIn ? <Route path="/addFeed" element={<AddFeed />} /> : <Route path="/addFeed" element={<Navigate to="/login" />} />}
-        <Route path="/editfeed/:id" element={<EditFeed />}></Route>
-        <Route path="/publicprofile/:id" element={<PublicProfile />}></Route>
-        <Route path="/aboutus" element={<AboutUsPage />}></Route>
+        {isLoggedIn ? <Route path="/editFeed/:id" element={<AddFeed />} /> : <Route path="/editFeed/:id" element={<Navigate to="/login" />} />}
+        <Route path="/publicProfile/:id" element={<PublicProfile />}></Route>
+        <Route path="/aboutUs" element={<AboutUsPage />}></Route>
+        <Route path="*" element={<ForbiddenPage />} />  {/* Replace with default component */}
       </Routes>
     </>
   );
