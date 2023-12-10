@@ -9,28 +9,38 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import "../css/TeamSection.css"
 import EmptyData from './EmptyData'; 
+import Loading from './Loading'; // Import the Loading component
 import { Link } from "react-router-dom";
 
 const ViewCampaigns = () => {
 
-  const [resources, setResources] = useState([]);
+  const [campaigns, setCampaigns] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Add a loading state
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true); // Set loading to true at the start of the fetch
         const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchCampaigns/`, { withCredentials: true });
-        //console.log("response", response.data);
-        setResources(response.data);
+        setCampaigns(response.data);
+        setIsLoading(false); // Set loading to false once the fetch is complete
       } catch (error) {
         console.error('Error fetching data: ', error);
+        setIsLoading(false); // Set loading to false if there is an error
       }
     };
 
     fetchData();
   }, []);
   
-  const fundedCampaigns = resources.filter(resource => resource.goal_amount > 0 && resource.current_amount < resource.goal_amount);
-  const nonFundedCampaigns = resources.filter(resource => resource.goal_amount == 0);
+  const fundedCampaigns = campaigns.filter(resource => resource.goal_amount > 0 && resource.current_amount < resource.goal_amount);
+  const nonFundedCampaigns = campaigns.filter(resource => resource.goal_amount === 0);
+
+  if (isLoading) {
+    console.log("loading now")
+    // Render the Loading component while the fetch is in progress
+    return <Loading />;
+  }
 
   return (
     <Container>

@@ -6,23 +6,27 @@ import "../css/EducationResources.css"
 import { useLocation, useNavigate } from 'react-router-dom'; 
 import { useSelector, useDispatch } from 'react-redux';               
 import EmptyData from './EmptyData'; 
+import Loading from './Loading'; // Import the Loading component
 
 export default function Home() {
 
   const [resources, setResources] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
-  const location = useLocation(); // Use useLocation hook to access location state
   const navigate = useNavigate();
   const userData = useSelector(state => state.auth.userData); // Access userData from Redux store
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true); // Set loading to true at the start of the fetch
         const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/getfeed/`, { withCredentials: true });
         //console.log("response", response.data);
         setResources(response.data);
+        setIsLoading(false); // Set loading to false after fetching
       } catch (error) {
         console.error('Error fetching data: ', error);
+        setIsLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -46,12 +50,18 @@ export default function Home() {
   };
 
   const handleAddUser = () => {
-    navigate('/feedForm');
+    navigate('/addFeed');
   };
 
   function formatDate(dateString) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
+  if (isLoading) {
+    console.log("loading now")
+    // Render the Loading component while the fetch is in progress
+    return <Loading />;
   }
 
   return (

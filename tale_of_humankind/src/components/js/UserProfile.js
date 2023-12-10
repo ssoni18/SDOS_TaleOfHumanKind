@@ -20,7 +20,7 @@ export default function UserProfile() {
       .then((response) => {
         if (!response.data.is_authenticated) {
           // Redirect to login page if user is not authenticated
-          navigate("/Login");
+          navigate("/login");
         }
       })
       .catch((error) => {
@@ -32,7 +32,7 @@ export default function UserProfile() {
   useEffect(() => {
     if (!userData) {
       // Redirect to login page if userData is not available
-      navigate("/Login");
+      navigate("/login");
     }
   }, [userData, navigate]);
 

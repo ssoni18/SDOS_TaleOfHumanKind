@@ -4,20 +4,19 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function FeedForm() {
+export default function AddFeed() {
   const [content, setcontent] = useState("");
   const [resourceUrl, setResourceUrl] = useState("");
   const [image, setImage] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState(null);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = () => {
     const formData = new FormData();
     formData.append('content', content);
     formData.append('resourceUrl', resourceUrl);
     formData.append('image', image);  // make sure 'image' is the state where your File object is stored
-    //console.log("Image", image);
-    //console.log("feed ", formData);
 
     axios
       .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/addfeed/`, formData, {
@@ -32,7 +31,7 @@ export default function FeedForm() {
         setcontent("");
         setResourceUrl("");
         setImage("");
-        navigate('/managefeed');
+        navigate('/manageFeed');
       })
       .catch((error) => {
         console.error(error);
@@ -51,7 +50,7 @@ export default function FeedForm() {
                 <div className="card-image post-image post-image-1"></div>
                 <div className="card-content post-content">
                   <div className="card-header px-lg-5">
-                    <div className="card-heading text-primary">feed</div>
+                    <div className="card-heading text-primary">Add New Feed</div>
                   </div>
                   <div className="card-body p-lg-5">
                     <h3 className="mb-4">Add Feed</h3>

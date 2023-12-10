@@ -26,6 +26,7 @@ export default function EducationalResources() {
 
     fetchData();
   }, []);
+  
   const handleSubmit = () => {
     var formData = new FormData();
     formData.append('title', title);
@@ -34,10 +35,7 @@ export default function EducationalResources() {
     formData.append('Mentor', Mentor);
     formData.append('image', image);  // make sure 'image' is the state where your File object is stored
 
-    axios({
-      method: "post",
-      url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/addCampaign/`,
-      data: formData,
+    axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/addCampaign/`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
       withCredentials: true
     })

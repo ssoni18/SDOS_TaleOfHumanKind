@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUserAlt,
   faMapMarker,
-  faCog,
+  // faCog,
   faSignOutAlt,
   faChevronDown,
   faRss,
@@ -57,7 +57,7 @@ function NavFunction() {
       .then((response) => {
         if (response.data.status === "success") {
           dispatch({ type: "LOGOUT" });
-          navigate("/Login");
+          navigate("/login");
         }
       })
       .catch((error) => {
@@ -163,7 +163,7 @@ function NavFunction() {
                       </Dropdown.Item>
                     )}
 
-                    <Dropdown.Item as={Link} to="/managefeed">
+                    <Dropdown.Item as={Link} to="/manageFeed">
                       <span className="picon">
                         <FontAwesomeIcon icon={faRss} />
                       </span>
@@ -193,7 +193,7 @@ function NavFunction() {
                 </Dropdown>
               ) : (
                 <>
-                  <Link to="/Login">
+                  <Link to="/login">
                     <Button variant="success" className="mr-2">
                       Login
                     </Button>

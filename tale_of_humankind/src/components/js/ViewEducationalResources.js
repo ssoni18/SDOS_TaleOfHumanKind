@@ -6,7 +6,7 @@ import Loading from './Loading'; // Import the Loading component
 import { useNavigate } from "react-router-dom";
 const ViewEducationalResource = () => {
 
-  const [resources, setResources] = useState([]);
+  const [resources, setResources] = useState([]);  // Add a resource state
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const navigate = useNavigate();
 
@@ -15,7 +15,6 @@ const ViewEducationalResource = () => {
       try {
         setIsLoading(true); // Set loading to true at the start of the fetch
         const response = await axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/fetchEducationalResources/`, { withCredentials: true });
-        //console.log("response", response.data);
         setResources(response.data);
         setIsLoading(false); // Set loading to false once the fetch is complete
       } catch (error) {
@@ -70,7 +69,7 @@ const ViewEducationalResource = () => {
               <div className="post-excerpt">
                 <p>{resource.content_type}</p>
               </div>
-              <a className="post-link" href={resource.resource_url} target={resource.resource_url.startsWith('http') ? "_self" : "_blank"}>Go to resource</a>
+              <a className="post-link" href={resource.resource_url} target={resource.resource_url.startsWith('http') ? "_self" : "_blank"} rel="noreferrer">Go to resource</a>
             </div>
           </div>
         ))

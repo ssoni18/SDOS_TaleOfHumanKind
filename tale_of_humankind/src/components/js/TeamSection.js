@@ -84,7 +84,7 @@ function TeamSection() {
           ))}
       </Row>
       <h5 className="mt-3">
-        ChangeMakers<span></span>
+        Changemakers<span></span>
       </h5>
 
       <Row className="justify-content-center">
