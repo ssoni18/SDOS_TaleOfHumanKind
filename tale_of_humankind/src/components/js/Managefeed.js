@@ -19,7 +19,7 @@ export default function ManageFeed() {
     fetchData();
   }, []);
 const handleAddUser = () => {
-  navigate('/feedForm');
+  navigate('/addFeed');
 };
 const handleEdit = (id) => {
   navigate(`/editfeed/${id}`);

@@ -268,11 +268,11 @@ def activateUser(request, uidb64, token):
         if default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
-            return redirect(f'{os.environ.get("REACT_APP_API_URL")}/Login?activated=true')
+            return redirect(f'{os.environ.get("REACT_APP_API_URL")}/login?activated=true')
         else:
-            return redirect(f'{os.environ.get("REACT_APP_API_URL")}/Login?activated=false')
+            return redirect(f'{os.environ.get("REACT_APP_API_URL")}/login?activated=false')
     except(TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
-        return redirect(f'{os.environ.get("REACT_APP_API_URL")}/Login?activated=false')
+        return redirect(f'{os.environ.get("REACT_APP_API_URL")}/login?activated=false')
 
     
 @csrf_exempt

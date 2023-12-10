@@ -27,18 +27,16 @@ const ManageInvitations = () => {
 
     fetchData();
   }, [feedbackMessage]);
+  
   const handleSubmit = (campaignId, status) => {
     //console.log("campaign Id", campaignId);
     var formData = new FormData();
     formData.append('status', status);
     formData.append('id', campaignId);
-      axios({
-        method: "post",
-        url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/manageCampaignInvitations/`,
-        data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true
-      })
+    axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/manageCampaignInvitations/`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      withCredentials: true
+    })
       .then((response) => {
         //console.log(response);
         setFeedbackMessage(`Campaign ${status} successfully!`);

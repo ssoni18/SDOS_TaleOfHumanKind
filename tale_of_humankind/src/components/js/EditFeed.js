@@ -32,7 +32,7 @@ export default function Feed() {
       })
       .then((response) => {
         setFeedbackMessage("Resources updated successfully!");
-        navigate('/managefeed');
+        navigate('/manageFeed');
       })
       .catch((error) => {
         console.error(error);

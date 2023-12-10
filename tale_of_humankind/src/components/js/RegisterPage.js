@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../css/LoginPage.css";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
-
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -17,11 +16,27 @@ export default function RegisterPage() {
   const [email, setemail] = useState("NULL")
   const [password, setpassword] = useState("NULL")
   const [confirmPassword, setConfirmPassword] = useState("NULL")
-  const [agreeTerms, setAgreeTerms] = useState(false); 
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [isloading, setisLoading] = useState(false); 
-  
-// Validate Email
+  const [isloading, setisLoading] = useState(false);
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_DJANGO_APP_API_URL}/is_authenticated/`, { withCredentials: true })
+      .then((response) => {
+        setisLoading(false); // Set loading to false once the authentication check is complete
+
+        if (response.data.is_authenticated) {
+          navigate('/'); // Redirect to the home page if the user is authenticated
+        }
+      })
+      .catch((error) => {
+        setisLoading(false); // Set loading to false if there is an error
+        console.error(error);
+        setErrorMessage('Authentication error occurred'); // Set the error message
+      });
+  }, [navigate]); // Added navigate to the dependency array
+
+  // Validate Email
   const validateEmail = (email) => {
     if (!email) {
       return false;
@@ -86,69 +101,69 @@ export default function RegisterPage() {
     return true;
   };
 
-  
+
   const handleSubmit = () => {
-    if(!agreeTerms){
+    if (!agreeTerms) {
       setisLoading(false);
       setErrorMessage("Accept the T&C");
-    }else if (!validateEmail(email)) {
+    } else if (!validateEmail(email)) {
       setisLoading(false);
       setErrorMessage("Invalid email");
-    }else if(!validatePasswordLength(password)){
+    } else if (!validatePasswordLength(password)) {
       setisLoading(false);
       setErrorMessage("Invalid password");
-    }else if(!validatePasswordMatch(password, confirmPassword)){
+    } else if (!validatePasswordMatch(password, confirmPassword)) {
       setisLoading(false);
       setErrorMessage("Password doesnt match");
-    }else if(!validateFirstname(firstName)){
+    } else if (!validateFirstname(firstName)) {
       setisLoading(false);
       setErrorMessage("Invalid firstname");
-    }else if(!validateLastname(lastName)){
+    } else if (!validateLastname(lastName)) {
       setisLoading(false);
       setErrorMessage("Invalid lastname");
-    }else if(!validatePhoneNumber(phoneNumber)){
+    } else if (!validatePhoneNumber(phoneNumber)) {
       setisLoading(false);
       setErrorMessage("Invalid phone number");
-    }else if(!validateSelectedRole(selectedRole)){
+    } else if (!validateSelectedRole(selectedRole)) {
       setisLoading(false);
       setErrorMessage("Invalid role");
-    }else if(!validateSelectedQualification(selectedQualification)){
+    } else if (!validateSelectedQualification(selectedQualification)) {
       setisLoading(false);
       setErrorMessage("Invalid qualification");
     }
-    else{
-    setisLoading(true);
+    else {
+      setisLoading(true);
 
-    axios
-      .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/user_signup/`, {
-        email: email,
-        password: password,
-        confirmPassword: confirmPassword,
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
-        selectedRole: selectedRole,
-        selectedQualification: selectedQualification,
-      })
-      .then((response) => {
-        setisLoading(false);
-        if (response.data.status === 'success') {
-          navigate('/Login?registered=true');  // Redirect to the login page with a query parameter
-          //console.log(response);
-        } else {
-          setErrorMessage(response.data.message);
-          //console.log(response.data.message);
-        }
-      })
-      .catch((error) => {
-        setisLoading(false); 
-        console.error(error);
-        // Check if the error has a response and response data
-        if (error.response && error.response.data) {
-          console.error('Response data:', error.response.data);
-          setErrorMessage(error.response.data.message);
-        }
-      });
+      axios
+        .post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/user_signup/`, {
+          email: email,
+          password: password,
+          confirmPassword: confirmPassword,
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
+          selectedRole: selectedRole,
+          selectedQualification: selectedQualification,
+        })
+        .then((response) => {
+          setisLoading(false);
+          if (response.data.status === 'success') {
+            navigate('/login?registered=true');  // Redirect to the login page with a query parameter
+            //console.log(response);
+          } else {
+            setErrorMessage(response.data.message);
+            //console.log(response.data.message);
+          }
+        })
+        .catch((error) => {
+          setisLoading(false);
+          console.error(error);
+          // Check if the error has a response and response data
+          if (error.response && error.response.data) {
+            console.error('Response data:', error.response.data);
+            setErrorMessage(error.response.data.message);
+          }
+        });
     }
   };
 
@@ -251,7 +266,7 @@ export default function RegisterPage() {
                   </form>
                 </div>
                 <div className="card-footer px-lg-5 py-lg-4">
-                  <Link to="/Login">
+                  <Link to="/login">
                     <div className="text-sm text-muted">Already have an account?</div></Link>
                 </div>
               </div>

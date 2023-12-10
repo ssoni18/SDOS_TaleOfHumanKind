@@ -52,6 +52,7 @@ const MakeDonations = () =>
         const amount = value !== '' ? parseInt(value, 10) : 0;
         setAmountToDonate(amount);
       };
+      
       const handlePaymentSuccess = async (response) => {
         try {
           let bodyData = new FormData();
@@ -59,10 +60,7 @@ const MakeDonations = () =>
           // we will send the response we've got from razorpay to the backend to validate the payment
           bodyData.append("response", JSON.stringify(response));
     
-          await axios({
-            url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/verifySignature/`,
-            method: "POST",
-            data: bodyData,
+          await axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/verifySignature/`, bodyData, {
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
@@ -93,10 +91,7 @@ const MakeDonations = () =>
     formData.append('name', name);
     formData.append('email', email);
  
-    const orderData = await axios({
-        method: "post",
-        url: `${process.env.REACT_APP_DJANGO_APP_API_URL}/makeDonation/`,
-        data: formData,
+    const orderData = await axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/makeDonation/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true
     })
