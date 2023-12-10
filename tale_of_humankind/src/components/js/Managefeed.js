@@ -22,7 +22,7 @@ const handleAddUser = () => {
   navigate('/addFeed');
 };
 const handleEdit = (id) => {
-  navigate(`/editfeed/${id}`);
+  navigate(`/editFeed/${id}`);
 };
 const handleDelete = async (id) => {
   const shouldDelete = window.confirm("Are you sure you want to delete?");

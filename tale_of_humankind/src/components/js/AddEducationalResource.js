@@ -3,7 +3,7 @@ import "../css/LoginPage.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function EducationForm() {
+export default function AddEducationalResource() {
   const [title, setTitle] = useState("");
   const [contenttype, setContentType] = useState("");
   const [resourceUrl, setResourceUrl] = useState("");
