@@ -56,12 +56,7 @@ const MakeDonations = () =>
       
       const handlePaymentSuccess = async (response) => {
         try {
-          // console.log("this is for test");
-          let bodyData = new FormData();
-    
-          // we will send the response we've got from razorpay to the backend to validate the payment
-          bodyData.append("response", JSON.stringify(response));
-          await axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/verifySignature/`, bodyData, {
+          await axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/verifySignature/`, response, {
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
