@@ -65,9 +65,10 @@ def verifySignature(request):
 
     # if payment is successful that means check is None then we will turn isPaid=True
     order.is_paid = True
-
+    campaignObj = order.campaign   
+    campaignObj.current_amount = campaignObj.current_amount + order.amount
+    campaignObj.save()
     order.save()
-
     res_data = {
         'message': 'payment successfully received!'
     }
