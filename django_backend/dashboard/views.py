@@ -29,15 +29,15 @@ from rest_framework.response import Response
 from rest_framework import status
 import json
 
+
 @api_view(['POST'])
 def verifySignature(request):
-    # request.data is coming from frontend
+    print("this is the payent verification")
     res = json.loads(request.data["response"])
-
+    print("yes")
     ord_id = ""
     raz_pay_id = ""
     raz_signature = ""
-    print(res)
     for key in res.keys():
         if key == 'razorpay_order_id':
             ord_id = res[key]
@@ -55,8 +55,8 @@ def verifySignature(request):
         'razorpay_payment_id': raz_pay_id,
         'razorpay_signature': raz_signature
     }
-
-    client = razorpay.Client(auth=(os.environ.get("PUBLIC_KEY"), os.environ.get("SECRET_KEY")))
+    print(os.environ.get("PUBLIC_KEY"))
+    client = razorpay.Client(auth=(os.environ.get("REACT_APP_PUBLIC_KEY"), os.environ.get("REACT_APP_SECRET_KEY")))
 
     # checking if the transaction is valid or not by passing above data dictionary in 
     # razorpay client if it is "valid" then check will return None
@@ -68,6 +68,7 @@ def verifySignature(request):
 
     # if payment is successful that means check is None then we will turn isPaid=True
     order.is_paid = True
+    
     order.save()
 
     res_data = {
@@ -472,13 +473,12 @@ def fetchEducationalResources(request):
 def createOrder(request):
     if request.method == 'POST':
         try:
-            client = razorpay.Client(auth=(os.environ.get("PUBLIC_KEY"), os.environ.get("SECRET_KEY")))
-            print(os.environ.get("PUBLIC_KEY"),os.environ.get("SECRET_KEY"))
+            client = razorpay.Client(auth=(os.environ.get("REACT_APP_PUBLIC_KEY"), os.environ.get("REACT_APP_SECRET_KEY")))
+            print(os.environ.get("REACT_APP_PUBLIC_KEY"),os.environ.get("REACT_APP_SECRET_KEY"))
             amount = int(request.POST.get('amount'))
             campaignId = request.POST.get('campaignId')
             name = request.POST.get('name')
             email = request.POST.get('email')
-            print(type(amount))
             
             if not Campaign.objects.filter(id=campaignId).exists():
                 return JsonResponse({'status': 'error', 'message': 'Server: Campaign does not exist'}, status=400)
@@ -494,7 +494,7 @@ def createOrder(request):
                 }
             else:
                 notes={}
-            print("here", amount, campaignId, name, email)
+            print(amount, campaignId, name, email)
             
             response = client.order.create({
                 'amount': amount * 100,  # amount in the smallest currency unit
@@ -502,7 +502,6 @@ def createOrder(request):
                 'receipt':  "for Campaign: "+campaignId,
                 'notes': notes
             })
-
             donation = Donation.objects.create(
                 email=email, 
                 campaign=campaignObj,

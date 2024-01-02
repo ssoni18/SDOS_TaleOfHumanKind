@@ -3,6 +3,7 @@ import axios from "axios";
 import "../css/DonationPage.css";
 import { useLocation } from "react-router-dom"
 import fundraisingImage from "../static/fundraising.jpg";
+
 function loadScript(src) {
 	return new Promise((resolve) => {
 		const script = document.createElement('script')
@@ -55,11 +56,11 @@ const MakeDonations = () =>
       
       const handlePaymentSuccess = async (response) => {
         try {
+          // console.log("this is for test");
           let bodyData = new FormData();
     
           // we will send the response we've got from razorpay to the backend to validate the payment
           bodyData.append("response", JSON.stringify(response));
-    
           await axios.post(`${process.env.REACT_APP_DJANGO_APP_API_URL}/verifySignature/`, bodyData, {
             headers: {
               Accept: "application/json",
@@ -78,12 +79,11 @@ const MakeDonations = () =>
         }
       };
     
-    async function handleSubmit() {
-        const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js')
-
-        if (!res) {
-            alert('Failure loading the Razorpay SDK. PLease make sure you are connected to the internet')
-            return
+  async function handleSubmit() {
+    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js')
+    if (!res) {
+        alert('Failure loading the Razorpay SDK. PLease make sure you are connected to the internet')
+        return
     }
     var formData = new FormData();
     formData.append('campaignId', campaignId);
@@ -95,24 +95,21 @@ const MakeDonations = () =>
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true
     })
-
-    const { amount, order_id } = orderData.data
-    const options = {
-        key: `${process.env.PUBLIC_KEY}`, 
-        amount: amount.toString(),
+    var options = {
+        key: `${process.env.REACT_APP_PUBLIC_KEY}`, 
+        amount: orderData.data["amount"].toString(),
         currency: 'INR',
         name: "The Tale of Humankind",
         description: "Test Transaction",
         image: "",
-        order_id: order_id,
-        handler: async function (response) {
+        order_id: orderData.data["order_id"],
+        handler: function (response) {
             handlePaymentSuccess(response);
         },
         theme: {
           color: "#61dafb",
         },
       };
-      
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     }

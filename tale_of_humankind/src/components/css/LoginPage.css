@@ -12,7 +12,6 @@
   box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 8%);
   z-index: 2;
 }
-
 .card {
   position: relative;
   display: flex;

@@ -132,8 +132,7 @@ function NavFunction() {
                           alt=""
                         />
                       )}
-                      <span className="name">{userData.first_name + " " + userData.last_name}</span>
-                      <FontAwesomeIcon icon={faChevronDown} />
+                      <span className="name">{userData.first_name + (userData.last_name !== "NULL" ? " " + userData.last_name : "")}</span>                      <FontAwesomeIcon icon={faChevronDown} />
                     </div>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>

@@ -47,16 +47,15 @@ export default function UserProfile() {
         <div className="row align-items-center flex-row-reverse">
           <div className="col-lg-6">
             <div className="about-text go-to">
-              <h3 className="dark-color">{userData.first_name + " " + userData.last_name}</h3>
-              <h6 className="theme-color lead">{userData.user_type}</h6>
+            <h3 className="dark-color">{userData.first_name + (userData.last_name !== "NULL" ? " " + userData.last_name : "")}</h3>              <h6 className="theme-color lead">{userData.user_type}</h6>
               <Link to="/editprofile">
                 <Button variant="success" className="mr-2">Edit Profile</Button>
               </Link>
               {/* <h6 className="theme-color lead">Role</h6> */}
-              <p>
+              {/* <p>
                 Some description that is optional that the user will write about
                 himself in his profile
-              </p>
+              </p> */}
               <div className="row about-list">
                 <div className="col-md-6">
                   <div className="media">
@@ -118,30 +117,27 @@ export default function UserProfile() {
           </div>
         </div>
         <br></br>
-        <h6>
-          This could include information related to maybe students he/she has mentored
-        </h6>
 
-        <div className="counter">
-          <div className="row">
+        <div className="counter center-content">
+          <div className="row justify-content-between">
             <div className="col-6 col-lg-3">
               <div className="count-data text-center">
-                <RegistrationCounter limit="300" description="Happy Clients" />
+                <RegistrationCounter limit="300" description="Campaigns Mentored" />
               </div>
             </div>
             <div className="col-6 col-lg-3">
               <div className="count-data text-center">
                 <RegistrationCounter
                   limit="100"
-                  description="Project Completed"
+                  description="Resources Created"
                 />
               </div>
             </div>
-            <div className="col-6 col-lg-3">
+            {/* <div className="col-6 col-lg-3">
               <div className="count-data text-center">
-                <RegistrationCounter limit="300" description="Photo Capture" />
+                <RegistrationCounter limit="300" description="Member since" />
               </div>
-            </div>
+            </div> */}
             <div className="col-6 col-lg-3">
               <div className="count-data text-center">
                 <RegistrationCounter

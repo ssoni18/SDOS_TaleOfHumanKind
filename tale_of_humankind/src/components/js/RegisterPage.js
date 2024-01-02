@@ -190,9 +190,6 @@ export default function RegisterPage() {
           <div className="row align-items-center">
             <div className='show col-lg-6 px-lg-4'>
               <div className="card">
-                <div className="card-header px-lg-5">
-                  <div className="card-heading text-primary">Registration</div>
-                </div>
                 <div className="card-body p-lg-5">
                   <h3 className="mb-4">Register Yourself</h3>
                   {/* <p className="text-muted text-sm mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p> */}
@@ -262,12 +259,12 @@ export default function RegisterPage() {
                     </div>
                     <div className="form-group">
                       <button className="btn btn-primary" id="register" type="button" name="registerSubmit" onClick={handleSubmit}>Register</button>
-                    </div>
+                      <div className="py-lg-4">
+                          <Link to="/login">
+                            <div className="text-sm text-muted">Already have an account?</div></Link>
+                        </div>
+                      </div>
                   </form>
-                </div>
-                <div className="card-footer px-lg-5 py-lg-4">
-                  <Link to="/login">
-                    <div className="text-sm text-muted">Already have an account?</div></Link>
                 </div>
               </div>
             </div>

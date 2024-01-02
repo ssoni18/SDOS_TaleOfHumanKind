@@ -75,7 +75,7 @@ class Donation(models.Model):
     is_paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return f"Donation - {self.name} - {self.amount}"
+        return f"Donation -{self.amount}"
 
     
 class EducationalResource(models.Model):

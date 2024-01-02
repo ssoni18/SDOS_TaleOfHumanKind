@@ -2,6 +2,11 @@
     color: #6F8BA4;
     margin-top:20px;
 } */
+/* .center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
 .section {
     padding: 100px 0;
     position: relative;

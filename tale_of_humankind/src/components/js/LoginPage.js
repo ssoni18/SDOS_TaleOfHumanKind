@@ -115,9 +115,6 @@ export default function LoginPage() {
           <div className="row align-items-center">
             <div className="show col-lg-6 px-lg-4">
               <div className="card">
-                <div className="card-header px-lg-5">
-                  <div className="card-heading text-primary">Login</div>
-                </div>
                 <div className="card-body p-lg-5">
                   <h3 className="mb-4">Login</h3>
                   {/* <p className="text-muted text-sm mb-5">
@@ -164,15 +161,14 @@ export default function LoginPage() {
                         Login
                       </button>
                     </div>
-                  </form>
-
-                </div>
-                <div className="card-footer px-lg-5 py-lg-4">
+                    <div className="py-lg-4">
                   <Link to="/registerPage">
                     <div className="text-sm text-muted">
                       Don't have an account?
                     </div>
                   </Link>
+                </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -185,14 +181,6 @@ export default function LoginPage() {
                 alt=""
                 style={{ transform: "rotate(10deg)" }}
               />
-              {/* <h1 className="mb-4">
-                Therichpost.com <br className="d-none d-lg-inline" />
-                free code snippets.
-              </h1>
-              <p className="lead text-muted">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                eiusmod tempor incididunt ut labore.
-              </p> */}
             </div>
           </div>
         </div>
