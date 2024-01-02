@@ -29,22 +29,20 @@ from rest_framework.response import Response
 from rest_framework import status
 import json
 
-
+@csrf_exempt
 @api_view(['POST'])
 def verifySignature(request):
-    print("this is the payent verification")
-    res = json.loads(request.data["response"])
-    print("yes")
+    data= json.loads(request.body)
     ord_id = ""
     raz_pay_id = ""
     raz_signature = ""
-    for key in res.keys():
+    for key in data.keys():
         if key == 'razorpay_order_id':
-            ord_id = res[key]
+            ord_id = data[key]
         elif key == 'razorpay_payment_id':
-            raz_pay_id = res[key]
+            raz_pay_id = data[key]
         elif key == 'razorpay_signature':
-            raz_signature = res[key]
+            raz_signature = data[key]
 
     # get order by payment_id which we've created earlier with isPaid=False
     order = Donation.objects.get(order_payment_id=ord_id)
@@ -55,7 +53,6 @@ def verifySignature(request):
         'razorpay_payment_id': raz_pay_id,
         'razorpay_signature': raz_signature
     }
-    print(os.environ.get("PUBLIC_KEY"))
     client = razorpay.Client(auth=(os.environ.get("REACT_APP_PUBLIC_KEY"), os.environ.get("REACT_APP_SECRET_KEY")))
 
     # checking if the transaction is valid or not by passing above data dictionary in 
@@ -68,7 +65,7 @@ def verifySignature(request):
 
     # if payment is successful that means check is None then we will turn isPaid=True
     order.is_paid = True
-    
+
     order.save()
 
     res_data = {
