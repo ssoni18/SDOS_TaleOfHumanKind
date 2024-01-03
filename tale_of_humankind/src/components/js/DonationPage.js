@@ -91,7 +91,7 @@ const MakeDonations = () =>
         withCredentials: true
     })
     var options = {
-        key: `${process.env.REACT_APP_PUBLIC_KEY}`, 
+        key: `${process.env.REACT_APP_RZP_PUBLIC_KEY}`, 
         amount: orderData.data["amount"].toString(),
         currency: 'INR',
         name: "The Tale of Humankind",
